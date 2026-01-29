@@ -1,29 +1,39 @@
 import { useEffect, useState } from 'react';
+import { auth } from '../appwrite';
 import * as remindersLib from '../lib/db/reminders';
 import { ReminderModel } from '../types/reminder';
 
-export default function useReminders(userId?: string) {
+export default function useReminders() {
   const [items, setItems] = useState<ReminderModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId) return;
+    let mounted = true;
     setLoading(true);
     (async () => {
       try {
-        const res: any = await remindersLib.listUpcomingForUser(userId);
+        const user = await auth.get();
+        const res: any = await remindersLib.listUpcomingForUser(user.$id);
+        if (!mounted) return;
         setItems(res.documents || []);
       } catch (e: any) {
+        if (!mounted) return;
         setError(e.message || 'Failed to load');
       } finally {
+        if (!mounted) return;
         setLoading(false);
       }
     })();
-  }, [userId]);
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const create = async (payload: Partial<ReminderModel>) => {
-    return await remindersLib.createReminder(payload);
+    const doc: any = await remindersLib.createReminder(payload);
+    setItems((s) => [doc, ...s]);
+    return doc;
   };
 
   return { items, loading, error, create };
