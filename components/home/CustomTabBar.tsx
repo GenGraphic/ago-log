@@ -1,8 +1,9 @@
 import Feather from '@expo/vector-icons/Feather';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { useNotifications } from '@/hooks/useNotifications';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface TabItem {
@@ -23,6 +24,7 @@ export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const tint = useThemeColor({}, 'tint');
   const inactive = useThemeColor({}, 'icon');
   const barBg = useThemeColor({}, 'background');
+  const { unreadCount } = useNotifications();
 
   return (
     <View style={[styles.wrapper, { shadowColor: tint }]}>
@@ -75,6 +77,11 @@ export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                   size={24}
                   color={isFocused ? tint : inactive}
                 />
+                {tab.name === 'notifications' && unreadCount > 0 && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
+                  </View>
+                )}
               </TouchableOpacity>
             );
           })}
@@ -138,5 +145,22 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 0 },
     elevation: 12,
+  },
+  badge: {
+    position: 'absolute',
+    top: 6,
+    right: 8,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#FF6060',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  badgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#fff',
   },
 });

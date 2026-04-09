@@ -8,13 +8,16 @@ import CriticalAlerts from '@/components/home/CriticalAlerts';
 import EntriesCounter from '@/components/home/EntriesCounter';
 import HomeHeader from '@/components/home/HomeHeader';
 import TimeLine from '@/components/home/TimeLine';
+import { LimitBanner } from '@/components/upgrade/LimitBanner';
 import globalStyles from '@/constants/GlobalStyles';
+import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const TAB_BAR_HEIGHT = 74;
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const limitStatus = useFreeLimitReached();
 
   return (
     <AnimatedBackground style={globalStyles.body}>
@@ -24,6 +27,7 @@ export default function HomeScreen() {
           contentContainerStyle={{ gap: 20, paddingBottom: TAB_BAR_HEIGHT + insets.bottom }}
         >
 
+          {limitStatus !== 'none' && <LimitBanner variant={limitStatus} />}
           <HomeHeader />
 
           <CallToActions />

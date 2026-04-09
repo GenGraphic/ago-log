@@ -11,6 +11,9 @@ export interface User_DB {
     status: UserStatus;
     plan: UserPlan;
     phone?: string;
+    pushEnabled: boolean;
+    emailEnabled: boolean;
+    expoPushToken: string | null;
 }
 export interface User extends User_DB {
     id: string;
@@ -56,13 +59,18 @@ export interface Entry extends Entry_DB {
   updatedAt: string;
 }
 
-export interface Notification {
-  id: string;
+export interface Notification_DB {
+  userId: string;
+  entryId?: string;
   title: string;
   body: string;
-  time: string;
-  read: boolean;
   type: NotifType;
+  read: boolean;
+  sentAt: string;
+}
+
+export interface Notification extends Notification_DB {
+  id: string;
 }
 
 export interface EntryAIPrefill {

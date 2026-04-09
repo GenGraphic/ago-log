@@ -6,12 +6,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AnimatedBackground from '@/components/AnimatedBackground';
 import { ThemedText } from '@/components/ThemedText';
+import { LimitBanner } from '@/components/upgrade/LimitBanner';
 import { StatusColors } from '@/constants/Colors';
 import globalStyles from '@/constants/GlobalStyles';
+import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function PickMethod() {
   const router = useRouter();
+  const limitStatus = useFreeLimitReached();
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
   const cardBg = useThemeColor({ light: '#1A2235', dark: '#1C2333' }, 'background');
@@ -20,6 +23,8 @@ export default function PickMethod() {
     <AnimatedBackground style={globalStyles.body}>
       <SafeAreaView style={globalStyles.safeView}>
         <View style={[globalStyles.mainContainer, styles.mainContanier]}>
+
+          {limitStatus !== 'none' && <LimitBanner variant={limitStatus} style={{ marginHorizontal: 0 }} />}
 
           {/* Header */}
           <View style={styles.header}>

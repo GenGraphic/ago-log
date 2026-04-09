@@ -4,14 +4,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -77,6 +77,7 @@ export default function ManualInputScreen() {
   const { extractEntryFromImage } = useAI();
   const userId = useAppSelector(state => state.user.id);
   const userPlan = useAppSelector(state => state.user.plan);
+  const defaultReminder = useAppSelector(state => state.preferences.defaultReminder);
   const [submitting, setSubmitting] = React.useState(false);
   const [aiLoading, setAiLoading] = React.useState(false);
   const [entryCount, setEntryCount] = React.useState<number | null>(null);
@@ -94,7 +95,7 @@ export default function ManualInputScreen() {
   }, [isFree]);
 
   const { control, watch, handleSubmit, setValue } = useForm<EntryFormData>({
-    defaultValues: { notifyDays: [] },
+    defaultValues: { notifyDays: [defaultReminder] },
   });
 
   React.useEffect(() => {

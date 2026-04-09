@@ -10,12 +10,15 @@ import { NotificationsSection } from '@/components/profile/NotificationsSection'
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { SecuritySection } from '@/components/profile/SecuritySection';
 import { SupportSection } from '@/components/profile/SupportSection';
+import { LimitBanner } from '@/components/upgrade/LimitBanner';
 import useAuth from '@/hooks/useAuth';
+import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 
 export default function ProfileScreen() {
   const { signOut } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const limitStatus = useFreeLimitReached();
 
   const handleSignOut = () => {
     Alert.alert('Terminate Session', 'All local data will be cleared. Continue?', [
@@ -38,6 +41,7 @@ export default function ProfileScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top + 12 }]}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+        {limitStatus !== 'none' && <LimitBanner variant={limitStatus} style={{ marginTop: 8 }} />}
         <ProfileHeader />
         <IntelligenceLoad />
         <NotificationsSection />

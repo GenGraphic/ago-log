@@ -1,6 +1,6 @@
 import { Models } from "react-native-appwrite";
 import { EntryStatus, EntryType, UserPlan, UserStatus } from "../models/enums";
-import { Entry, User } from "../models/types";
+import { Entry, Notification, User } from "../models/types";
 
 export const toUser = (dbUser: Models.DefaultRow): User => {
   return {
@@ -12,6 +12,9 @@ export const toUser = (dbUser: Models.DefaultRow): User => {
     status: dbUser.status as UserStatus,
     plan: (dbUser.plan as UserPlan) ?? UserPlan.FREE,
     phone: dbUser.phone,
+    emailEnabled: dbUser.emailEnabled,
+    expoPushToken: dbUser.expoPushToken,
+    pushEnabled: dbUser.pushEnabled
   };
 };
 
@@ -37,3 +40,16 @@ export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
   mileageInterval: dbEntry.mileageInterval ?? undefined,
   imageId: dbEntry.imageId ?? undefined,
 });
+
+export function toNotification(doc: Models.DefaultRow): Notification {
+  return {
+    id: doc.$id,
+    userId: doc.userId,
+    entryId: doc.entryId,
+    title: doc.title,
+    body: doc.body,
+    type: doc.type,
+    read: doc.read,
+    sentAt: doc.sentAt,
+  };
+}

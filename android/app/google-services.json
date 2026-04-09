@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "980575056524",
+    "project_id": "ago-log",
+    "storage_bucket": "ago-log.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980575056524:android:87c21bfd0e3b20000741a9",
+        "android_client_info": {
+          "package_name": "com.gengraphic.agolog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCROrqY_ZBDBgsNPPQQF2IifJkH6Di7Z5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

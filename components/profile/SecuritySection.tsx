@@ -9,8 +9,6 @@ export function SecuritySection() {
     <>
       <SectionLabel title="SECURITY" />
       <View style={sharedStyles.card}>
-        <SettingRow label="Change password" onPress={() => {}} />
-        <RowDivider />
         <SettingRow label="2FA Authentication" onPress={() => {}} />
         <RowDivider />
         <View style={styles.infoBox}>

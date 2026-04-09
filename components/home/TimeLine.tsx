@@ -103,7 +103,7 @@ export default function TimeLine() {
               key={entry.id}
               style={[styles.row, { backgroundColor: cardBg }]}
               activeOpacity={0.75}
-              onPress={() => router.push(`/(main)/document-details/${entry.id}` as any)}>
+              onPress={() => router.push(`/(main)/entry-details/${entry.id}` as any)}>
 
               {/* Icon box */}
               <View style={[styles.iconBox, { backgroundColor: `${tint}18` }]}>

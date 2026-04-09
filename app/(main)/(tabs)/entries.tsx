@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
-  RefreshControl,
-  SectionList,
-  StyleSheet,
-  View,
+    ActivityIndicator,
+    RefreshControl,
+    SectionList,
+    StyleSheet,
+    View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,8 +13,10 @@ import CategoryFilter, { CategoryKey } from '@/components/entries/CategoryFilter
 import EntryRow from '@/components/entries/EntryRow';
 import SearchBar from '@/components/entries/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
+import { LimitBanner } from '@/components/upgrade/LimitBanner';
 import { StatusColors } from '@/constants/Colors';
 import useEntries from '@/hooks/useEntries';
+import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { EntryStatus, EntryType } from '@/models/enums';
 import { Entry } from '@/models/types';
@@ -73,6 +75,7 @@ export default function EntriesScreen() {
   const [category, setCategory] = useState<CategoryKey>('ALL');
 
   const { listEntries } = useEntries();
+  const limitStatus = useFreeLimitReached();
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
   const dividerBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
@@ -148,6 +151,7 @@ export default function EntriesScreen() {
         ]}
         ListHeaderComponent={
           <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+            {limitStatus !== 'none' && <LimitBanner variant={limitStatus} style={{ marginHorizontal: 0, marginBottom: 12 }} />}
             <SearchBar value={search} onChangeText={setSearch} />
             <CategoryFilter selected={category} onSelect={setCategory} />
           </View>

@@ -1,12 +1,13 @@
-import Feather from '@expo/vector-icons/Feather';
+import Header from '@/components/upgrade/Header';
+import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ComparisonTable } from '../../components/upgrade/ComparisonTable';
@@ -21,8 +22,9 @@ import { useRevenueCat } from '../../hooks/useRevenueCat';
 export default function UpgradeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [billing, setBilling] = useState<BillingCycle>('yearly');
+  const [billing, setBilling] = useState<BillingCycle>('monthly');
   const { presentPaywall, isLoading } = useRevenueCat();
+  const limitStatus = useFreeLimitReached();
 
   const price = PLAN_PRICE[billing];
 
@@ -33,17 +35,11 @@ export default function UpgradeScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* ── Top bar */}
-      <View style={styles.topBar}>
-        <Text style={styles.brand}>AGOLOG</Text>
-        <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-          <Feather name="x" size={20} color="#555" />
-        </TouchableOpacity>
-      </View>
+      <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}>
 
-        <LimitBanner />
+        {limitStatus !== 'none' && <LimitBanner variant={limitStatus} showUpgradeLink={false} />}
 
         {/* ── Hero */}
         <View style={styles.hero}>
@@ -87,19 +83,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0D0D0D',
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  brand: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#ECEDEE',
-    letterSpacing: 2,
   },
   hero: {
     paddingHorizontal: 20,

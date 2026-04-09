@@ -65,7 +65,7 @@ export default function EntryComponent({ item }: Props) {
       {/* Action button */}
       <TouchableOpacity
         style={[styles.actionBtn, { backgroundColor: accentColor }]}
-        onPress={() => router.push(`/(main)/edit-document/${item.id}` as any)}
+        onPress={() => router.push(`/(main)/edit-entry/${item.id}` as any)}
         activeOpacity={0.8}>
         <Feather name={actionIcon} size={18} color="#0A1A1A" />
       </TouchableOpacity>

@@ -2,7 +2,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Logo from '@/components/Logo';
@@ -97,6 +97,16 @@ export default function LoginScreen() {
           isDisabled={loading}
           action={handleSubmit(onSubmit)}
         />
+
+        {/* Legal */}
+        <View style={styles.legalSection}>
+          <Text style={styles.legalText}>
+            By registering you agree to our{' '}
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/privacy')}>Privacy Policy</Text>
+            {' '}and{' '}
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/terms')}>Legal Terms</Text>.
+          </Text>
+        </View>
 
         {/* Security Badges */}
         <View style={styles.badgesSection}>
@@ -205,5 +215,20 @@ const styles = StyleSheet.create({
     fontSize: 11,
     opacity: 0.5,
     textAlign: 'center',
+  },
+  legalSection: {
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  legalText: {
+    fontSize: 11,
+    color: '#888',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  legalLink: {
+    color: '#4F8EF7',
+    fontWeight: '600',
   },
 });
