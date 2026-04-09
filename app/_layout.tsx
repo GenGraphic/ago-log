@@ -4,33 +4,71 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
+import { Provider } from 'react-redux';
 
 import useAuth from '@/hooks/useAuth';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRevenueCat } from '@/hooks/useRevenueCat';
+import { useAppSelector } from '@/store/hooks';
+import { store } from '@/store/store';
+
+// Handles auth initialization (must be inside Provider)
+function AuthInitializer() {
+  const { checkUserPresence } = useAuth();
+
+  useEffect(() => {
+    checkUserPresence();
+  }, [checkUserPresence]);
+
+  return null;
+}
+
+// Configures RevenueCat SDK and links identity when user is authenticated
+function PurchasesInitializer() {
+  const { configure, logIn, loadCustomerInfo } = useRevenueCat();
+  const userId = useAppSelector((s) => s.user.id);
+  const isAuthenticated = useAppSelector((s) => s.auth.isAuth);
+
+  // Configure SDK once on mount (anonymous session to start)
+  useEffect(() => {
+    configure();
+  }, [configure]);
+
+  // Link RevenueCat identity when the user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && userId) {
+      logIn(userId);
+    } else if (!isAuthenticated) {
+      loadCustomerInfo();
+    }
+  }, [isAuthenticated, userId, logIn, loadCustomerInfo]);
+
+  return null;
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-  const { checkUserPresence } = useAuth();
-
-  useEffect(() => {
-    if (!loaded) return;
-    checkUserPresence();
-  }, [loaded, checkUserPresence]);
 
   if (!loaded) return null;
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(main)" options={{ headerShown: false }} />
-        <Stack.Screen name="profile" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Provider store={store}>
+      <AuthInitializer />
+      <PurchasesInitializer />
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack initialRouteName='index'>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+        <Toast />
+      </ThemeProvider>
+    </Provider>
   );
 }

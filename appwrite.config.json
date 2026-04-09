@@ -1,0 +1,405 @@
+{
+    "projectId": "68ba4c3f002c9e51046a",
+    "projectName": "AgoLog",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "sites": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": false,
+                "phone": false,
+                "invites": false,
+                "anonymous": false,
+                "email-otp": true,
+                "magic-url": false,
+                "email-password": false
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "tablesDB": [
+        {
+            "$id": "68ba4da4001145a3a851",
+            "name": "main",
+            "enabled": true
+        }
+    ],
+    "tables": [
+        {
+            "$id": "697c28da000f3f78bafd",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "68ba4da4001145a3a851",
+            "name": "users",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "email",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "avatar",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "elements": [
+                        "Active",
+                        "Inactive",
+                        "Deleted"
+                    ],
+                    "format": "enum",
+                    "default": null
+                },
+                {
+                    "key": "phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "plan",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "elements": [
+                        "FREE",
+                        "PRO"
+                    ],
+                    "format": "enum",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "69d5dbd80021364ce602",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "68ba4da4001145a3a851",
+            "name": "entries",
+            "enabled": true,
+            "rowSecurity": true,
+            "columns": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "entryType",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "elements": [
+                        "Passport",
+                        "Driving_License",
+                        "ID_Card",
+                        "Visa",
+                        "Car_Insurance",
+                        "Health_Insurance",
+                        "Home_Insurance",
+                        "Travel_Insurance",
+                        "Car_Inspection",
+                        "Car_Maintenance",
+                        "Vehicle_Registration",
+                        "Vaccination",
+                        "Prescription",
+                        "Medical_Checkup",
+                        "Subscription",
+                        "Contract",
+                        "Warranty",
+                        "Property_Lease",
+                        "Birthday",
+                        "Anniversary",
+                        "Credential",
+                        "Reminder"
+                    ],
+                    "format": "enum",
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "elements": [
+                        "Active",
+                        "Archived",
+                        "Expired"
+                    ],
+                    "format": "enum",
+                    "default": null
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "expiryDate",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "notifyDaysBefore",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 30,
+                    "default": null
+                },
+                {
+                    "key": "issuer",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "identifier",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 35,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "secret",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 160,
+                    "default": null,
+                    "encrypt": true
+                },
+                {
+                    "key": "username",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "url",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "lastServiceDate",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "intervalDays",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "lastMileage",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "mileageInterval",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "imageId",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "userId_index",
+                    "type": "key",
+                    "status": "available",
+                    "columns": [
+                        "userId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "69d5e39f00247e5da26f",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "fileSecurity": true,
+            "name": "entries_images",
+            "enabled": true,
+            "maximumFileSize": 30000000,
+            "allowedFileExtensions": [],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        }
+    ],
+    "functions": [
+        {
+            "$id": "69d65e68001c88649e1c",
+            "name": "on-success-payment",
+            "runtime": "node-16.0",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [
+                "rows.read",
+                "rows.write"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/on-success-payment"
+        },
+        {
+            "$id": "69d65e820023add99094",
+            "name": "on-fail-payment",
+            "runtime": "node-16.0",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [
+                "any"
+            ],
+            "events": [],
+            "scopes": [
+                "rows.read",
+                "rows.write"
+            ],
+            "schedule": "",
+            "timeout": 15,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/on-fail-payment"
+        },
+        {
+            "$id": "69d669cf0017ac725ee9",
+            "name": "handleEntryImage",
+            "runtime": "node-16.0",
+            "specification": "s-0.5vcpu-512mb",
+            "execute": [
+                "users"
+            ],
+            "events": [],
+            "scopes": [],
+            "schedule": "",
+            "timeout": 30,
+            "enabled": true,
+            "logging": true,
+            "entrypoint": "src/main.js",
+            "commands": "npm install",
+            "path": "functions/handleEntryImage"
+        }
+    ]
+}

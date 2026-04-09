@@ -1,4 +1,5 @@
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { ImageSourcePropType, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
@@ -6,15 +7,26 @@ interface Props {
     title: string;
     isDisabled: boolean;
     icon?: ImageSourcePropType;
-    action: () => void
+    action: () => void;
+    customColor?: string;
 };
 
-const MyMainButton: React.FC<Props> = ({ title, isDisabled, action, icon }) => {
+const MyMainButton: React.FC<Props> = ({ title, isDisabled, action, icon, customColor }) => {
     const backgroundColor = useThemeColor({}, "tint");
-
+    const backgroundColorLight = useThemeColor({}, "tintLight");
     return (
-        <TouchableOpacity style={[styles.button, { backgroundColor, borderColor: backgroundColor }]} onPress={action} disabled={isDisabled}>
-            <Text style={styles.text}>{title}</Text>
+        <TouchableOpacity
+            onPress={action}
+            disabled={isDisabled}
+            activeOpacity={0.85}>
+                <LinearGradient
+                    end={{ x: 0, y: 0 }}
+                    start={{ x: 1, y: 0 }}
+                    colors={[customColor ?? backgroundColor, backgroundColorLight]}
+                    style={[styles.button, { opacity: isDisabled ? 0.5 : 1 }]}
+                >
+                    <Text style={styles.text}>{title}</Text>
+                </LinearGradient>
         </TouchableOpacity>
     )
 }
@@ -25,13 +37,13 @@ const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: 53,
+        height: 60,
         borderRadius: 8,
-        borderWidth: 1
     },
     text: {
-        color: "#FFFFFF",
+        color: "#00363A",
         fontWeight: "bold",
-        fontSize: 16
+        fontSize: 16,
+        letterSpacing: 2,
     },
 })

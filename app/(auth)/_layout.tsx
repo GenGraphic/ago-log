@@ -1,10 +1,10 @@
-import useAuthState from "@/store/useAuthState";
+import { useAppSelector } from "@/store/hooks";
 import { Redirect, Stack } from "expo-router";
 
 const AuthLayout = () => {
-    const { isAuth } = useAuthState();
+    const { isAuth } = useAppSelector((state) => state.auth);
 
-    if (isAuth) return <Redirect href="/(main)" />;
+    if (isAuth) return <Redirect href="/(main)/(tabs)" />;
 
     return(
         <Stack screenOptions={{ headerShown: false }}>

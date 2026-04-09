@@ -1,0 +1,39 @@
+import { Models } from "react-native-appwrite";
+import { EntryStatus, EntryType, UserPlan, UserStatus } from "../models/enums";
+import { Entry, User } from "../models/types";
+
+export const toUser = (dbUser: Models.DefaultRow): User => {
+  return {
+    id: dbUser.$id,
+    createdAt: dbUser.$createdAt,
+    name: dbUser.name,
+    email: dbUser.email,
+    avatar: dbUser.avatar,
+    status: dbUser.status as UserStatus,
+    plan: (dbUser.plan as UserPlan) ?? UserPlan.FREE,
+    phone: dbUser.phone,
+  };
+};
+
+export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
+  id: dbEntry.$id,
+  createdAt: dbEntry.$createdAt,
+  updatedAt: dbEntry.$updatedAt,
+  userId: dbEntry.userId,
+  title: dbEntry.title,
+  entryType: dbEntry.entryType as EntryType,
+  status: dbEntry.status as EntryStatus,
+  notes: dbEntry.notes ?? undefined,
+  expiryDate: dbEntry.expiryDate ?? undefined,
+  notifyDaysBefore: dbEntry.notifyDaysBefore ?? undefined,
+  issuer: dbEntry.issuer ?? undefined,
+  identifier: dbEntry.identifier ?? undefined,
+  secret: dbEntry.secret ?? undefined,
+  username: dbEntry.username ?? undefined,
+  url: dbEntry.url ?? undefined,
+  lastServiceDate: dbEntry.lastServiceDate ?? undefined,
+  intervalDays: dbEntry.intervalDays ?? undefined,
+  lastMileage: dbEntry.lastMileage ?? undefined,
+  mileageInterval: dbEntry.mileageInterval ?? undefined,
+  imageId: dbEntry.imageId ?? undefined,
+});

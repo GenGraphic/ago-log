@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { auth } from '../appwrite';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { auth } from '../../appwrite';
 
 export default function ProfileScreen({ navigation }: any) {
   const [user, setUser] = useState<any>(null);
@@ -10,18 +10,18 @@ export default function ProfileScreen({ navigation }: any) {
       try {
         const res = await auth.get();
         setUser(res);
-      } catch (e) {
+      } catch {
         navigation.replace('(auth)/login');
       }
     })();
-  }, []);
+  }, [navigation]);
 
   const logout = async () => {
     try {
       await auth.deleteSession('current');
       navigation.replace('(auth)/login');
-    } catch (e) {
-      console.log('Logout error', e);
+    } catch {
+      console.log('Logout error');
     }
   };
 

@@ -1,40 +1,41 @@
-import { Image } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import { ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedView } from '@/components/ThemedView';
+import AnimatedBackground from '@/components/AnimatedBackground';
+import CallToActions from '@/components/home/CallToActions';
+import CriticalAlerts from '@/components/home/CriticalAlerts';
+import EntriesCounter from '@/components/home/EntriesCounter';
+import HomeHeader from '@/components/home/HomeHeader';
+import TimeLine from '@/components/home/TimeLine';
 import globalStyles from '@/constants/GlobalStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const TAB_BAR_HEIGHT = 74;
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <View style={globalStyles.mainContainer}>
-          
-        </View>
-      </ThemedView>
-    </ParallaxScrollView>
+    <AnimatedBackground style={globalStyles.body}>
+      <SafeAreaView style={globalStyles.safeView}>
+        <ScrollView
+          style={globalStyles.mainContainer}
+          contentContainerStyle={{ gap: 20, paddingBottom: TAB_BAR_HEIGHT + insets.bottom }}
+        >
+
+          <HomeHeader />
+
+          <CallToActions />
+
+          <EntriesCounter />
+
+          <CriticalAlerts />
+
+          <TimeLine />
+
+        </ScrollView>
+      </SafeAreaView>
+    </AnimatedBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

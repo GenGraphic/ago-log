@@ -6,7 +6,6 @@ const globalStyles = StyleSheet.create({
     },
     safeView: {
         flex: 1,
-        paddingTop: 50
     },
     mainContainer: {
         flex: 1,

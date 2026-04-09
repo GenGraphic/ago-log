@@ -1,4 +1,3 @@
-import { useThemeColor } from '@/hooks/useThemeColor';
 import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
@@ -13,7 +12,7 @@ interface Props extends TextInputProps {
 }
 
 const MyTextInput: React.FC<Props> = ({ name, control, rules, label, errorMessage, ...textInputProps }) => {
-    const textColor = useThemeColor({}, "text");
+    const placeholderColor = '#999999';
 
     return (
         <View style={styles.container}>
@@ -25,7 +24,8 @@ const MyTextInput: React.FC<Props> = ({ name, control, rules, label, errorMessag
                 render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                         <TextInput
-                            style={[styles.input, error && styles.errorInput, {color: textColor}]}
+                            style={[styles.input, error && styles.errorInput]}
+                            placeholderTextColor={placeholderColor}
                             onBlur={onBlur}
                             onChangeText={onChange}
                             value={value}
@@ -51,18 +51,21 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     input: {
-        borderRadius: 4,
+        borderRadius: 8,
         borderWidth: 1,
-        borderColor: "#EDEDED",
+        borderColor: "#E0E0E0",
         height: 48,
-        paddingHorizontal: 20,
-        backgroundColor: "#FFFFFF"
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: "#F5F5F5",
+        color: "#333333",
+        fontSize: 16
     },
     errorInput: {
-        borderColor: 'red',
+        borderColor: '#FF3B30',
     },
     errorText: {
-        color: 'red',
+        color: '#FF3B30',
         fontSize: 12,
         marginTop: 4,
     },
