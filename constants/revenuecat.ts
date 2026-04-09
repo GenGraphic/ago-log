@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 // ⚠️  Replace with your production key before shipping
 export const RC_API_KEY =
   Platform.OS === 'ios'
-    ? 'test_xebtvDupSrtAxWVNDetFPidCega'
+    ? 'appl_mCyDyZAOrNxoGdJNdcLoAlCbCCb'
     : 'test_xebtvDupSrtAxWVNDetFPidCega'; // add separate Android key if needed
 
 export const RC_ENTITLEMENT_ID = 'GenGraphic Pro';
