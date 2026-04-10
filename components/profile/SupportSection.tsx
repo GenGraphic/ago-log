@@ -1,28 +1,39 @@
-import Feather from '@expo/vector-icons/Feather';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Feather from "@expo/vector-icons/Feather";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { useRevenueCat } from '@/hooks/useRevenueCat';
-import { SectionLabel } from './shared';
+import { useRevenueCat } from "@/hooks/useRevenueCat";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { SectionLabel } from "./shared";
 
 export function SupportSection() {
   const { presentCustomerCenter, isPro } = useRevenueCat();
+  const cardBg = useThemeColor(
+    { light: "#FFFFFF", dark: "#141414" },
+    "background",
+  );
 
   return (
     <>
       <SectionLabel title="SUPPORT" />
       <View style={styles.row}>
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: cardBg }]}
+          activeOpacity={0.7}
+        >
           <Feather name="book-open" size={22} color="#00F0FF" />
           <Text style={styles.label}>HELP/FAQ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: cardBg }]}
+          activeOpacity={0.7}
+        >
           <Feather name="message-circle" size={22} color="#00F0FF" />
           <Text style={styles.label}>CONTACT</Text>
         </TouchableOpacity>
         {isPro && (
           <TouchableOpacity
-            style={styles.card}
+            style={[styles.card, { backgroundColor: cardBg }]}
             activeOpacity={0.7}
             onPress={presentCustomerCenter}
           >
@@ -37,23 +48,22 @@ export function SupportSection() {
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
     marginHorizontal: 16,
     marginBottom: 20,
   },
   card: {
     flex: 1,
-    backgroundColor: '#141414',
     borderRadius: 12,
     paddingVertical: 18,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 8,
   },
   label: {
     fontSize: 10,
-    fontWeight: '700',
-    color: '#555',
+    fontWeight: "700",
+    color: "#555",
     letterSpacing: 1,
   },
 });

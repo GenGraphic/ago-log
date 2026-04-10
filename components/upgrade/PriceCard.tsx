@@ -1,6 +1,7 @@
-import Feather from '@expo/vector-icons/Feather';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useThemeColor } from "@/hooks/useThemeColor";
+import Feather from "@expo/vector-icons/Feather";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface PriceInfo {
   amount: string;
@@ -14,10 +15,19 @@ interface Props {
 }
 
 export function PriceCard({ price, features }: Props) {
+  const cardBg = useThemeColor(
+    { light: "#FFFFFF", dark: "#111111" },
+    "background",
+  );
+  const badgeBg = useThemeColor(
+    { light: "#F3F4F6", dark: "#1A1A1A" },
+    "background",
+  );
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: cardBg }]}>
       <View style={styles.header}>
-        <View style={styles.tierBadge}>
+        <View style={[styles.tierBadge, { backgroundColor: badgeBg }]}>
           <Text style={styles.tierText}>ELITE TIER</Text>
         </View>
         <View style={styles.boltBadge}>
@@ -47,16 +57,15 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 20,
     marginBottom: 16,
-    backgroundColor: '#111',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(0,240,255,0.2)',
+    borderColor: "rgba(0,240,255,0.2)",
     padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   tierBadge: {
@@ -64,44 +73,43 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#222',
-    backgroundColor: '#1A1A1A',
+    borderColor: "#222",
   },
   tierText: {
     fontSize: 9,
-    fontWeight: '700',
-    color: '#555',
+    fontWeight: "700",
+    color: "#555",
     letterSpacing: 1.5,
   },
   boltBadge: {
     width: 28,
     height: 28,
     borderRadius: 8,
-    backgroundColor: '#00F0FF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#00F0FF",
+    justifyContent: "center",
+    alignItems: "center",
   },
   priceRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    alignItems: "flex-end",
     gap: 4,
     marginBottom: 4,
   },
   amount: {
     fontSize: 48,
-    fontWeight: '800',
-    color: '#ECEDEE',
+    fontWeight: "800",
+    color: "#ECEDEE",
     lineHeight: 54,
   },
   period: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#555',
+    fontWeight: "700",
+    color: "#555",
     marginBottom: 8,
   },
   note: {
     fontSize: 10,
-    color: '#333',
+    color: "#333",
     letterSpacing: 0.8,
     marginBottom: 20,
   },
@@ -109,12 +117,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   featureRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   featureText: {
     fontSize: 13,
-    color: '#BBBBBB',
+    color: "#BBBBBB",
   },
 });

@@ -1,28 +1,39 @@
-import Feather from '@expo/vector-icons/Feather';
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Feather from "@expo/vector-icons/Feather";
+import { useRouter } from "expo-router";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from '@/components/ThemedText';
-import { StatusColors } from '@/constants/Colors';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { EntryStatus } from '@/models/enums';
-import { Entry } from '@/models/types';
+import { ThemedText } from "@/components/ThemedText";
+import { StatusColors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { EntryStatus } from "@/models/enums";
+import { Entry } from "@/models/types";
 
 interface Props {
   item: Entry;
+  criticalAlertMode?: boolean;
 }
+
+const CRITICAL_SOON_COLOR = "#FFB547";
+const CRITICAL_ALERT_DAYS = 7;
 
 function getDaysUntil(isoDate: string): number {
   const diff = new Date(isoDate).getTime() - Date.now();
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-export default function EntryComponent({ item }: Props) {
+export default function EntryComponent({
+  item,
+  criticalAlertMode = false,
+}: Props) {
   const router = useRouter();
-  const cardBg = useThemeColor({ light: '#1C2333', dark: '#1C2333' }, 'background');
+  const cardBg = useThemeColor(
+    { light: "#FFFFFF", dark: "#1C2333" },
+    "background",
+  );
 
-  const isExpired = item.status === EntryStatus.EXPIRED ||
+  const isExpired =
+    item.status === EntryStatus.EXPIRED ||
     (item.expiryDate ? getDaysUntil(item.expiryDate) < 0 : false);
 
   const daysLeft = item.expiryDate ? getDaysUntil(item.expiryDate) : null;
@@ -33,24 +44,44 @@ export default function EntryComponent({ item }: Props) {
       ? StatusColors.archived
       : StatusColors.active;
 
+  const isCriticalSoon =
+    criticalAlertMode &&
+    !isExpired &&
+    daysLeft !== null &&
+    daysLeft <= CRITICAL_ALERT_DAYS;
+
+  const leftAccentColor = isExpired
+    ? StatusColors.expired
+    : isCriticalSoon
+      ? CRITICAL_SOON_COLOR
+      : accentColor;
+
   const badgeLabel = isExpired
-    ? 'EXPIRED'
+    ? "EXPIRED"
     : daysLeft !== null
       ? `EXPIRES IN ${daysLeft}D`
-      : 'ACTIVE';
+      : "ACTIVE";
 
-  const actionIcon: React.ComponentProps<typeof Feather>['name'] =
-    isExpired ? 'refresh-cw' : 'edit-2';
+  const actionIcon: React.ComponentProps<typeof Feather>["name"] = isExpired
+    ? "refresh-cw"
+    : "edit-2";
 
   return (
     <View style={[styles.card, { backgroundColor: cardBg }]}>
       {/* Left accent bar */}
-      <View style={[styles.accentBar, { backgroundColor: accentColor }]} />
+      <View style={[styles.accentBar, { backgroundColor: leftAccentColor }]} />
 
       <View style={styles.content}>
         {/* Badge */}
-        <View style={[styles.badge, { backgroundColor: `${accentColor}22`, borderColor: accentColor }]}>
-          <ThemedText style={[styles.badgeText, { color: accentColor }]}>{badgeLabel}</ThemedText>
+        <View
+          style={[
+            styles.badge,
+            { backgroundColor: `${accentColor}22`, borderColor: accentColor },
+          ]}
+        >
+          <ThemedText style={[styles.badgeText, { color: accentColor }]}>
+            {badgeLabel}
+          </ThemedText>
         </View>
 
         {/* Title & subtitle */}
@@ -66,7 +97,8 @@ export default function EntryComponent({ item }: Props) {
       <TouchableOpacity
         style={[styles.actionBtn, { backgroundColor: accentColor }]}
         onPress={() => router.push(`/(main)/edit-entry/${item.id}` as any)}
-        activeOpacity={0.8}>
+        activeOpacity={0.8}
+      >
         <Feather name={actionIcon} size={18} color="#0A1A1A" />
       </TouchableOpacity>
     </View>
@@ -75,17 +107,17 @@ export default function EntryComponent({ item }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 10,
     paddingRight: 16,
     minHeight: 90,
   },
   accentBar: {
     width: 4,
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
     marginRight: 14,
   },
   content: {
@@ -94,7 +126,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   badge: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 8,
@@ -103,12 +135,12 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: "700",
     letterSpacing: 1,
   },
   title: {
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 13,
@@ -118,8 +150,8 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginLeft: 12,
   },
 });

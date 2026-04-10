@@ -1,44 +1,72 @@
-import NotificationEmpty from '@/components/notifications/NotificationEmpty';
-import NotificationFilterBar, { FilterKey } from '@/components/notifications/NotificationFilterBar';
-import NotificationRow from '@/components/notifications/NotificationRow';
-import NotificationSectionHeader from '@/components/notifications/NotificationSectionHeader';
-import NotificationsHeader from '@/components/notifications/NotificationsHeader';
-import { groupIntoSections } from '@/components/notifications/notificationUtils';
-import { LimitBanner } from '@/components/upgrade/LimitBanner';
-import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
-import { useNotifications } from '@/hooks/useNotifications';
-import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, RefreshControl, SectionList, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AnimatedBackground from "@/components/AnimatedBackground";
+import NotificationEmpty from "@/components/notifications/NotificationEmpty";
+import NotificationFilterBar, {
+  FilterKey,
+} from "@/components/notifications/NotificationFilterBar";
+import NotificationRow from "@/components/notifications/NotificationRow";
+import NotificationSectionHeader from "@/components/notifications/NotificationSectionHeader";
+import NotificationsHeader from "@/components/notifications/NotificationsHeader";
+import { groupIntoSections } from "@/components/notifications/notificationUtils";
+import { LimitBanner } from "@/components/upgrade/LimitBanner";
+import globalStyles from "@/constants/GlobalStyles";
+import { useFreeLimitReached } from "@/hooks/useFreeLimitReached";
+import { useNotifications } from "@/hooks/useNotifications";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SectionList
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function NotificationsScreen() {
   const insets = useSafeAreaInsets();
   const limitStatus = useFreeLimitReached();
-  const [activeFilter, setActiveFilter] = useState<FilterKey>('ALL');
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("ALL");
 
-  const { notifications, loading, unreadCount, fetchNotifications, markAsRead, markAllAsRead } =
-    useNotifications();
+  const {
+    notifications,
+    loading,
+    unreadCount,
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+  } = useNotifications();
 
-  useFocusEffect(useCallback(() => { fetchNotifications(); }, [fetchNotifications]));
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotifications();
+    }, [fetchNotifications]),
+  );
 
   const filtered = useMemo(() => {
     switch (activeFilter) {
-      case 'UNREAD':   return notifications.filter((n) => !n.read);
-      case 'EXPIRED':  return notifications.filter((n) => n.type === 'expired');
-      case 'UPCOMING': return notifications.filter((n) => n.type === 'warning');
-      default:         return notifications;
+      case "UNREAD":
+        return notifications.filter((n) => !n.read);
+      case "EXPIRED":
+        return notifications.filter((n) => n.type === "expired");
+      case "UPCOMING":
+        return notifications.filter((n) => n.type === "warning");
+      default:
+        return notifications;
     }
   }, [notifications, activeFilter]);
 
   const sections = useMemo(() => groupIntoSections(filtered), [filtered]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#0D0D0D', paddingTop: insets.top + 12 }}>
-      <NotificationsHeader unreadCount={unreadCount} onMarkAllRead={markAllAsRead} />
+    <AnimatedBackground style={globalStyles.body}>
+      <NotificationsHeader
+        unreadCount={unreadCount}
+        onMarkAllRead={markAllAsRead}
+      />
 
-      {limitStatus !== 'none' && (
-        <LimitBanner variant={limitStatus} style={{ marginTop: -8, marginBottom: 12 }} />
+      {limitStatus !== "none" && (
+        <LimitBanner
+          variant={limitStatus}
+          style={{ marginTop: -8, marginBottom: 12 }}
+        />
       )}
 
       <NotificationFilterBar
@@ -61,7 +89,7 @@ export default function NotificationsScreen() {
               refreshing={loading}
               onRefresh={fetchNotifications}
               tintColor="#00F0FF"
-              colors={['#00F0FF']}
+              colors={["#00F0FF"]}
             />
           }
           renderSectionHeader={({ section }) => (
@@ -70,12 +98,14 @@ export default function NotificationsScreen() {
           renderItem={({ item }) => (
             <NotificationRow
               item={item}
-              onPress={(id) => { if (!item.read) markAsRead(id); }}
+              onPress={(id) => {
+                if (!item.read) markAsRead(id);
+              }}
             />
           )}
           ListEmptyComponent={<NotificationEmpty />}
         />
       )}
-    </View>
+    </AnimatedBackground>
   );
 }
