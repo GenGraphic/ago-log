@@ -25,11 +25,12 @@ export function useNotifications() {
           query.limit(100),
         ],
       });
+      console.log(res)
       const items = res.rows.map(toNotification);
       setNotifications(items);
       setUnreadCount(items.filter((n) => !n.read).length);
-    } catch {
-      // table may not exist yet during development — fail silently
+    } catch (err: any) {
+      console.log('fetchNotifications error:', err?.message ?? err);
     } finally {
       setLoading(false);
     }

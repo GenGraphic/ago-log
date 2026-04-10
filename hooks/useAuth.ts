@@ -75,6 +75,7 @@ const useAuth = () => {
   const checkUserPresence = useCallback(async (): Promise<HookResponse<null>> => {
     try {
       const authUser = await auth.get();
+      console.log(authUser)
       dispatch(setAuthState(true));
 
       const response = await db.getRow({

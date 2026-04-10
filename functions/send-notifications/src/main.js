@@ -1,4 +1,5 @@
-import { Client, ID, Query, TablesDB } from 'node-appwrite';
+import { Client, ID, Permission, Query, Role, TablesDB } from 'node-appwrite';
+import fetch from 'node-fetch';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -130,7 +131,8 @@ export default async ({ req, res, log, error }) => {
         await db.createRow({
           databaseId: DB_ID, 
           tableId: NOTIFICATIONS_TABLE_ID, 
-          rowId: ID.unique(), 
+          rowId: ID.unique(),
+          permissions: [`read("user:${userId}")`, `update("user:${userId}")`],
           data: {
             userId,
             entryId: entry.$id,
@@ -139,7 +141,11 @@ export default async ({ req, res, log, error }) => {
             type,
             read: false,
             sentAt: new Date().toISOString(),
-          }
+          },
+          permissions: [
+            Permission.read(Role.user(userId)),
+            Permission.update(Role.user(userId))
+          ]
         });
 
         log(`Notified user ${userId} about "${entry.title}" (${days} days)`);
