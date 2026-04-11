@@ -34,8 +34,8 @@ export default function EntryTypePicker({ control, name }: Props) {
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
-  const cardBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
-  const modalBg = useThemeColor({ light: '#0D1420', dark: '#0D1420' }, 'background');
+  const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
+  const modalBg = useThemeColor({ light: '#F6F6F6', dark: '#0D1420' }, 'background');
 
   return (
     <Controller

@@ -18,10 +18,9 @@ import {
   RefreshControl,
   SectionList
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NotificationsScreen() {
-  const insets = useSafeAreaInsets();
   const limitStatus = useFreeLimitReached();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("ALL");
 
@@ -57,55 +56,57 @@ export default function NotificationsScreen() {
 
   return (
     <AnimatedBackground style={globalStyles.body}>
-      <NotificationsHeader
-        unreadCount={unreadCount}
-        onMarkAllRead={markAllAsRead}
-      />
-
-      {limitStatus !== "none" && (
-        <LimitBanner
-          variant={limitStatus}
-          style={{ marginTop: -8, marginBottom: 12 }}
+      <SafeAreaView>
+        <NotificationsHeader
+          unreadCount={unreadCount}
+          onMarkAllRead={markAllAsRead}
         />
-      )}
 
-      <NotificationFilterBar
-        activeFilter={activeFilter}
-        unreadCount={unreadCount}
-        onSelect={setActiveFilter}
-      />
+        {limitStatus !== "none" && (
+          <LimitBanner
+            variant={limitStatus}
+            style={{ marginTop: -8, marginBottom: 12 }}
+          />
+        )}
 
-      {loading && !notifications.length ? (
-        <ActivityIndicator color="#00F0FF" style={{ marginTop: 40 }} />
-      ) : (
-        <SectionList
-          sections={sections}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}
-          stickySectionHeadersEnabled={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={loading}
-              onRefresh={fetchNotifications}
-              tintColor="#00F0FF"
-              colors={["#00F0FF"]}
-            />
-          }
-          renderSectionHeader={({ section }) => (
-            <NotificationSectionHeader title={section.title} />
-          )}
-          renderItem={({ item }) => (
-            <NotificationRow
-              item={item}
-              onPress={(id) => {
-                if (!item.read) markAsRead(id);
-              }}
-            />
-          )}
-          ListEmptyComponent={<NotificationEmpty />}
+        <NotificationFilterBar
+          activeFilter={activeFilter}
+          unreadCount={unreadCount}
+          onSelect={setActiveFilter}
         />
-      )}
+
+        {loading && !notifications.length ? (
+          <ActivityIndicator color="#00F0FF" style={{ marginTop: 40 }} />
+        ) : (
+          <SectionList
+            sections={sections}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}
+            stickySectionHeadersEnabled={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={fetchNotifications}
+                tintColor="#00F0FF"
+                colors={["#00F0FF"]}
+              />
+            }
+            renderSectionHeader={({ section }) => (
+              <NotificationSectionHeader title={section.title} />
+            )}
+            renderItem={({ item }) => (
+              <NotificationRow
+                item={item}
+                onPress={(id) => {
+                  if (!item.read) markAsRead(id);
+                }}
+              />
+            )}
+            ListEmptyComponent={<NotificationEmpty />}
+          />
+        )}
+      </SafeAreaView>
     </AnimatedBackground>
   );
 }

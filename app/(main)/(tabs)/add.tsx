@@ -17,7 +17,7 @@ export default function PickMethod() {
   const limitStatus = useFreeLimitReached();
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
-  const cardBg = useThemeColor({ light: '#1A2235', dark: '#1C2333' }, 'background');
+  const cardBg = useThemeColor({ light: '#FFFFFF', dark: '#1C2333' }, 'background');
 
   return (
     <AnimatedBackground style={globalStyles.body}>

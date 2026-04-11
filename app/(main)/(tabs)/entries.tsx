@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-    ActivityIndicator,
-    RefreshControl,
-    SectionList,
-    StyleSheet,
-    View,
+  ActivityIndicator,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -78,7 +78,7 @@ export default function EntriesScreen() {
   const limitStatus = useFreeLimitReached();
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
-  const dividerBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
+  const dividerBg = useThemeColor({ light: '#FFFFFF', dark: '#141C2A' }, 'background');
   const insets = useSafeAreaInsets();
 
   const load = useCallback(async (showRefresh = false) => {

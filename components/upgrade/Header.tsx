@@ -1,7 +1,8 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 export default function Header() {
   const router = useRouter();
@@ -9,7 +10,7 @@ export default function Header() {
   return (
     <View style={styles.container}>
       <View style={styles.logoRow}>
-        <Text style={styles.brand}>AGO_LOG</Text>
+        <ThemedText style={styles.brand}>AGO_LOG</ThemedText>
         <View style={styles.logoDot} />
       </View>
       <TouchableOpacity onPress={() => router.back()} hitSlop={12} style={styles.closeBtn}>
@@ -33,7 +34,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   brand: {
-    color: '#fff',
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 2,

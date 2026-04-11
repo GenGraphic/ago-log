@@ -18,7 +18,7 @@ type Props = {
 export default function CategoryFilter({ selected, onSelect }: Props) {
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
-  const cardBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
+  const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
 
   return (
     <ScrollView

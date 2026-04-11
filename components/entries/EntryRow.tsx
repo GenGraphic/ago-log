@@ -50,6 +50,7 @@ type Props = { item: Entry };
 export default function EntryRow({ item }: Props) {
   const router = useRouter();
   const icon = useThemeColor({}, 'icon');
+  const cardBg = useThemeColor({ light: '#FFFFFF', dark: '#141C2A' }, 'background');
 
   const daysLeft = item.expiryDate ? getDaysLeft(item.expiryDate) : null;
   const isExpired = item.status === EntryStatus.EXPIRED || (daysLeft !== null && daysLeft < 0);
@@ -73,7 +74,7 @@ export default function EntryRow({ item }: Props) {
 
   return (
     <TouchableOpacity
-      style={styles.row}
+      style={[styles.row, { backgroundColor: cardBg }]}
       activeOpacity={0.7}
       onPress={() => router.push(`/(main)/entry-details/${item.id}` as any)}>
       {/* Left accent bar */}
@@ -109,7 +110,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     paddingVertical: 14,
-    paddingRight: 8,
+    paddingHorizontal: 12,
+    borderRadius: 12,
   },
   accent: {
     width: 3,

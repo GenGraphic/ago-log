@@ -7,6 +7,7 @@ import useEntries from "@/hooks/useEntries";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { EntryStatus, UserPlan } from "@/models/enums";
 import { useAppSelector } from "@/store/hooks";
+import { ThemedText } from "../ThemedText";
 
 export function IntelligenceLoad() {
   const plan = useAppSelector((s) => s.user.plan);
@@ -43,22 +44,22 @@ export function IntelligenceLoad() {
   return (
     <View style={[styles.statsRow, { backgroundColor: cardBg }]}>
       <View style={styles.statCard}>
-        <Text style={styles.statValue}>{String(active).padStart(2, "0")}</Text>
+        <ThemedText style={styles.statValue}>{String(active).padStart(2, "0")}</ThemedText>
         <Text style={styles.statKey}>ACTIVE</Text>
       </View>
       <View style={[styles.statDivider, { backgroundColor: dividerBg }]} />
       <View style={styles.statCard}>
-        <Text style={[styles.statValue, { color: "#FF6060" }]}>
+        <ThemedText style={[styles.statValue, { color: "#FF6060" }]}>
           {String(expired).padStart(2, "0")}
-        </Text>
+        </ThemedText>
         <Text style={styles.statKey}>EXPIRED</Text>
       </View>
       <View style={[styles.statDivider, { backgroundColor: dividerBg }]} />
       <View style={styles.statCard}>
-        <Text style={styles.statValue}>
+        <ThemedText style={styles.statValue}>
           {String(total).padStart(2, "0")}
           <Text style={styles.limitSuffix}> / {limit}</Text>
-        </Text>
+        </ThemedText>
         <Text style={styles.statKey}>TOTAL</Text>
       </View>
     </View>
@@ -86,17 +87,14 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#ECEDEE",
   },
   limitSuffix: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#444",
   },
   statKey: {
     fontSize: 9,
     fontWeight: "700",
-    color: "#444",
     letterSpacing: 1,
   },
 });

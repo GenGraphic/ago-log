@@ -1,8 +1,9 @@
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, SettingRow, sharedStyles } from "./shared";
 
 export function SecuritySection() {
@@ -24,10 +25,10 @@ export function SecuritySection() {
             color="#00F0FF"
             style={{ marginTop: 1 }}
           />
-          <Text style={styles.infoText}>
+          <ThemedText style={styles.infoText}>
             Your account uses military-grade AES-256 encryption to protect your
             personal data and credentials at all times.
-          </Text>
+          </ThemedText>
         </View>
       </View>
     </>

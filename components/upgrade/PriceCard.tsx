@@ -1,7 +1,8 @@
+import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface PriceInfo {
   amount: string;
@@ -23,12 +24,15 @@ export function PriceCard({ price, features }: Props) {
     { light: "#F3F4F6", dark: "#1A1A1A" },
     "background",
   );
+  const text = useThemeColor({}, "text");
+  const icon = useThemeColor({}, "icon");
+  const badgeBorder = useThemeColor({ light: "#D1D5DB", dark: "#222222" }, "background");
 
   return (
     <View style={[styles.card, { backgroundColor: cardBg }]}>
       <View style={styles.header}>
-        <View style={[styles.tierBadge, { backgroundColor: badgeBg }]}>
-          <Text style={styles.tierText}>ELITE TIER</Text>
+        <View style={[styles.tierBadge, { backgroundColor: badgeBg, borderColor: badgeBorder }]}>
+          <ThemedText style={[styles.tierText, { color: icon }]}>ELITE TIER</ThemedText>
         </View>
         <View style={styles.boltBadge}>
           <Feather name="zap" size={14} color="#0D0D0D" />
@@ -36,16 +40,16 @@ export function PriceCard({ price, features }: Props) {
       </View>
 
       <View style={styles.priceRow}>
-        <Text style={styles.amount}>{price.amount}</Text>
-        <Text style={styles.period}>{price.period}</Text>
+        <ThemedText style={[styles.amount, { color: text }]}>{price.amount}</ThemedText>
+        <ThemedText style={[styles.period, { color: icon }]}>{price.period}</ThemedText>
       </View>
-      <Text style={styles.note}>{price.note}</Text>
+      <ThemedText style={[styles.note, { color: icon }]}>{price.note}</ThemedText>
 
       <View style={styles.featureList}>
         {features.map((f) => (
           <View key={f} style={styles.featureRow}>
             <Feather name="check-circle" size={14} color="#00F0FF" />
-            <Text style={styles.featureText}>{f}</Text>
+            <ThemedText style={[styles.featureText, { color: icon }]}>{f}</ThemedText>
           </View>
         ))}
       </View>
@@ -73,12 +77,10 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#222",
   },
   tierText: {
     fontSize: 9,
     fontWeight: "700",
-    color: "#555",
     letterSpacing: 1.5,
   },
   boltBadge: {
@@ -98,18 +100,15 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 48,
     fontWeight: "800",
-    color: "#ECEDEE",
     lineHeight: 54,
   },
   period: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#555",
     marginBottom: 8,
   },
   note: {
     fontSize: 10,
-    color: "#333",
     letterSpacing: 0.8,
     marginBottom: 20,
   },
@@ -123,6 +122,5 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 13,
-    color: "#BBBBBB",
   },
 });

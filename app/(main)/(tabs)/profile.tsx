@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
 import { AppSettingsSection } from "@/components/profile/AppSettingsSection";
@@ -52,28 +52,30 @@ export default function ProfileScreen() {
 
   return (
     <AnimatedBackground style={globalStyles.body}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
-      >
-        {limitStatus !== "none" && (
-          <LimitBanner variant={limitStatus} style={{ marginTop: 8 }} />
-        )}
-        <ProfileHeader />
-        <IntelligenceLoad />
-        <NotificationsSection />
-        <SecuritySection />
-        <DataSection />
-        <AppSettingsSection />
-        <SupportSection />
-        <TouchableOpacity
-          style={styles.terminateBtn}
-          onPress={handleSignOut}
-          activeOpacity={0.7}
+      <SafeAreaView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 120 }}
         >
-          <Text style={styles.terminateText}>TERMINATE SESSION</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          {limitStatus !== "none" && (
+            <LimitBanner variant={limitStatus} style={{ marginTop: 8 }} />
+          )}
+          <ProfileHeader />
+          <IntelligenceLoad />
+          <NotificationsSection />
+          <SecuritySection />
+          <DataSection />
+          <AppSettingsSection />
+          <SupportSection />
+          <TouchableOpacity
+            style={styles.terminateBtn}
+            onPress={handleSignOut}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.terminateText}>TERMINATE SESSION</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
     </AnimatedBackground>
   );
 }

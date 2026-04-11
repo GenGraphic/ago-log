@@ -2,20 +2,21 @@ import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
 import useUser from "@/hooks/useUser";
 import { UserPlan } from "@/models/enums";
 import { useAppSelector } from "@/store/hooks";
+import { ThemedText } from "../ThemedText";
 
 export function ProfileHeader() {
   const user = useAppSelector((s) => s.user);
@@ -40,6 +41,10 @@ export function ProfileHeader() {
     { light: "#F3F4F6", dark: "#1E1E1E" },
     "background",
   );
+  const text = useThemeColor({}, "text");
+  const icon = useThemeColor({}, "icon");
+  const avatarBorder = useThemeColor({ light: "#E0E0E0", dark: "#1E1E1E" }, "background");
+  const inputBorder = useThemeColor({ light: "#E0E0E0", dark: "#2A2A2A" }, "background");
 
   const [modalVisible, setModalVisible] = useState(false);
   const [nameInput, setNameInput] = useState(user.name ?? "");
@@ -65,7 +70,7 @@ export function ProfileHeader() {
 
   return (
     <View style={styles.block}>
-      <View style={[styles.avatar, { backgroundColor: avatarBg }]}>
+      <View style={[styles.avatar, { backgroundColor: avatarBg, borderColor: avatarBorder }]}>
         <Feather name="user" size={36} color="#00F0FF" />
       </View>
 
@@ -75,11 +80,11 @@ export function ProfileHeader() {
         onPress={openEdit}
         activeOpacity={0.7}
       >
-        <Text style={styles.name}>{displayName}</Text>
-        <Feather name="edit-2" size={14} color="#444" style={styles.editIcon} />
+        <ThemedText style={styles.name}>{displayName}</ThemedText>
+        <Feather name="edit-2" size={14} color={icon} style={styles.editIcon} />
       </TouchableOpacity>
 
-      <Text style={styles.email}>{displayEmail}</Text>
+      <Text style={[styles.email, { color: text }]}>{displayEmail}</Text>
 
       {isPro ? (
         <View style={[styles.badge, styles.badgePro]}>
@@ -91,7 +96,7 @@ export function ProfileHeader() {
           onPress={() => router.push("/(main)/upgrade")}
           activeOpacity={0.8}
         >
-          <Text style={styles.upgradeBtnLabel}>FREE</Text>
+          <Text style={[styles.upgradeBtnLabel, { color: icon }]}>FREE</Text>
           <Feather name="zap" size={10} color="#00F0FF" />
           <Text style={styles.upgradeBtnCta}>UPGRADE</Text>
         </TouchableOpacity>
@@ -113,13 +118,13 @@ export function ProfileHeader() {
             style={[styles.sheet, { backgroundColor: sheetBg }]}
             activeOpacity={1}
           >
-            <Text style={styles.sheetTitle}>Edit Name</Text>
+            <Text style={[styles.sheetTitle, { color: text }]}>Edit Name</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: inputBg }]}
+              style={[styles.input, { backgroundColor: inputBg, color: text, borderColor: inputBorder }]}
               value={nameInput}
               onChangeText={setNameInput}
               placeholder="Your name"
-              placeholderTextColor="#444"
+              placeholderTextColor={icon}
               autoFocus
               maxLength={60}
             />
@@ -128,7 +133,7 @@ export function ProfileHeader() {
                 style={[styles.cancelBtn, { backgroundColor: neutralBtnBg }]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={styles.cancelText}>CANCEL</Text>
+                <Text style={[styles.cancelText, { color: icon }]}>CANCEL</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.saveBtn}
@@ -160,7 +165,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#1E1E1E",
+    borderColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 14,
@@ -174,7 +179,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#ECEDEE",
     letterSpacing: 0.3,
   },
   editIcon: {
@@ -182,7 +186,6 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 12,
-    color: "#555",
     marginBottom: 10,
   },
   badge: {
@@ -220,7 +223,6 @@ const styles = StyleSheet.create({
   upgradeBtnLabel: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#444",
     letterSpacing: 1,
   },
   upgradeBtnCta: {
@@ -245,7 +247,6 @@ const styles = StyleSheet.create({
   sheetTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#ECEDEE",
     letterSpacing: 0.5,
   },
   input: {
@@ -253,9 +254,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
-    color: "#ECEDEE",
     borderWidth: 1,
-    borderColor: "#2A2A2A",
   },
   sheetActions: {
     flexDirection: "row",
@@ -270,7 +269,6 @@ const styles = StyleSheet.create({
   cancelText: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#555",
     letterSpacing: 1,
   },
   saveBtn: {

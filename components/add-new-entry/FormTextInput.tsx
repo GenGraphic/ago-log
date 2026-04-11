@@ -27,7 +27,7 @@ export default function FormTextInput({
 }: Props) {
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
-  const cardBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
+  const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
 
   return (
     <Controller

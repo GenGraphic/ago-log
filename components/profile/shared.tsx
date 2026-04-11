@@ -2,6 +2,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ThemedText } from "../ThemedText";
 
 export function SectionLabel({ title }: { title: string }) {
   return <Text style={styles.sectionLabel}>{title}</Text>;
@@ -30,9 +31,9 @@ export function SettingRow({
 }) {
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.7}>
-      <Text style={[styles.rowLabel, danger && styles.rowLabelDanger]}>
+      <ThemedText style={[styles.rowLabel, danger && styles.rowLabelDanger]}>
         {label}
-      </Text>
+      </ThemedText>
       <View style={styles.rowRight}>
         {value ? <Text style={styles.rowValue}>{value}</Text> : null}
         <Feather
@@ -61,7 +62,6 @@ export const sharedStyles = StyleSheet.create({
   },
   rowLabel: {
     fontSize: 13,
-    color: "#BBBBBB",
     fontWeight: "500",
   },
 });
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     fontSize: 13,
-    color: "#BBBBBB",
     fontWeight: "500",
   },
   rowLabelDanger: {

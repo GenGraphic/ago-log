@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { db, DB_ID, USERS_TABLE_ID } from "@/appwrite";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-    ReminderDays,
-    setDefaultReminder,
-    setEmailNotifications,
-    setPushNotifications,
+  ReminderDays,
+  setDefaultReminder,
+  setEmailNotifications,
+  setPushNotifications,
 } from "@/store/slices/preferencesSlice";
+import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, sharedStyles } from "./shared";
 
 const REMINDER_OPTIONS: { label: string; value: ReminderDays }[] = [
@@ -77,7 +78,7 @@ export function NotificationsSection() {
           activeOpacity={0.7}
           onPress={() => setDropdownOpen(true)}
         >
-          <Text style={sharedStyles.rowLabel}>Default reminder</Text>
+          <ThemedText style={sharedStyles.rowLabel}>Default reminder</ThemedText>
           <View style={styles.rowRight}>
             <Text style={styles.rowValue}>{selectedLabel}</Text>
             <Text style={styles.chevron}>›</Text>
@@ -157,13 +158,11 @@ const styles = StyleSheet.create({
   },
   rowValue: {
     fontSize: 12,
-    color: "#555",
     fontWeight: "600",
     letterSpacing: 0.5,
   },
   chevron: {
     fontSize: 18,
-    color: "#444",
     lineHeight: 20,
   },
   overlay: {

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 13,
   },
   body: { flex: 1, gap: 3, paddingVertical: 14 },
-  title: { fontSize: 14, fontWeight: "600", color: "#ECEDEE" },
+  title: { fontSize: 14, fontWeight: "600" },
   desc: { fontSize: 12, color: "#555", lineHeight: 17 },
   meta: {
     alignItems: "flex-end",

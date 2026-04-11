@@ -12,7 +12,7 @@ type Props = {
 export default function SearchBar({ value, onChangeText }: Props) {
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
-  const cardBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
+  const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
 
   return (
     <View style={[styles.container, { backgroundColor: cardBg }]}>

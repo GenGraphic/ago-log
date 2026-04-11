@@ -1,98 +1,30 @@
 ﻿import Feather from "@expo/vector-icons/Feather";
-import { Image } from "expo-image";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { ENTRIES_IMAGES_BUCKET_ID } from "@/appwrite";
 import { ThemedText } from "@/components/ThemedText";
-import { StatusColors } from "@/constants/Colors";
+import { CountdownCard } from "@/components/entry-details/CountdownCard";
+import { DetailsSection } from "@/components/entry-details/DetailsSection";
+import { EntryDetailsFooter } from "@/components/entry-details/EntryDetailsFooter";
+import { EntryImageViewer } from "@/components/entry-details/EntryImageViewer";
+import { InfoRow } from "@/components/entry-details/InfoRow";
+import { daysUntil, formatDate, statusColor } from "@/components/entry-details/helpers";
 import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ENTRY_CONFIG } from "@/models/entryConfig";
-import { EntryStatus } from "@/models/enums";
 import { Entry } from "@/models/types";
-
-// --- Helpers ---
-
-function formatDate(iso?: string): string {
-  if (!iso) return "---";
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return `${m[3]}/${m[2]}/${m[1]}`;
-  return iso;
-}
-
-function daysUntil(iso?: string): number | null {
-  if (!iso) return null;
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!m) return null;
-  const target = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
-}
-
-function statusColor(entry: Entry): string {
-  switch (entry.status) {
-    case EntryStatus.EXPIRED:
-      return StatusColors.expired;
-    case EntryStatus.ARCHIVED:
-      return StatusColors.archived;
-    default:
-      return StatusColors.active;
-  }
-}
-
-// --- InfoRow ---
-
-interface InfoRowProps {
-  label: string;
-  value?: string | null;
-  sensitive?: boolean;
-}
-
-function InfoRow({ label, value, sensitive = false }: InfoRowProps) {
-  const icon = useThemeColor({}, "icon");
-  const text = useThemeColor({}, "text");
-  const [revealed, setRevealed] = useState(false);
-
-  if (!value) return null;
-
-  return (
-    <View style={detailStyles.infoRow}>
-      <ThemedText style={[detailStyles.infoLabel, { color: `${icon}80` }]}>
-        {label}
-      </ThemedText>
-      <View style={detailStyles.infoValueRow}>
-        <ThemedText style={[detailStyles.infoValue, { color: text }]}>
-          {sensitive && !revealed ? "X X X X X X X X" : value}
-        </ThemedText>
-        {sensitive && (
-          <TouchableOpacity
-            onPress={() => setRevealed((r) => !r)}
-            style={{ marginLeft: 8 }}
-          >
-            <Feather
-              name={revealed ? "eye-off" : "eye"}
-              size={14}
-              color={`${icon}80`}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-}
 
 // --- Screen ---
 
@@ -232,13 +164,7 @@ export default function DocumentDetailsScreen() {
         contentContainerStyle={detailStyles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {imageUri && (
-          <Image
-            source={{ uri: imageUri }}
-            style={detailStyles.image}
-            contentFit="cover"
-          />
-        )}
+        {imageUri && <EntryImageViewer uri={imageUri} />}
         <ThemedText style={[detailStyles.typeLabel, { color: `${icon}80` }]}>
           {entry.entryType.replace(/_/g, " ").toUpperCase()}
         </ThemedText>
@@ -252,98 +178,40 @@ export default function DocumentDetailsScreen() {
           </ThemedText>
         </View>
         {days !== null && (
-          <View
-            style={[detailStyles.countdownCard, { borderLeftColor: color }]}
-          >
-            <ThemedText style={[detailStyles.countdownNumber, { color }]}>
-              {days < 0 ? Math.abs(days) : days}
-            </ThemedText>
-            <ThemedText
-              style={[detailStyles.countdownLabel, { color: `${icon}99` }]}
-            >
-              {days < 0 ? "days overdue" : "days remaining"}
-            </ThemedText>
-            <ThemedText style={[detailStyles.countdownDate, { color: icon }]}>
-              {config.expiryLabel ?? "Expiry"}: {formatDate(entry.expiryDate)}
-            </ThemedText>
-          </View>
+          <CountdownCard
+            days={days}
+            color={color}
+            expiryLabel={config.expiryLabel ?? "Expiry"}
+            expiryDateFormatted={formatDate(entry.expiryDate)}
+          />
         )}
-        <View style={[detailStyles.section, { borderColor: `${tint}18` }]}>
-          <ThemedText
-            style={[detailStyles.sectionTitle, { color: `${icon}80` }]}
-          >
-            DETAILS
-          </ThemedText>
+        <DetailsSection title="DETAILS">
           <InfoRow label="ISSUER" value={entry.issuer} />
           <InfoRow label="IDENTIFIER" value={entry.identifier} />
           <InfoRow label="USERNAME" value={entry.username} />
           <InfoRow label="SECRET" value={entry.secret} sensitive />
           <InfoRow label="URL" value={entry.url} />
-          <InfoRow
-            label="LAST SERVICE"
-            value={
-              entry.lastServiceDate
-                ? formatDate(entry.lastServiceDate)
-                : undefined
-            }
-          />
-          <InfoRow
-            label="LAST MILEAGE"
-            value={
-              entry.lastMileage != null
-                ? `${entry.lastMileage.toLocaleString()} km`
-                : undefined
-            }
-          />
-          <InfoRow
-            label="SERVICE INTERVAL"
-            value={
-              entry.intervalDays != null
-                ? `${entry.intervalDays} days`
-                : undefined
-            }
-          />
-          <InfoRow
-            label="MILEAGE INTERVAL"
-            value={
-              entry.mileageInterval != null
-                ? `${entry.mileageInterval.toLocaleString()} km`
-                : undefined
-            }
-          />
+          <InfoRow label="LAST SERVICE" value={entry.lastServiceDate ? formatDate(entry.lastServiceDate) : undefined} />
+          <InfoRow label="LAST MILEAGE" value={entry.lastMileage != null ? `${entry.lastMileage.toLocaleString()} km` : undefined} />
+          <InfoRow label="SERVICE INTERVAL" value={entry.intervalDays != null ? `${entry.intervalDays} days` : undefined} />
+          <InfoRow label="MILEAGE INTERVAL" value={entry.mileageInterval != null ? `${entry.mileageInterval.toLocaleString()} km` : undefined} />
           <InfoRow label="ADDED" value={formatDate(entry.createdAt)} />
           <InfoRow label="LAST UPDATED" value={formatDate(entry.updatedAt)} />
-        </View>
+        </DetailsSection>
         {entry.notes && (
-          <View style={[detailStyles.section, { borderColor: `${tint}18` }]}>
-            <ThemedText
-              style={[detailStyles.sectionTitle, { color: `${icon}80` }]}
-            >
-              NOTES
-            </ThemedText>
+          <DetailsSection title="NOTES">
             <ThemedText style={[detailStyles.notes, { color: `${icon}CC` }]}>
               {entry.notes}
             </ThemedText>
-          </View>
+          </DetailsSection>
         )}
-        <View style={{ height: 24 }} />
+      <View style={{ height: 24 }} />
       </ScrollView>
 
-      <View style={detailStyles.footer}>
-        <TouchableOpacity
-          style={[detailStyles.editBtn, { borderColor: tint }]}
-          onPress={() => router.push(`/(main)/edit-entry/${id}`)}
-        >
-          <Feather name="edit-2" size={16} color={tint} />
-          <ThemedText style={[detailStyles.editBtnText, { color: tint }]}>
-            EDIT
-          </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={detailStyles.deleteBtn} onPress={handleDelete}>
-          <Feather name="trash-2" size={16} color="#fff" />
-          <ThemedText style={detailStyles.deleteBtnText}>DELETE</ThemedText>
-        </TouchableOpacity>
-      </View>
+      <EntryDetailsFooter
+        onEdit={() => router.push(`/(main)/edit-entry/${id}`)}
+        onDelete={handleDelete}
+      />
     </SafeAreaView>
   );
 }
@@ -370,7 +238,6 @@ const detailStyles = StyleSheet.create({
   logoDot: { width: 6, height: 6, borderRadius: 3 },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: 20 },
-  image: { width: "100%", height: 180, borderRadius: 12, marginBottom: 20 },
   typeLabel: {
     fontSize: 10,
     fontWeight: "700",
@@ -396,66 +263,5 @@ const detailStyles = StyleSheet.create({
   },
   statusDot: { width: 6, height: 6, borderRadius: 3 },
   statusText: { fontSize: 10, fontWeight: "700", letterSpacing: 1.5 },
-  countdownCard: {
-    borderLeftWidth: 3,
-    paddingLeft: 16,
-    paddingVertical: 12,
-    marginBottom: 24,
-    gap: 2,
-  },
-  countdownNumber: { fontSize: 40, fontWeight: "800", lineHeight: 44 },
-  countdownLabel: { fontSize: 11, fontWeight: "600", letterSpacing: 1 },
-  countdownDate: { fontSize: 12, marginTop: 4 },
-  section: { borderWidth: 1, borderRadius: 12, padding: 16, marginBottom: 16 },
-  sectionTitle: {
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 2,
-    marginBottom: 12,
-  },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 8,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#1E2A3A",
-  },
-  infoLabel: { fontSize: 10, fontWeight: "600", letterSpacing: 1.5 },
-  infoValueRow: { flexDirection: "row", alignItems: "center" },
-  infoValue: { fontSize: 13, fontWeight: "500" },
   notes: { fontSize: 13, lineHeight: 20 },
-  footer: {
-    flexDirection: "row",
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  editBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  editBtnText: { fontSize: 12, fontWeight: "800", letterSpacing: 2 },
-  deleteBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 10,
-    backgroundColor: "#FF3B30",
-  },
-  deleteBtnText: {
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 2,
-    color: "#fff",
-  },
 });

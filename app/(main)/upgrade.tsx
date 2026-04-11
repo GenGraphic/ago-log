@@ -1,14 +1,14 @@
+import { ThemedText } from "@/components/ThemedText";
 import Header from "@/components/upgrade/Header";
 import { useFreeLimitReached } from "@/hooks/useFreeLimitReached";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ComparisonTable } from "../../components/upgrade/ComparisonTable";
@@ -16,10 +16,10 @@ import { LimitBanner } from "../../components/upgrade/LimitBanner";
 import { PriceCard } from "../../components/upgrade/PriceCard";
 import { UpgradeFooter } from "../../components/upgrade/UpgradeFooter";
 import {
-    BillingCycle,
-    PLAN_COMPARISON,
-    PLAN_PRICE,
-    PRO_FEATURES,
+  BillingCycle,
+  PLAN_COMPARISON,
+  PLAN_PRICE,
+  PRO_FEATURES,
 } from "../../constants/plans";
 import { useRevenueCat } from "../../hooks/useRevenueCat";
 
@@ -35,6 +35,7 @@ export default function UpgradeScreen() {
     { light: "#F6F6F6", dark: "#0D0D0D" },
     "background",
   );
+  const mutedText = useThemeColor({ light: "#687076", dark: "#9BA1A6" }, "icon");
 
   const price = PLAN_PRICE[billing];
 
@@ -62,8 +63,8 @@ export default function UpgradeScreen() {
 
         {/* ── Hero */}
         <View style={styles.hero}>
-          <Text style={styles.heroTitle}>Upgrade to Pro</Text>
-          <Text style={styles.heroSub}>Never miss anything important</Text>
+          <ThemedText style={styles.heroTitle}>Upgrade to Pro</ThemedText>
+          <ThemedText style={styles.heroSub}>Never miss anything important</ThemedText>
         </View>
 
         <PriceCard price={price} features={PRO_FEATURES} />
@@ -75,9 +76,9 @@ export default function UpgradeScreen() {
           onPress={handleUpgrade}
           disabled={isLoading}
         >
-          <Text style={styles.ctaText}>
+          <ThemedText style={styles.ctaText}>
             {isLoading ? "LOADING…" : "UPGRADE TO PRO"}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
 
         {/* ── Billing toggle */}
@@ -87,9 +88,9 @@ export default function UpgradeScreen() {
               setBilling(billing === "yearly" ? "monthly" : "yearly")
             }
           >
-            <Text style={styles.billingToggleText}>
+            <ThemedText style={[styles.billingToggleText, { color: mutedText }]}>
               SWITCH TO {billing === "yearly" ? "MONTHLY" : "ANNUAL"} BILLING
-            </Text>
+            </ThemedText>
           </TouchableOpacity>
         </View>
 
@@ -109,18 +110,18 @@ const styles = StyleSheet.create({
   },
   hero: {
     paddingHorizontal: 20,
+    paddingTop: 16,
     marginBottom: 20,
   },
   heroTitle: {
     fontSize: 32,
     fontWeight: "800",
-    color: "#ECEDEE",
     letterSpacing: -0.5,
+    lineHeight: 42,
     marginBottom: 6,
   },
   heroSub: {
     fontSize: 13,
-    color: "#555",
   },
   ctaBtn: {
     marginHorizontal: 20,
@@ -146,7 +147,6 @@ const styles = StyleSheet.create({
   billingToggleText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#444",
     letterSpacing: 0.8,
     textDecorationLine: "underline",
   },
