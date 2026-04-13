@@ -9,52 +9,57 @@ import { useCallback } from "react";
 const useAuth = () => {
   const dispatch = useAppDispatch();
 
-  const sendOtp = useCallback(async (email: string): Promise<HookResponse<string>> => {
-    try {
-      const response = await auth.createEmailToken({
-        userId: idGen.unique(), 
-        email
-      });
+  const sendOtp = useCallback(
+    async (email: string): Promise<HookResponse<string>> => {
+      try {
+        const response = await auth.createEmailToken({
+          userId: idGen.unique(),
+          email,
+        });
 
-      return {
-        success: true,
-        data: response.userId,
-      };
-    } catch (error: any) {
-      console.log("There was an error sendOtp: ", error);
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  }, []);
+        return {
+          success: true,
+          data: response.userId,
+        };
+      } catch (error: any) {
+        console.log("There was an error sendOtp: ", error);
+        return {
+          success: false,
+          message: error.message,
+        };
+      }
+    },
+    [],
+  );
 
-  const validateOtp = useCallback(async (userID: string, secret: string): Promise<HookResponse<string>> => {
-    try {
-      const response = await auth.createSession({
-        userId: userID, 
-        secret: secret
-      });
+  const validateOtp = useCallback(
+    async (userID: string, secret: string): Promise<HookResponse<string>> => {
+      try {
+        const response = await auth.createSession({
+          userId: userID,
+          secret: secret,
+        });
 
-      dispatch(setAuthState(true));
-
-      return {
-        success: true,
-        data: response.$id,
-      };
-    } catch (error: any) {
-      console.log("There was an error validateOtp: ", error);
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  }, []);
+        dispatch(setAuthState(true));
+        return {
+          success: true,
+          data: response.$id,
+        };
+      } catch (error: any) {
+        console.log("There was an error validateOtp: ", error);
+        return {
+          success: false,
+          message: error.message,
+        };
+      }
+    },
+    [],
+  );
 
   const signOut = useCallback(async (): Promise<HookResponse<null>> => {
     try {
-      const response = await auth.deleteSession({
-        sessionId: "current"
+      await auth.deleteSession({
+        sessionId: "current",
       });
 
       dispatch(setAuthState(false));
@@ -72,10 +77,12 @@ const useAuth = () => {
     }
   }, []);
 
-  const checkUserPresence = useCallback(async (): Promise<HookResponse<null>> => {
+  const checkUserPresence = useCallback(async (): Promise<
+    HookResponse<null>
+  > => {
     try {
       const authUser = await auth.get();
-      console.log(authUser)
+      console.log(authUser);
       dispatch(setAuthState(true));
 
       const response = await db.getRow({

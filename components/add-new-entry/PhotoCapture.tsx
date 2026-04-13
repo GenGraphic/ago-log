@@ -1,11 +1,11 @@
-import Feather from '@expo/vector-icons/Feather';
-import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import Feather from "@expo/vector-icons/Feather";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedText } from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type PhotoCaptureProps = {
   uri?: string | null;
@@ -18,25 +18,43 @@ type PhotoCaptureProps = {
  */
 export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
   const router = useRouter();
-  const tint = useThemeColor({}, 'tint');
-  const icon = useThemeColor({}, 'icon');
-  const cardBg = useThemeColor({ light: '#141C2A', dark: '#141C2A' }, 'background');
+  const tint = useThemeColor({}, "tint");
+  const icon = useThemeColor({}, "icon");
+  const cardBg = useThemeColor(
+    { light: "#FFFFFF", dark: "#141C2A" },
+    "background",
+  );
+  const cardBorder = useThemeColor(
+    { light: "#E3EAF2", dark: "#273246" },
+    "background",
+  );
 
   const handlePress = () => {
-    router.push('/(main)/add-entry/smart');
+    router.push("/(main)/add-entry/smart");
   };
 
   if (uri) {
     return (
-      <View style={[styles.card, { backgroundColor: cardBg }]}>
+      <View
+        style={[
+          styles.card,
+          { backgroundColor: cardBg, borderColor: cardBorder },
+        ]}
+      >
         <Image source={{ uri }} style={styles.preview} contentFit="cover" />
         {/* Retake overlay */}
         <TouchableOpacity
-          style={[styles.retakeBtn, { backgroundColor: 'rgba(0,0,0,0.55)', borderColor: tint }]}
+          style={[
+            styles.retakeBtn,
+            { backgroundColor: "rgba(0,0,0,0.55)", borderColor: tint },
+          ]}
           onPress={onRetake ?? handlePress}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+        >
           <Feather name="camera" size={14} color={tint} />
-          <ThemedText style={[styles.retakeLabel, { color: tint }]}>Retake</ThemedText>
+          <ThemedText style={[styles.retakeLabel, { color: tint }]}>
+            Retake
+          </ThemedText>
         </TouchableOpacity>
       </View>
     );
@@ -44,11 +62,25 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
 
   return (
     <TouchableOpacity
-      style={[styles.card, styles.empty, { backgroundColor: cardBg }]}
+      style={[
+        styles.card,
+        styles.empty,
+        { backgroundColor: cardBg, borderColor: cardBorder },
+      ]}
       onPress={handlePress}
-      activeOpacity={0.8}>
+      activeOpacity={0.8}
+    >
       {/* Icon box */}
-      <View style={[styles.iconBox, { backgroundColor: `${tint}14`, borderColor: `${tint}30`, borderWidth: 1 }]}>
+      <View
+        style={[
+          styles.iconBox,
+          {
+            backgroundColor: `${tint}14`,
+            borderColor: `${tint}30`,
+            borderWidth: 1,
+          },
+        ]}
+      >
         <Feather name="maximize" size={28} color={tint} />
       </View>
 
@@ -63,11 +95,12 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
+    borderWidth: 1,
   },
   // Empty state
   empty: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 32,
     paddingHorizontal: 24,
     gap: 12,
@@ -76,29 +109,29 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   emptySubtitle: {
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 18,
   },
   // Filled state
   preview: {
-    width: '100%',
+    width: "100%",
     height: 200,
   },
   retakeBtn: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 12,
     right: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -107,6 +140,6 @@ const styles = StyleSheet.create({
   },
   retakeLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

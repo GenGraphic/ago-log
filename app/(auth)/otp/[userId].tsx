@@ -1,16 +1,17 @@
+import { auth } from "@/appwrite";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import AuthOtpInput from "@/components/auth/AuthOtpInput";
+import AuthTitleBlock from "@/components/auth/AuthTitleBlock";
 import Loading from "@/components/Loading";
 import { ThemedText } from "@/components/ThemedText";
 import globalStyles from "@/constants/GlobalStyles";
 import useAuth from "@/hooks/useAuth";
-import { useThemeColor } from "@/hooks/useThemeColor";
 import useUser from "@/hooks/useUser";
-import { UserStatus } from "@/models/enums";
+import { UserPlan, UserStatus } from "@/models/enums";
 import { User_DB } from "@/models/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { OtpInput } from "react-native-otp-entry";
 import Toast from "react-native-toast-message";
 
 const Otp = () => {
@@ -21,20 +22,40 @@ const Otp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { getUser, createUser } = useUser();
-  const otpCellBg = useThemeColor(
-    { light: "#FFFFFF", dark: "#1C2333" },
-    "background",
-  );
+
+  const ensureUserDocument = useCallback(async (): Promise<boolean> => {
+    const userResult = await getUser();
+    if (userResult.success) return true;
+
+    const accountUser = await auth.get();
+    const newUser: User_DB = {
+      email: accountUser.email,
+      status: UserStatus.ACTIVE,
+      avatar: "",
+      name: accountUser.name || "",
+      phone: accountUser.phone || "",
+      plan: UserPlan.FREE,
+      pushEnabled: true,
+      emailEnabled: true,
+      expoPushToken: null,
+    };
+
+    const createUserResult = await createUser(newUser, accountUser.$id);
+    if (!createUserResult.success) {
+      Toast.show({
+        type: "error",
+        text1: "Error!",
+        text2: createUserResult.message,
+      });
+      return false;
+    }
+
+    return true;
+  }, [getUser, createUser]);
 
   const handleValidate = useCallback(
     async (otpCode: string) => {
       if (!otpCode || otpCode.length !== 6 || !userId) {
-        console.log(
-          "Validation blocked - userId:",
-          userId,
-          "otpCode length:",
-          otpCode.length,
-        );
         return;
       }
 
@@ -54,34 +75,15 @@ const Otp = () => {
           return;
         }
 
-        //check if user doc exists
-        const userResult = await getUser(result.data);
-        if (!userResult.success) {
-          const newUser: User_DB = {
-            email: userEmail as string,
-            status: UserStatus.ACTIVE,
-            avatar: "",
-            name: "",
-            phone: "",
-          };
-
-          const createUserResult = await createUser(newUser, userId as string);
-          if (!createUserResult.success) {
-            Toast.show({
-              type: "error",
-              text1: "Error!",
-              text2: createUserResult.message,
-            });
-            return;
-          }
-        }
+        const ok = await ensureUserDocument();
+        if (!ok) return;
 
         navi.push("/(main)/(tabs)");
       } finally {
         setLoading(false);
       }
     },
-    [userId, validateOtp, navi],
+    [userId, validateOtp, navi, ensureUserDocument],
   );
 
   useEffect(() => {
@@ -120,27 +122,12 @@ const Otp = () => {
             <Loading />
           ) : (
             <View style={styles.form}>
-              <ThemedText type="title" style={styles.title}>
-                Enter OTP Code
-              </ThemedText>
-              <ThemedText style={styles.subtitle}>
-                Check your email for the verification code
-              </ThemedText>
-
-              <OtpInput
-                numberOfDigits={6}
-                onTextChange={(text) => setOtp(text)}
-                theme={{
-                  containerStyle: styles.otpContainer,
-                  pinCodeContainerStyle: [
-                    styles.otpCell,
-                    { backgroundColor: otpCellBg },
-                  ],
-                  pinCodeTextStyle: styles.otpText,
-                  focusStickStyle: styles.otpCursor,
-                  focusedPinCodeContainerStyle: styles.otpCellFocused,
-                }}
+              <AuthTitleBlock
+                title="Enter OTP Code"
+                subtitle="Check your email for the verification code"
               />
+
+              <AuthOtpInput autoFocus onTextChange={setOtp} />
 
               {error && (
                 <ThemedText style={styles.errorText}>{error}</ThemedText>
@@ -177,16 +164,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 20,
   },
-  title: {
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subtitle: {
-    textAlign: "center",
-    fontSize: 14,
-    opacity: 0.7,
-    marginBottom: 24,
-  },
   helpText: {
     textAlign: "center",
     fontSize: 14,
@@ -204,24 +181,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.5,
     marginTop: 16,
-  },
-  otpContainer: {
-    marginVertical: 8,
-  },
-  otpCell: {
-    borderWidth: 1.5,
-    borderColor: "#2A3550",
-    borderRadius: 12,
-  },
-  otpCellFocused: {
-    borderColor: "#00F0FF",
-  },
-  otpText: {
-    color: "#FFFFFF",
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  otpCursor: {
-    backgroundColor: "#00F0FF",
   },
 });

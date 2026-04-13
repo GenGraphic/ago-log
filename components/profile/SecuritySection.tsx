@@ -1,4 +1,5 @@
 import Feather from "@expo/vector-icons/Feather";
+import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -7,6 +8,7 @@ import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, SettingRow, sharedStyles } from "./shared";
 
 export function SecuritySection() {
+  const router = useRouter();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
     "background",
@@ -16,7 +18,10 @@ export function SecuritySection() {
     <>
       <SectionLabel title="SECURITY" />
       <View style={[sharedStyles.card, { backgroundColor: cardBg }]}>
-        <SettingRow label="2FA Authentication" onPress={() => {}} />
+        <SettingRow
+          label="2FA Authentication"
+          onPress={() => router.push("/(main)/mfa-setup")}
+        />
         <RowDivider />
         <View style={styles.infoBox}>
           <Feather

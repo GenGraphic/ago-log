@@ -2,16 +2,16 @@ import { useAppSelector } from "@/store/hooks";
 import { Redirect, Stack } from "expo-router";
 
 const AuthLayout = () => {
-    const { isAuth } = useAppSelector((state) => state.auth);
+  const { isAuth } = useAppSelector((state) => state.auth);
 
-    if (isAuth) return <Redirect href="/(main)/(tabs)" />;
+  if (isAuth) return <Redirect href="/(main)/(tabs)" />;
 
-    return(
-        <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="otp/[userId]" />
-        </Stack>
-    )
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="otp/[userId]" />
+    </Stack>
+  );
 };
 
 export default AuthLayout;

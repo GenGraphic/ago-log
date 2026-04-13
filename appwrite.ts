@@ -1,14 +1,25 @@
-import { Account, Client, Functions, ID, Query, Storage, TablesDB } from "react-native-appwrite";
+import {
+  Account,
+  Client,
+  Functions,
+  ID,
+  Query,
+  Storage,
+  TablesDB,
+} from "react-native-appwrite";
 
-const client = new Client()
-    .setProject("68ba4c3f002c9e51046a")
-    .setEndpoint("https://gengraphic.de/v1")
-    .setPlatform("com.gengraphic.agolog");
+export const APPWRITE_PROJECT_ID = "68ba4c3f002c9e51046a";
+export const APPWRITE_ENDPOINT = "https://api.gengraphic.de/v1";
 
-export const db = new TablesDB(client);
-export const auth = new Account(client);
-export const functions = new Functions(client);
-export const storage = new Storage(client);
+export const appwriteClient = new Client()
+  .setProject(APPWRITE_PROJECT_ID)
+  .setEndpoint(APPWRITE_ENDPOINT)
+  .setPlatform("com.gengraphic.agolog");
+
+export const db = new TablesDB(appwriteClient);
+export const auth = new Account(appwriteClient);
+export const functions = new Functions(appwriteClient);
+export const storage = new Storage(appwriteClient);
 export const idGen = ID;
 export const query = Query;
 
@@ -24,5 +35,4 @@ export const NOTIFICATIONS_TABLE_ID = "69d78d63001584d54dc5";
 export const ENTRIES_IMAGES_BUCKET_ID = "69d5e39f00247e5da26f";
 
 //Functions id's
-export const HANDLE_ENTRY_IMAGE = "69d669cf0017ac725ee9"; 
-
+export const HANDLE_ENTRY_IMAGE = "69d669cf0017ac725ee9";
