@@ -1,9 +1,10 @@
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedText } from "../ThemedText";
 import { SectionLabel } from "./shared";
 
 export function SupportSection() {
@@ -12,6 +13,7 @@ export function SupportSection() {
     { light: "#FFFFFF", dark: "#141414" },
     "background",
   );
+  const labelColor = useThemeColor({ light: "#555", dark: "#999" }, "icon");
 
   return (
     <>
@@ -22,14 +24,18 @@ export function SupportSection() {
           activeOpacity={0.7}
         >
           <Feather name="book-open" size={22} color="#00F0FF" />
-          <Text style={styles.label}>HELP/FAQ</Text>
+          <ThemedText style={[styles.label, { color: labelColor }]}>
+            HELP/FAQ
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.card, { backgroundColor: cardBg }]}
           activeOpacity={0.7}
         >
           <Feather name="message-circle" size={22} color="#00F0FF" />
-          <Text style={styles.label}>CONTACT</Text>
+          <ThemedText style={[styles.label, { color: labelColor }]}>
+            CONTACT
+          </ThemedText>
         </TouchableOpacity>
         {isPro && (
           <TouchableOpacity
@@ -38,7 +44,9 @@ export function SupportSection() {
             onPress={presentCustomerCenter}
           >
             <Feather name="settings" size={22} color="#00F0FF" />
-            <Text style={styles.label}>MANAGE SUB</Text>
+            <ThemedText style={[styles.label, { color: labelColor }]}>
+              MANAGE SUB
+            </ThemedText>
           </TouchableOpacity>
         )}
       </View>
@@ -63,7 +71,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#555",
     letterSpacing: 1,
   },
 });

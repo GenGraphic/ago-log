@@ -1,17 +1,21 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-import Toast from 'react-native-toast-message';
-import { Provider } from 'react-redux';
+import {
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import "react-native-reanimated";
+import Toast from "react-native-toast-message";
+import { Provider } from "react-redux";
 
-import useAuth from '@/hooks/useAuth';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRevenueCat } from '@/hooks/useRevenueCat';
-import { useAppSelector } from '@/store/hooks';
-import { store } from '@/store/store';
+import useAuth from "@/hooks/useAuth";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useRevenueCat } from "@/hooks/useRevenueCat";
+import { useAppSelector } from "@/store/hooks";
+import { store } from "@/store/store";
 
 // Handles auth initialization (must be inside Provider)
 function AuthInitializer() {
@@ -47,10 +51,21 @@ function PurchasesInitializer() {
   return null;
 }
 
-export default function RootLayout() {
+// Wraps children with nav theme driven by the user preference
+function ThemedApp({ children }: { children: React.ReactNode }) {
   const colorScheme = useColorScheme();
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      {children}
+      <StatusBar style="auto" />
+      <Toast />
+    </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   if (!loaded) return null;
@@ -59,16 +74,14 @@ export default function RootLayout() {
     <Provider store={store}>
       <AuthInitializer />
       <PurchasesInitializer />
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack initialRouteName='index'>
+      <ThemedApp>
+        <Stack initialRouteName="index">
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(main)" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
-        <StatusBar style="auto" />
-        <Toast />
-      </ThemeProvider>
+      </ThemedApp>
     </Provider>
   );
 }

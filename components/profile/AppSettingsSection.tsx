@@ -1,9 +1,13 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { AppLanguage, AppTheme } from "@/store/slices/preferencesSlice";
+import {
+    AppLanguage,
+    AppTheme,
+    setTheme,
+} from "@/store/slices/preferencesSlice";
 import { RowDivider, SectionLabel, SettingRow, sharedStyles } from "./shared";
 
 const LANGUAGE_LABELS: Record<AppLanguage, string> = {
@@ -26,6 +30,18 @@ export function AppSettingsSection() {
     "background",
   );
 
+  const THEME_OPTIONS: AppTheme[] = ["system", "dark", "light"];
+
+  const handleThemePress = () => {
+    Alert.alert("Select Theme", "Choose your preferred theme", [
+      ...THEME_OPTIONS.map((option) => ({
+        text: THEME_LABELS[option],
+        onPress: () => dispatch(setTheme(option)),
+      })),
+      { text: "Cancel", style: "cancel" as const },
+    ]);
+  };
+
   return (
     <>
       <SectionLabel title="APP SETTINGS" />
@@ -33,13 +49,18 @@ export function AppSettingsSection() {
         <SettingRow
           label="Interface Language"
           value={LANGUAGE_LABELS[language]}
-          onPress={() => {}}
+          onPress={() => {
+            Alert.alert(
+              "Coming Soon",
+              "Language selection will be available in a future update.",
+            );
+          }}
         />
         <RowDivider />
         <SettingRow
           label="System Theme"
           value={THEME_LABELS[theme]}
-          onPress={() => {}}
+          onPress={handleThemePress}
         />
       </View>
     </>

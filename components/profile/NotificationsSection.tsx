@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View,
+    Modal,
+    Pressable,
+    StyleSheet,
+    Switch,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 import { db, DB_ID, USERS_TABLE_ID } from "@/appwrite";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  ReminderDays,
-  setDefaultReminder,
-  setEmailNotifications,
-  setPushNotifications,
+    ReminderDays,
+    setDefaultReminder,
+    setEmailNotifications,
+    setPushNotifications,
 } from "@/store/slices/preferencesSlice";
 import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, sharedStyles } from "./shared";
@@ -78,17 +77,21 @@ export function NotificationsSection() {
           activeOpacity={0.7}
           onPress={() => setDropdownOpen(true)}
         >
-          <ThemedText style={sharedStyles.rowLabel}>Default reminder</ThemedText>
+          <ThemedText style={sharedStyles.rowLabel}>
+            Default reminder
+          </ThemedText>
           <View style={styles.rowRight}>
-            <Text style={styles.rowValue}>{selectedLabel}</Text>
-            <Text style={styles.chevron}>›</Text>
+            <ThemedText style={styles.rowValue}>{selectedLabel}</ThemedText>
+            <ThemedText style={styles.chevron}>›</ThemedText>
           </View>
         </TouchableOpacity>
 
         <RowDivider />
 
         <View style={sharedStyles.row}>
-          <Text style={sharedStyles.rowLabel}>Push notifications</Text>
+          <ThemedText style={sharedStyles.rowLabel}>
+            Push notifications
+          </ThemedText>
           <Switch
             value={pushNotifications}
             onValueChange={handlePushToggle}
@@ -100,7 +103,9 @@ export function NotificationsSection() {
         <RowDivider />
 
         <View style={sharedStyles.row}>
-          <Text style={sharedStyles.rowLabel}>Email notifications</Text>
+          <ThemedText style={sharedStyles.rowLabel}>
+            Email notifications
+          </ThemedText>
           <Switch
             value={emailNotifications}
             onValueChange={handleEmailToggle}
@@ -122,7 +127,9 @@ export function NotificationsSection() {
           onPress={() => setDropdownOpen(false)}
         >
           <View style={[styles.dropdown, { backgroundColor: dropdownBg }]}>
-            <Text style={styles.dropdownTitle}>DEFAULT REMINDER</Text>
+            <ThemedText style={styles.dropdownTitle}>
+              DEFAULT REMINDER
+            </ThemedText>
             {REMINDER_OPTIONS.map((opt, i) => (
               <React.Fragment key={opt.value}>
                 <TouchableOpacity
@@ -133,9 +140,11 @@ export function NotificationsSection() {
                     setDropdownOpen(false);
                   }}
                 >
-                  <Text style={styles.dropdownItemText}>{opt.label}</Text>
+                  <ThemedText style={styles.dropdownItemText}>
+                    {opt.label}
+                  </ThemedText>
                   {defaultReminder === opt.value && (
-                    <Text style={styles.checkmark}>✓</Text>
+                    <ThemedText style={styles.checkmark}>✓</ThemedText>
                   )}
                 </TouchableOpacity>
                 {i < REMINDER_OPTIONS.length - 1 && (
@@ -182,7 +191,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "700",
     letterSpacing: 1.5,
-    color: "#555",
+    color: "#888",
     textAlign: "center",
     paddingVertical: 12,
   },
@@ -195,7 +204,6 @@ const styles = StyleSheet.create({
   },
   dropdownItemText: {
     fontSize: 14,
-    color: "#CCCCCC",
     fontWeight: "500",
   },
   checkmark: {

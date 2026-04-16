@@ -77,6 +77,24 @@ const useAuth = () => {
     }
   }, []);
 
+  const deleteAccount = useCallback(async (): Promise<HookResponse<null>> => {
+    try {
+      await auth.updateStatus();
+      dispatch(setAuthState(false));
+
+      return {
+        success: true,
+        data: null,
+      };
+    } catch (error: any) {
+      console.log("There was an error deleteAccount: ", error);
+      return {
+        success: false,
+        message: error.message,
+      };
+    }
+  }, []);
+
   const checkUserPresence = useCallback(async (): Promise<
     HookResponse<null>
   > => {
@@ -105,6 +123,7 @@ const useAuth = () => {
     sendOtp,
     validateOtp,
     signOut,
+    deleteAccount,
     checkUserPresence,
   };
 };

@@ -5,7 +5,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 
 export function SectionLabel({ title }: { title: string }) {
-  return <Text style={styles.sectionLabel}>{title}</Text>;
+  const color = useThemeColor({ light: "#444", dark: "#888" }, "icon");
+  return <Text style={[styles.sectionLabel, { color }]}>{title}</Text>;
 }
 
 export function RowDivider() {
@@ -29,17 +30,20 @@ export function SettingRow({
   danger?: boolean;
   rightIcon?: React.ComponentProps<typeof Feather>["name"];
 }) {
+  const mutedColor = useThemeColor({ light: "#555", dark: "#999" }, "icon");
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.7}>
       <ThemedText style={[styles.rowLabel, danger && styles.rowLabelDanger]}>
         {label}
       </ThemedText>
       <View style={styles.rowRight}>
-        {value ? <Text style={styles.rowValue}>{value}</Text> : null}
+        {value ? (
+          <Text style={[styles.rowValue, { color: mutedColor }]}>{value}</Text>
+        ) : null}
         <Feather
           name={rightIcon}
           size={14}
-          color={danger ? "#FF6060" : "#444"}
+          color={danger ? "#FF6060" : mutedColor}
         />
       </View>
     </TouchableOpacity>
@@ -70,7 +74,6 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#444",
     letterSpacing: 1.2,
     paddingHorizontal: 16,
     marginBottom: 6,
@@ -100,6 +103,5 @@ const styles = StyleSheet.create({
   },
   rowValue: {
     fontSize: 12,
-    color: "#555",
   },
 });
