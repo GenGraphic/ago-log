@@ -1,9 +1,9 @@
-import React from 'react';
-import { Control, Controller } from 'react-hook-form';
-import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+import React from "react";
+import { Control, Controller } from "react-hook-form";
+import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
-import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedText } from "@/components/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 type Props = {
   control: Control<any>;
@@ -13,7 +13,7 @@ type Props = {
   sensitive?: boolean;
   multiline?: boolean;
   rules?: object;
-} & Omit<TextInputProps, 'style'>;
+} & Omit<TextInputProps, "style">;
 
 export default function FormTextInput({
   control,
@@ -25,19 +25,27 @@ export default function FormTextInput({
   rules,
   ...rest
 }: Props) {
-  const icon = useThemeColor({}, 'icon');
-  const text = useThemeColor({}, 'text');
-  const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
+  const icon = useThemeColor({}, "icon");
+  const text = useThemeColor({}, "text");
+  const cardBg = useThemeColor(
+    { light: "#E8E9EA", dark: "#141C2A" },
+    "background",
+  );
 
   return (
     <Controller
       control={control}
       name={name}
       rules={rules}
-      render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+      render={({
+        field: { onChange, onBlur, value },
+        fieldState: { error },
+      }) => (
         <View style={styles.container}>
           <View style={styles.labelRow}>
-            <ThemedText style={[styles.label, { color: icon }]}>{label}</ThemedText>
+            <ThemedText style={[styles.label, { color: icon }]}>
+              {label}
+            </ThemedText>
             {sensitive && (
               <View style={styles.sensitiveBadge}>
                 <ThemedText style={styles.sensitiveText}>SENSITIVE</ThemedText>
@@ -47,7 +55,11 @@ export default function FormTextInput({
           <TextInput
             style={[
               styles.input,
-              { backgroundColor: cardBg, color: text, borderColor: error ? '#FF6060' : `${icon}30` },
+              {
+                backgroundColor: cardBg,
+                color: text,
+                borderColor: error ? "#FF6060" : `${icon}30`,
+              },
               multiline && styles.multiline,
             ]}
             placeholder={placeholder}
@@ -73,27 +85,28 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   labelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   label: {
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: "700",
     letterSpacing: 1.5,
   },
   sensitiveBadge: {
     borderWidth: 1,
-    borderColor: '#FF6060',
+    borderColor: "#FF6060",
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    marginVertical: 4,
   },
   sensitiveText: {
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: "700",
     letterSpacing: 1,
-    color: '#FF6060',
+    color: "#FF6060",
   },
   input: {
     borderWidth: 1,
@@ -104,11 +117,11 @@ const styles = StyleSheet.create({
   },
   multiline: {
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     paddingTop: 12,
   },
   error: {
     fontSize: 11,
-    color: '#FF6060',
+    color: "#FF6060",
   },
 });

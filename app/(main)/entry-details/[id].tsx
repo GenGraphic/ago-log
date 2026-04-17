@@ -19,7 +19,11 @@ import { DetailsSection } from "@/components/entry-details/DetailsSection";
 import { EntryDetailsFooter } from "@/components/entry-details/EntryDetailsFooter";
 import { EntryImageViewer } from "@/components/entry-details/EntryImageViewer";
 import { InfoRow } from "@/components/entry-details/InfoRow";
-import { daysUntil, formatDate, statusColor } from "@/components/entry-details/helpers";
+import {
+  daysUntil,
+  formatDate,
+  statusColor,
+} from "@/components/entry-details/helpers";
 import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -40,7 +44,7 @@ export default function DocumentDetailsScreen() {
   );
 
   const { getEntry, deleteEntry } = useEntries();
-  const { getImagePreview } = useStorage();
+  const { getPrivateImage } = useStorage();
 
   const [entry, setEntry] = useState<Entry | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -53,7 +57,7 @@ export default function DocumentDetailsScreen() {
     if (res.success) {
       setEntry(res.data);
       if (res.data.imageId) {
-        const imgRes = await getImagePreview(
+        const imgRes = await getPrivateImage(
           ENTRIES_IMAGES_BUCKET_ID,
           res.data.imageId,
         );
@@ -191,10 +195,38 @@ export default function DocumentDetailsScreen() {
           <InfoRow label="USERNAME" value={entry.username} />
           <InfoRow label="SECRET" value={entry.secret} sensitive />
           <InfoRow label="URL" value={entry.url} />
-          <InfoRow label="LAST SERVICE" value={entry.lastServiceDate ? formatDate(entry.lastServiceDate) : undefined} />
-          <InfoRow label="LAST MILEAGE" value={entry.lastMileage != null ? `${entry.lastMileage.toLocaleString()} km` : undefined} />
-          <InfoRow label="SERVICE INTERVAL" value={entry.intervalDays != null ? `${entry.intervalDays} days` : undefined} />
-          <InfoRow label="MILEAGE INTERVAL" value={entry.mileageInterval != null ? `${entry.mileageInterval.toLocaleString()} km` : undefined} />
+          <InfoRow
+            label="LAST SERVICE"
+            value={
+              entry.lastServiceDate
+                ? formatDate(entry.lastServiceDate)
+                : undefined
+            }
+          />
+          <InfoRow
+            label="LAST MILEAGE"
+            value={
+              entry.lastMileage != null
+                ? `${entry.lastMileage.toLocaleString()} km`
+                : undefined
+            }
+          />
+          <InfoRow
+            label="SERVICE INTERVAL"
+            value={
+              entry.intervalDays != null
+                ? `${entry.intervalDays} days`
+                : undefined
+            }
+          />
+          <InfoRow
+            label="MILEAGE INTERVAL"
+            value={
+              entry.mileageInterval != null
+                ? `${entry.mileageInterval.toLocaleString()} km`
+                : undefined
+            }
+          />
           <InfoRow label="ADDED" value={formatDate(entry.createdAt)} />
           <InfoRow label="LAST UPDATED" value={formatDate(entry.updatedAt)} />
         </DetailsSection>
@@ -205,7 +237,7 @@ export default function DocumentDetailsScreen() {
             </ThemedText>
           </DetailsSection>
         )}
-      <View style={{ height: 24 }} />
+        <View style={{ height: 24 }} />
       </ScrollView>
 
       <EntryDetailsFooter

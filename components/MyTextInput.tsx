@@ -31,6 +31,10 @@ const MyTextInput: React.FC<Props> = ({
     { light: "#F5F5F5", dark: "#1C2333" },
     "background",
   );
+  const inputColor = useThemeColor(
+    { light: "#11181C", dark: "#FFFFFF" },
+    "text",
+  );
 
   return (
     <View style={styles.container}>
@@ -51,7 +55,7 @@ const MyTextInput: React.FC<Props> = ({
             <TextInput
               style={[
                 styles.input,
-                { backgroundColor: inputBg },
+                { backgroundColor: inputBg, color: inputColor },
                 error && styles.errorInput,
               ]}
               placeholderTextColor={placeholderColor}
@@ -90,7 +94,6 @@ const styles = StyleSheet.create({
     height: 48,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    color: "#333333",
     fontSize: 16,
   },
   errorInput: {
