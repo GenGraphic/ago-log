@@ -8,7 +8,7 @@ import {
   TablesDB,
 } from "react-native-appwrite";
 
-export const APPWRITE_PROJECT_ID = "68ba4c3f002c9e51046a";
+export const APPWRITE_PROJECT_ID = "69e3d500003cab18686d";
 export const APPWRITE_ENDPOINT = "https://api.gengraphic.de/v1";
 
 export const appwriteClient = new Client()
