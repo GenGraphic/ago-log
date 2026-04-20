@@ -1,5 +1,5 @@
 {
-    "projectId": "69e3d500003cab18686d",
+    "projectId": "68ba4c3f002c9e51046a",
     "projectName": "AgoLog",
     "settings": {
         "services": {
@@ -47,16 +47,13 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-16.0",
-            "scopes": [
-                "rows.read",
-                "rows.write"
-            ],
+            "scopes": [],
             "events": [],
             "schedule": "",
             "timeout": 15,
             "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "specification": "s-0.5vcpu-512mb",
+            "commands": "",
+            "specification": "s-8vcpu-8gb",
             "path": "functions/on-success-payment"
         },
         {
@@ -68,16 +65,13 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-16.0",
-            "scopes": [
-                "rows.read",
-                "rows.write"
-            ],
+            "scopes": [],
             "events": [],
             "schedule": "",
             "timeout": 15,
             "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "specification": "s-0.5vcpu-512mb",
+            "commands": "",
+            "specification": "s-8vcpu-8gb",
             "path": "functions/on-fail-payment"
         },
         {
@@ -94,8 +88,8 @@
             "schedule": "",
             "timeout": 30,
             "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "specification": "s-0.5vcpu-512mb",
+            "commands": "",
+            "specification": "s-8vcpu-8gb",
             "path": "functions/handleEntryImage"
         },
         {
@@ -105,17 +99,13 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-16.0",
-            "scopes": [
-                "rows.read",
-                "rows.write",
-                "users.read"
-            ],
+            "scopes": [],
             "events": [],
             "schedule": "0 4 * * *",
             "timeout": 60,
             "entrypoint": "src/main.js",
-            "commands": "npm install",
-            "specification": "s-0.5vcpu-512mb",
+            "commands": "",
+            "specification": "s-8vcpu-8gb",
             "path": "functions/send-notifications"
         }
     ],
@@ -399,19 +389,7 @@
                     "default": null
                 }
             ],
-            "indexes": [
-                {
-                    "key": "userId_index",
-                    "type": "key",
-                    "status": "available",
-                    "attributes": [
-                        "userId"
-                    ],
-                    "orders": [
-                        "ASC"
-                    ]
-                }
-            ]
+            "indexes": []
         },
         {
             "$id": "69d78d63001584d54dc5",
