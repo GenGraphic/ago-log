@@ -2,6 +2,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -17,6 +18,7 @@ type PhotoCaptureProps = {
  * Filled state  → shows the captured image with a "Retake" button.
  */
 export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const tint = useThemeColor({}, "tint");
   const icon = useThemeColor({}, "icon");
@@ -53,7 +55,7 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
         >
           <Feather name="camera" size={14} color={tint} />
           <ThemedText style={[styles.retakeLabel, { color: tint }]}>
-            Retake
+            {t('photo.retake')}
           </ThemedText>
         </TouchableOpacity>
       </View>
@@ -84,9 +86,9 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
         <Feather name="maximize" size={28} color={tint} />
       </View>
 
-      <ThemedText style={styles.emptyTitle}>Add Photo (AI Scan)</ThemedText>
+      <ThemedText style={styles.emptyTitle}>{t('photo.addPhoto')}</ThemedText>
       <ThemedText style={[styles.emptySubtitle, { color: icon }]}>
-        Extract intelligence from images automatically
+        {t('photo.extractAuto')}
       </ThemedText>
     </TouchableOpacity>
   );

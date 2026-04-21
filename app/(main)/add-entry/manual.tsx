@@ -3,6 +3,7 @@ import { File } from "expo-file-system";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     KeyboardAvoidingView,
@@ -66,6 +67,7 @@ function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
 }
 
 export default function ManualInputScreen() {
+  const { t } = useTranslation();
   const { photoUri } = useLocalSearchParams<{ photoUri?: string }>();
   const router = useRouter();
 
@@ -126,7 +128,7 @@ export default function ManualInputScreen() {
         if (!result.success) {
           Toast.show({
             type: "error",
-            text1: "AI extraction failed",
+            text1: t('manual.aiExtractionFailed'),
             text2: result.message,
           });
           return;
@@ -147,7 +149,7 @@ export default function ManualInputScreen() {
         if (prefill.mileageInterval)
           setValue("mileageInterval", String(prefill.mileageInterval));
       } catch (err: any) {
-        Toast.show({ type: "error", text1: "AI error", text2: err.message });
+        Toast.show({ type: "error", text1: t('manual.aiError'), text2: err.message });
       } finally {
         setAiLoading(false);
       }
@@ -164,8 +166,8 @@ export default function ManualInputScreen() {
     if (!data.entryType) {
       Toast.show({
         type: "error",
-        text1: "Entry type required",
-        text2: "Please select a type before saving.",
+        text1: t('manual.entryTypeRequired'),
+        text2: t('manual.entryTypeRequiredSub'),
       });
       return;
     }
@@ -188,7 +190,7 @@ export default function ManualInputScreen() {
         if (!imageUpload.success) {
           Toast.show({
             type: "error",
-            text1: "Error!",
+            text1: t('common.error'),
             text2: imageUpload.message,
           });
           return;
@@ -235,7 +237,7 @@ export default function ManualInputScreen() {
       if (!result.success) {
         Toast.show({
           type: "error",
-          text1: "Failed to save",
+          text1: t('manual.failedToSave'),
           text2: result.message,
         });
         return;
@@ -243,8 +245,8 @@ export default function ManualInputScreen() {
 
       Toast.show({
         type: "success",
-        text1: "Entry sealed",
-        text2: `${data.title} has been added to your vault.`,
+        text1: t('manual.entrySealed'),
+        text2: t('manual.entrySealedBody', { title: data.title }),
       });
 
       // Warn on 4th entry (1 free slot left)
@@ -255,8 +257,8 @@ export default function ManualInputScreen() {
       ) {
         Toast.show({
           type: "info",
-          text1: "Almost at your limit",
-          text2: "You have 1 free log remaining. Upgrade for unlimited.",
+          text1: t('manual.almostAtLimit'),
+          text2: t('manual.almostAtLimitSub'),
           visibilityTime: 5000,
         });
       }
@@ -265,7 +267,7 @@ export default function ManualInputScreen() {
     } catch (err: any) {
       Toast.show({
         type: "error",
-        text1: "Unexpected error",
+        text1: t('manual.unexpectedError'),
         text2: err.message,
       });
     } finally {
@@ -280,7 +282,7 @@ export default function ManualInputScreen() {
         <View style={styles.aiOverlay}>
           <ActivityIndicator size="large" color={tint} />
           <ThemedText style={[styles.aiOverlayText, { color: text }]}>
-            AI IS THINKING...
+            {t('manual.aiThinking')}
           </ThemedText>
         </View>
       )}
@@ -298,11 +300,10 @@ export default function ManualInputScreen() {
               <Feather name="lock" size={28} color={tint} />
             </View>
             <ThemedText style={[styles.modalTitle, { color: text }]}>
-              FREE LIMIT REACHED
+              {t('manual.freeLimitTitle')}
             </ThemedText>
             <ThemedText style={[styles.modalBody, { color: `${icon}CC` }]}>
-              You've used all {FREE_LOG_LIMIT} free logs. Upgrade to PRO for
-              unlimited entries, AI scans, and notifications.
+              {t('manual.freeLimitBody', { limit: FREE_LOG_LIMIT })}
             </ThemedText>
             <TouchableOpacity
               style={[styles.modalUpgradeBtn, { backgroundColor: tint }]}
@@ -312,7 +313,7 @@ export default function ManualInputScreen() {
               }}
             >
               <ThemedText style={styles.modalUpgradeBtnText}>
-                UPGRADE TO PRO
+                {t('manual.upgradeToPro')}
               </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -322,7 +323,7 @@ export default function ManualInputScreen() {
               <ThemedText
                 style={[styles.modalDismissText, { color: `${icon}80` }]}
               >
-                DISMISS
+                {t('common.dismiss')}
               </ThemedText>
             </TouchableOpacity>
           </View>
@@ -346,10 +347,10 @@ export default function ManualInputScreen() {
       {/* ── Title area ── */}
       <View style={styles.titleArea}>
         <ThemedText style={[styles.sectionLabel, { color: `${icon}80` }]}>
-          VAULT ACQUISITION
+          {t('manual.vaultAcquisition')}
         </ThemedText>
         <ThemedText style={[styles.pageTitle, { color: text }]}>
-          {watchedTitle?.trim() || "Manual Entry"}
+          {watchedTitle?.trim() || t('manual.manualEntry')}
         </ThemedText>
         {entryType && (
           <ThemedText style={[styles.entrySubtitle, { color: `${icon}70` }]}>
@@ -377,9 +378,9 @@ export default function ManualInputScreen() {
           <FormTextInput
             control={control}
             name="title"
-            label="TITLE"
-            placeholder="e.g. Nexus Corp Agreement"
-            rules={{ required: "Title is required" }}
+            label={t('manual.titleLabel')}
+            placeholder={t('manual.titlePlaceholder')}
+            rules={{ required: t('manual.titleRequired') }}
           />
 
           {config?.showExpiryDate && (
@@ -415,16 +416,16 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="issuer"
-                  label="ISSUER"
-                  placeholder="Organisation or company"
+                  label={t('manual.issuerLabel')}
+                  placeholder={t('manual.issuerPlaceholder')}
                 />
               )}
               {config.showIdentifier && (
                 <FormTextInput
                   control={control}
                   name="identifier"
-                  label="IDENTIFIER"
-                  placeholder="Policy number, ID, reference"
+                  label={t('manual.identifierLabel')}
+                  placeholder={t('manual.identifierPlaceholder')}
                   sensitive
                 />
               )}
@@ -432,8 +433,8 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="secret"
-                  label="SECRET"
-                  placeholder="Password or secret key"
+                  label={t('manual.secretLabel')}
+                  placeholder={t('manual.secretPlaceholder')}
                   sensitive
                   secureTextEntry
                 />
@@ -442,15 +443,15 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="username"
-                  label="USERNAME"
-                  placeholder="Username or email"
+                  label={t('manual.usernameLabel')}
+                  placeholder={t('manual.usernamePlaceholder')}
                 />
               )}
               {config.showUrl && (
                 <FormTextInput
                   control={control}
                   name="url"
-                  label="URL"
+                  label={t('manual.urlLabel')}
                   placeholder="https://..."
                   keyboardType="url"
                   autoCapitalize="none"
@@ -460,14 +461,14 @@ export default function ManualInputScreen() {
                 <FormDateInput
                   control={control}
                   name="lastServiceDate"
-                  label="LAST SERVICE DATE"
+                  label={t('manual.lastServiceDateLabel')}
                 />
               )}
               {config.showIntervalDays && (
                 <FormTextInput
                   control={control}
                   name="intervalDays"
-                  label="SERVICE INTERVAL (DAYS)"
+                  label={t('manual.intervalDaysLabel')}
                   placeholder="e.g. 365"
                   keyboardType="number-pad"
                 />
@@ -476,7 +477,7 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="lastMileage"
-                  label="LAST MILEAGE"
+                  label={t('manual.lastMileageLabel')}
                   placeholder="e.g. 45000"
                   keyboardType="number-pad"
                 />
@@ -485,7 +486,7 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="mileageInterval"
-                  label="MILEAGE INTERVAL"
+                  label={t('manual.mileageIntervalLabel')}
                   placeholder="e.g. 10000"
                   keyboardType="number-pad"
                 />
@@ -499,8 +500,8 @@ export default function ManualInputScreen() {
             label="NOTES"
             placeholder={
               config
-                ? "Additional information..."
-                : "Specific intelligence fields will materialise once an Entry Type is defined."
+                ? t('manual.additionalInfo')
+                : t('manual.notesPlaceholder')
             }
             multiline
           />
@@ -510,13 +511,13 @@ export default function ManualInputScreen() {
       {/* ── Footer ── */}
       <View style={styles.footer}>
         <MyMainButton
-          title={submitting ? "SEALING..." : "SEAL ENTRY"}
+          title={submitting ? t('manual.sealing') : t('manual.sealEntry')}
           isDisabled={submitting}
           action={handleSubmit(onSubmit)}
         />
         <TouchableOpacity style={styles.voidBtn} onPress={() => router.back()}>
           <ThemedText style={[styles.voidText, { color: `${icon}80` }]}>
-            VOID ENTRY
+            {t('manual.voidEntry')}
           </ThemedText>
         </TouchableOpacity>
       </View>

@@ -3,6 +3,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     StyleSheet,
@@ -15,6 +16,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function CameraScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
@@ -36,7 +38,7 @@ export default function CameraScreen() {
     try {
       const photo = await cameraRef.current.takePictureAsync({
         base64: false,
-        quality: 0.8,
+        quality: 1,
       });
       // Pass the photo URI to manual screen via query param; AI prefill happens there
       router.replace({
@@ -64,13 +66,13 @@ export default function CameraScreen() {
       >
         <Feather name="camera-off" size={48} color={icon} />
         <ThemedText style={[styles.permissionText, { color: icon }]}>
-          Camera access is required
+          {t('smart.cameraRequired')}
         </ThemedText>
         <TouchableOpacity
           style={[styles.permissionBtn, { borderColor: tint }]}
           onPress={requestPermission}
         >
-          <ThemedText style={{ color: tint }}>Grant Permission</ThemedText>
+          <ThemedText style={{ color: tint }}>{t('smart.grantPermission')}</ThemedText>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -97,7 +99,7 @@ export default function CameraScreen() {
               <Feather name="x" size={22} color="#fff" />
             </TouchableOpacity>
 
-            <ThemedText style={styles.topLabel}>SCAN DOCUMENT</ThemedText>
+            <ThemedText style={styles.topLabel}>{t('smart.scanDocument')}</ThemedText>
 
             <TouchableOpacity style={styles.iconBtn} onPress={toggleFlash}>
               <Feather
@@ -127,7 +129,7 @@ export default function CameraScreen() {
 
         {/* Hint */}
         <ThemedText style={[styles.hint, { color: `${tint}CC` }]}>
-          Align the document within the frame
+          {t('smart.alignFrame')}
         </ThemedText>
 
         {/* Bottom controls */}
@@ -210,13 +212,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     letterSpacing: 2,
   },
-  // Frame corners
+  // Frame corners — A4 proportions (width : height ≈ 1 : 1.414)
   frameWrapper: {
     position: "absolute",
-    top: "25%",
-    left: "8%",
-    right: "8%",
-    bottom: "25%",
+    left: "6%",
+    right: "6%",
+    top: "15%",
+    bottom: "9%",
   },
   frameCorner: {
     position: "absolute",

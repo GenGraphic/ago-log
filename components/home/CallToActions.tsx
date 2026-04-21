@@ -2,12 +2,14 @@ import Feather from '@expo/vector-icons/Feather';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function CallToActions() {
+  const { t } = useTranslation();
   const router = useRouter();
   const tint = useThemeColor({}, 'tint');
   const tintLight = useThemeColor({}, 'tintLight');
@@ -23,7 +25,7 @@ export default function CallToActions() {
         <View style={[styles.iconBox, { borderColor: tint, borderWidth: 1 }]}>
           <Feather name="plus" size={20} color={tint} />
         </View>
-        <ThemedText style={[styles.label, { color: tint }]}>ADD LOG</ThemedText>
+        <ThemedText style={[styles.label, { color: tint }]}>{t('home.addLog')}</ThemedText>
       </TouchableOpacity>
 
       {/* AI SCAN — gradient card, icon top-left, label bottom-left */}
@@ -40,7 +42,7 @@ export default function CallToActions() {
         <View style={[styles.iconBox, { backgroundColor: 'rgba(0,0,0,0.15)' }]}>
           <Feather name="maximize" size={20} color="#0A1A1A" />
         </View>
-        <ThemedText style={[styles.label, { color: '#0A1A1A' }]}>AI SCAN</ThemedText>
+        <ThemedText style={[styles.label, { color: '#0A1A1A' }]}>{t('home.aiScan')}</ThemedText>
       </TouchableOpacity>
     </View>
   );

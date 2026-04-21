@@ -1,11 +1,11 @@
 import Feather from "@expo/vector-icons/Feather";
-import { useRouter } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    StyleSheet,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 import { query } from "@/appwrite";
@@ -103,9 +103,9 @@ export default function TimeLine() {
     }
   }, [queryEntries]);
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     load();
-  }, [load]);
+  }, [load]));
 
   return (
     <View style={styles.container}>

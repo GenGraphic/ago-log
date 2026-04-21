@@ -1,6 +1,7 @@
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, View } from "react-native";
 
 import useAuth from "@/hooks/useAuth";
@@ -11,6 +12,7 @@ import { RowDivider, SectionLabel, SettingRow, sharedStyles } from "./shared";
 const EXPORT_VERSION = 1;
 
 export function DataSection() {
+  const { t } = useTranslation();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
     "background",
@@ -25,7 +27,7 @@ export function DataSection() {
     try {
       const result = await listEntries();
       if (!result.success) {
-        Alert.alert("Error", result.message ?? "Failed to load entries.");
+        Alert.alert(t("common.error"), result.message ?? t("profile.failedToLoad"));
         return;
       }
 
@@ -43,12 +45,12 @@ export function DataSection() {
 
       await Sharing.shareAsync(file.uri, {
         mimeType: "application/json",
-        dialogTitle: "Export AgoLog Data",
+        dialogTitle: t("profile.exportTitle"),
         UTI: "public.json",
       });
     } catch (error: any) {
       console.log("Error exporting data: ", error);
-      Alert.alert("Error", "Something went wrong while exporting.");
+      Alert.alert(t("common.error"), t("profile.exportError"));
     } finally {
       setExporting(false);
     }
@@ -56,12 +58,12 @@ export function DataSection() {
 
   const handleDeleteAccount = () => {
     Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? You will permanently lose access to this account. Your data will not be deleted.",
+      t("profile.deleteTitle"),
+      t("profile.deleteMessage"),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "Delete",
+          text: t("common.delete"),
           style: "destructive",
           onPress: async () => {
             setDeleting(true);
@@ -69,8 +71,8 @@ export function DataSection() {
             setDeleting(false);
             if (!result.success) {
               Alert.alert(
-                "Error",
-                result.message ?? "Failed to delete account.",
+                t("common.error"),
+                result.message ?? t("profile.failedToDelete"),
               );
             }
           },
@@ -81,15 +83,15 @@ export function DataSection() {
 
   return (
     <>
-      <SectionLabel title="DATA MANAGEMENT" />
+      <SectionLabel title={t("profile.dataManagement")} />
       <View style={[sharedStyles.card, { backgroundColor: cardBg }]}>
         <SettingRow
-          label={exporting ? "Exporting..." : "Export ledger account"}
+          label={exporting ? t("profile.exporting") : t("profile.exportLedger")}
           onPress={handleExport}
         />
         <RowDivider />
         <SettingRow
-          label={deleting ? "Deleting..." : "Delete account"}
+          label={deleting ? t("profile.deleting") : t("profile.deleteAccount")}
           onPress={handleDeleteAccount}
           danger
           rightIcon="trash-2"

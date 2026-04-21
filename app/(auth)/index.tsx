@@ -2,6 +2,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import AnimatedBackground from '@/components/AnimatedBackground';
@@ -20,6 +21,7 @@ interface LoginFormInputs {
 }
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { sendOtp } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ export default function LoginScreen() {
       if (!result.success) {
         Toast.show({
            type: 'error', 
-           text1: 'Error', 
+           text1: t('common.error'), 
            text2: result.message 
           });
         return;
@@ -67,8 +69,8 @@ export default function LoginScreen() {
 
         {/* Welcome Section */}
         <View style={styles.welcomeSection}>
-          <ThemedText type="title" style={styles.welcomeTitle}>Welcome back</ThemedText>
-          <ThemedText type="default" style={styles.subtitle}>Sign in to manage your vault</ThemedText>
+          <ThemedText type="title" style={styles.welcomeTitle}>{t('auth.welcomeBack')}</ThemedText>
+          <ThemedText type="default" style={styles.subtitle}>{t('auth.subtitle')}</ThemedText>
         </View>
 
         {/* Form Section */}
@@ -77,15 +79,15 @@ export default function LoginScreen() {
           <MyTextInput
             name="email"
             control={control}
-            label="EMAIL ADDRESS"
-            placeholder="name@company.com"
+            label={t('auth.emailLabel')}
+            placeholder={t('auth.emailPlaceholder')}
             keyboardType="email-address"
             autoCapitalize="none"
             rules={{
-              required: 'Email is required',
+              required: t('auth.emailRequired'),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Please enter a valid email',
+                message: t('auth.emailInvalid'),
               },
             }}
           />
@@ -93,7 +95,7 @@ export default function LoginScreen() {
 
         {/* Login Button */}
         <MyMainButton
-          title={loading ? 'SIGNING IN...' : 'LOGIN'}
+          title={loading ? t('auth.signingIn') : t('auth.login')}
           isDisabled={loading}
           action={handleSubmit(onSubmit)}
         />
@@ -101,10 +103,10 @@ export default function LoginScreen() {
         {/* Legal */}
         <View style={styles.legalSection}>
           <Text style={styles.legalText}>
-            By registering you agree to our{' '}
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/privacy')}>Privacy Policy</Text>
-            {' '}and{' '}
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/terms')}>Legal Terms</Text>.
+            {t('auth.legalPrefix')}{' '}
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/privacy')}>{t('auth.privacyPolicy')}</Text>
+            {' '}{t('auth.legalAnd')}{' '}
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/terms')}>{t('auth.legalTerms')}</Text>.
           </Text>
         </View>
 
@@ -125,7 +127,7 @@ export default function LoginScreen() {
         </View>
 
         {/* Copyright */}
-        <ThemedText style={styles.copyright}>© 2024 AGO-LOG SENTIENT LEDGER. ALL RIGHTS RESERVED.</ThemedText>
+        <ThemedText style={styles.copyright}>{t('auth.copyright')}</ThemedText>
       </ScrollView>
       </SafeAreaView>
     </AnimatedBackground>
@@ -148,10 +150,12 @@ const styles = StyleSheet.create({
   },
   welcomeSection: {
     marginBottom: 32,
+    paddingTop: 8,
   },
   welcomeTitle: {
     fontSize: 40,
     fontWeight: 'bold',
+    lineHeight: 52,
     marginBottom: 8,
   },
   subtitle: {

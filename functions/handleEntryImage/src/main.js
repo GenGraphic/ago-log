@@ -124,7 +124,7 @@ export default async ({ req, res, log, error }) => {
             },
             {
               type: 'image_url',
-              image_url: { url: `data:image/jpeg;base64,${image}` },
+              image_url: { url: `data:image/jpeg;base64,${image}`, detail: 'high' },
             },
           ],
         },

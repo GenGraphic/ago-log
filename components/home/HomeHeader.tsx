@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -6,6 +7,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useAppSelector } from '@/store/hooks';
 
 export default function HomeHeader() {
+  const { t } = useTranslation();
   const user = useAppSelector((state) => state.user);
   const tint = useThemeColor({}, 'tint');
 
@@ -14,12 +16,12 @@ export default function HomeHeader() {
       {/* Status row */}
       <View style={styles.statusRow}>
         <View style={[styles.statusDot, { backgroundColor: tint }]} />
-        <ThemedText style={[styles.statusText, { color: tint }]}>SYSTEM ONLINE</ThemedText>
+        <ThemedText style={[styles.statusText, { color: tint }]}>{t('home.systemOnline')}</ThemedText>
       </View>
 
       {/* Welcome heading */}
       <ThemedText style={styles.welcomeText}>
-        Welcome back,{'\n'}{user.name !== '' ? user.name : 'Guest'}!
+        {t('home.welcomeBack', { name: user.name !== '' ? user.name : 'Guest' })}
       </ThemedText>
     </View>
   );

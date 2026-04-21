@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -16,9 +17,23 @@ type Props = {
 };
 
 export default function CategoryFilter({ selected, onSelect }: Props) {
+  const { t } = useTranslation();
   const tint = useThemeColor({}, 'tint');
   const icon = useThemeColor({}, 'icon');
   const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
+
+  const CATEGORY_LABELS: Record<CategoryKey, string> = {
+    ALL:       t('entries.filterAll'),
+    EXPIRED:   t('entries.filterExpired'),
+    UPCOMING:  t('entries.filterUpcoming'),
+    INSURANCE: t('entries.filterInsurance'),
+    DOCUMENTS: t('entries.filterDocuments'),
+    VEHICLE:   t('entries.filterVehicle'),
+    MEDICAL:   t('entries.filterMedical'),
+    LEGAL:     t('entries.filterLegal'),
+    PERSONAL:  t('entries.filterPersonal'),
+    SECURE:    t('entries.filterSecure'),
+  };
 
   return (
     <ScrollView
@@ -37,7 +52,7 @@ export default function CategoryFilter({ selected, onSelect }: Props) {
             onPress={() => onSelect(cat)}
             activeOpacity={0.7}>
             <ThemedText style={[styles.chipText, { color: active ? '#00363A' : icon }]}>
-              {cat}
+              {CATEGORY_LABELS[cat]}
             </ThemedText>
           </TouchableOpacity>
         );

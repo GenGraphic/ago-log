@@ -1,5 +1,6 @@
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { useRevenueCat } from "@/hooks/useRevenueCat";
@@ -8,6 +9,7 @@ import { ThemedText } from "../ThemedText";
 import { SectionLabel } from "./shared";
 
 export function SupportSection() {
+  const { t } = useTranslation();
   const { presentCustomerCenter, isPro } = useRevenueCat();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
@@ -17,7 +19,7 @@ export function SupportSection() {
 
   return (
     <>
-      <SectionLabel title="SUPPORT" />
+      <SectionLabel title={t('profile.support')} />
       <View style={styles.row}>
         <TouchableOpacity
           style={[styles.card, { backgroundColor: cardBg }]}
@@ -25,7 +27,7 @@ export function SupportSection() {
         >
           <Feather name="book-open" size={22} color="#00F0FF" />
           <ThemedText style={[styles.label, { color: labelColor }]}>
-            HELP/FAQ
+            {t('profile.helpFaq')}
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
@@ -34,7 +36,7 @@ export function SupportSection() {
         >
           <Feather name="message-circle" size={22} color="#00F0FF" />
           <ThemedText style={[styles.label, { color: labelColor }]}>
-            CONTACT
+            {t('profile.contact')}
           </ThemedText>
         </TouchableOpacity>
         {isPro && (
@@ -45,7 +47,7 @@ export function SupportSection() {
           >
             <Feather name="settings" size={22} color="#00F0FF" />
             <ThemedText style={[styles.label, { color: labelColor }]}>
-              MANAGE SUB
+              {t('profile.manageSub')}
             </ThemedText>
           </TouchableOpacity>
         )}

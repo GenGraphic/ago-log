@@ -1,5 +1,6 @@
 import Feather from '@expo/vector-icons/Feather';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function SearchBar({ value, onChangeText }: Props) {
+  const { t } = useTranslation();
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
   const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');
@@ -19,7 +21,7 @@ export default function SearchBar({ value, onChangeText }: Props) {
       <Feather name="search" size={16} color={`${icon}80`} />
       <TextInput
         style={[styles.input, { color: text }]}
-        placeholder="Search logs..."
+        placeholder={t('entries.searchPlaceholder')}
         placeholderTextColor={`${icon}60`}
         value={value}
         onChangeText={onChangeText}

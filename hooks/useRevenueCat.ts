@@ -80,6 +80,43 @@ export function useRevenueCat() {
     }
   }, [dispatch, userId]);
 
+  // ── Purchase a specific plan directly (no RC paywall UI) ─────────────────
+  const purchasePlan = useCallback(async (billing: 'monthly' | 'yearly'): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      const offerings = await Purchases.getOfferings();
+      const offering = offerings.current;
+      if (!offering) {
+        Toast.show({ type: 'error', text1: 'No offerings available', text2: 'Please try again later.' });
+        return false;
+      }
+
+      const productId = billing === 'yearly' ? RC_PRODUCTS.yearly : RC_PRODUCTS.monthly;
+      const pkg = offering.availablePackages.find(
+        (p) => p.product.identifier === productId,
+      );
+
+      if (!pkg) {
+        Toast.show({ type: 'error', text1: 'Product not found', text2: 'Please try again later.' });
+        return false;
+      }
+
+      const { customerInfo } = await Purchases.purchasePackage(pkg);
+      const newPlan = getPlanFromCustomerInfo(customerInfo);
+      dispatch(updateUser({ plan: newPlan }));
+      if (userId) await persistPlanToDb(userId, newPlan);
+      Toast.show({ type: 'success', text1: 'Welcome to Pro!', text2: 'Your account has been upgraded.' });
+      return true;
+    } catch (e: any) {
+      if (!e.userCancelled) {
+        Toast.show({ type: 'error', text1: 'Purchase failed', text2: e.message });
+      }
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dispatch, userId]);
+
   // ── Present RC Paywall ──────────────────────────────────────────────────
   const presentPaywall = useCallback(async (): Promise<boolean> => {
     const result: PAYWALL_RESULT = await RevenueCatUI.presentPaywall();
@@ -155,6 +192,7 @@ export function useRevenueCat() {
     logIn,
     logOut,
     loadCustomerInfo,
+    purchasePlan,
     presentPaywall,
     presentPaywallIfNeeded,
     restorePurchases,

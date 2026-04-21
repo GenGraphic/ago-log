@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  ActivityIndicator,
-  RefreshControl,
-  SectionList,
-  StyleSheet,
-  View,
+    ActivityIndicator,
+    RefreshControl,
+    SectionList,
+    StyleSheet,
+    View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -68,6 +69,7 @@ type SectionData = { title: string; dot: string; count: number; data: Entry[] };
 // --- screen ---
 
 export default function EntriesScreen() {
+  const { t } = useTranslation();
   const [allEntries, setAllEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -124,9 +126,9 @@ export default function EntriesScreen() {
       .sort((a, b) => (a.expiryDate ?? '').localeCompare(b.expiryDate ?? ''));
 
     const result: SectionData[] = [];
-    if (expired.length)  result.push({ title: 'PRIORITY OVERRIDE', dot: StatusColors.expired, count: expired.length, data: expired });
-    if (upcoming.length) result.push({ title: 'INCOMING BUFFER',   dot: '#FFA500',            count: upcoming.length, data: upcoming });
-    if (stable.length)   result.push({ title: 'STABILIZED VAULT',  dot: StatusColors.active,  count: stable.length,  data: stable });
+    if (expired.length)  result.push({ title: t('entries.priorityOverride'), dot: StatusColors.expired, count: expired.length, data: expired });
+    if (upcoming.length) result.push({ title: t('entries.incomingBuffer'),   dot: '#FFA500',            count: upcoming.length, data: upcoming });
+    if (stable.length)   result.push({ title: t('entries.stabilizedVault'),  dot: StatusColors.active,  count: stable.length,  data: stable });
     return result;
   }, [filtered]);
 
@@ -158,7 +160,7 @@ export default function EntriesScreen() {
         }
         ListEmptyComponent={
           <View style={styles.empty}>
-            <ThemedText style={[styles.emptyText, { color: `${icon}60` }]}>No entries found</ThemedText>
+            <ThemedText style={[styles.emptyText, { color: `${icon}60` }]}>{t('entries.noEntries')}</ThemedText>
           </View>
         }
         renderSectionHeader={({ section }) => (
@@ -168,7 +170,7 @@ export default function EntriesScreen() {
               {section.title}
             </ThemedText>
             <ThemedText style={[styles.sectionCount, { color: `${icon}50` }]}>
-              {section.count} {section.count === 1 ? 'RECORD' : 'RECORDS'}
+              {t('entries.record', { count: section.count })}
             </ThemedText>
           </View>
         )}

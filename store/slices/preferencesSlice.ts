@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type ReminderDays = 1 | 7 | 30;
-export type AppLanguage = 'en' | 'pt' | 'es';
+export type AppLanguage = 'en' | 'ro';
 export type AppTheme = 'dark' | 'light' | 'system';
 
 export interface UserPreferences {

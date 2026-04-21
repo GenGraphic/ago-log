@@ -4,6 +4,7 @@ import { useFreeLimitReached } from "@/hooks/useFreeLimitReached";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   StyleSheet,
@@ -29,7 +30,8 @@ export default function UpgradeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [billing, setBilling] = useState<BillingCycle>("monthly");
-  const { presentPaywall, isLoading } = useRevenueCat();
+  const { purchasePlan, isLoading } = useRevenueCat();
+  const { t } = useTranslation();
   const limitStatus = useFreeLimitReached();
   const screenBg = useThemeColor(
     { light: "#F6F6F6", dark: "#0D0D0D" },
@@ -40,7 +42,7 @@ export default function UpgradeScreen() {
   const price = PLAN_PRICE[billing];
 
   async function handleUpgrade() {
-    const purchased = await presentPaywall();
+    const purchased = await purchasePlan(billing);
     if (purchased) router.back();
   }
 
@@ -63,8 +65,8 @@ export default function UpgradeScreen() {
 
         {/* ── Hero */}
         <View style={styles.hero}>
-          <ThemedText style={styles.heroTitle}>Upgrade to Pro</ThemedText>
-          <ThemedText style={styles.heroSub}>Never miss anything important</ThemedText>
+          <ThemedText style={styles.heroTitle}>{t('upgrade.title')}</ThemedText>
+          <ThemedText style={styles.heroSub}>{t('upgrade.subtitle')}</ThemedText>
         </View>
 
         <PriceCard price={price} features={PRO_FEATURES} />
@@ -77,7 +79,7 @@ export default function UpgradeScreen() {
           disabled={isLoading}
         >
           <ThemedText style={styles.ctaText}>
-            {isLoading ? "LOADING…" : "UPGRADE TO PRO"}
+            {isLoading ? t('upgrade.loading') : t('upgrade.upgradeToPro')}
           </ThemedText>
         </TouchableOpacity>
 
@@ -89,7 +91,7 @@ export default function UpgradeScreen() {
             }
           >
             <ThemedText style={[styles.billingToggleText, { color: mutedText }]}>
-              SWITCH TO {billing === "yearly" ? "MONTHLY" : "ANNUAL"} BILLING
+              {billing === "yearly" ? t('upgrade.switchToMonthly') : t('upgrade.switchToAnnual')}
             </ThemedText>
           </TouchableOpacity>
         </View>

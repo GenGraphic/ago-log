@@ -1,11 +1,12 @@
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -23,6 +24,7 @@ import useAuth from "@/hooks/useAuth";
 import { useFreeLimitReached } from "@/hooks/useFreeLimitReached";
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
   const { signOut } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -30,19 +32,19 @@ export default function ProfileScreen() {
 
   const handleSignOut = () => {
     Alert.alert(
-      "Terminate Session",
-      "All local data will be cleared. Continue?",
+      t("profile.terminateTitle"),
+      t("profile.terminateMessage"),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "Terminate",
+          text: t("profile.terminate"),
           style: "destructive",
           onPress: async () => {
             const result = await signOut();
             if (result.success) {
               router.replace("/(auth)");
             } else {
-              Alert.alert("Error", result.message);
+              Alert.alert(t("common.error"), result.message);
             }
           },
         },
@@ -72,7 +74,7 @@ export default function ProfileScreen() {
             onPress={handleSignOut}
             activeOpacity={0.7}
           >
-            <Text style={styles.terminateText}>TERMINATE SESSION</Text>
+            <Text style={styles.terminateText}>{t("profile.terminateSessionBtn")}</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>

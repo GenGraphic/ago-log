@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Modal,
     Pressable,
@@ -20,13 +21,8 @@ import {
 import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, sharedStyles } from "./shared";
 
-const REMINDER_OPTIONS: { label: string; value: ReminderDays }[] = [
-  { label: "1 day before", value: 1 },
-  { label: "7 days before", value: 7 },
-  { label: "30 days before", value: 30 },
-];
-
 export function NotificationsSection() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const userId = useAppSelector((s) => s.user.id);
   const { defaultReminder, pushNotifications, emailNotifications } =
@@ -41,9 +37,15 @@ export function NotificationsSection() {
     "background",
   );
 
+  const REMINDER_OPTIONS: { label: string; value: ReminderDays }[] = [
+    { label: t("notifications.day1"), value: 1 },
+    { label: t("notifications.day7"), value: 7 },
+    { label: t("notifications.day30"), value: 30 },
+  ];
+
   const selectedLabel =
     REMINDER_OPTIONS.find((o) => o.value === defaultReminder)?.label ??
-    "7 days before";
+    t("notifications.day7");
 
   async function handlePushToggle(v: boolean) {
     dispatch(setPushNotifications(v));
@@ -69,7 +71,7 @@ export function NotificationsSection() {
 
   return (
     <>
-      <SectionLabel title="NOTIFICATIONS" />
+      <SectionLabel title={t("notifications.sectionHeader")} />
       <View style={[sharedStyles.card, { backgroundColor: cardBg }]}>
         {/* Default Reminder Row */}
         <TouchableOpacity
@@ -78,7 +80,7 @@ export function NotificationsSection() {
           onPress={() => setDropdownOpen(true)}
         >
           <ThemedText style={sharedStyles.rowLabel}>
-            Default reminder
+            {t("notifications.defaultReminder")}
           </ThemedText>
           <View style={styles.rowRight}>
             <ThemedText style={styles.rowValue}>{selectedLabel}</ThemedText>
@@ -90,7 +92,7 @@ export function NotificationsSection() {
 
         <View style={sharedStyles.row}>
           <ThemedText style={sharedStyles.rowLabel}>
-            Push notifications
+            {t("notifications.push")}
           </ThemedText>
           <Switch
             value={pushNotifications}
@@ -104,7 +106,7 @@ export function NotificationsSection() {
 
         <View style={sharedStyles.row}>
           <ThemedText style={sharedStyles.rowLabel}>
-            Email notifications
+            {t("notifications.email")}
           </ThemedText>
           <Switch
             value={emailNotifications}
@@ -128,7 +130,7 @@ export function NotificationsSection() {
         >
           <View style={[styles.dropdown, { backgroundColor: dropdownBg }]}>
             <ThemedText style={styles.dropdownTitle}>
-              DEFAULT REMINDER
+              {t("notifications.dropdownTitle")}
             </ThemedText>
             {REMINDER_OPTIONS.map((opt, i) => (
               <React.Fragment key={opt.value}>

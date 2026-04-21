@@ -1,15 +1,16 @@
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -19,8 +20,9 @@ import { useAppSelector } from "@/store/hooks";
 import { ThemedText } from "../ThemedText";
 
 export function ProfileHeader() {
+  const { t } = useTranslation();
   const user = useAppSelector((s) => s.user);
-  const displayName = user.name || "Anonymous User";
+  const displayName = user.name || t('profile.anonymousUser');
   const displayEmail = user.email || "—";
   const { updateUserData } = useUser();
   const router = useRouter();
@@ -64,7 +66,7 @@ export function ProfileHeader() {
     if (result.success) {
       setModalVisible(false);
     } else {
-      Alert.alert("Error", result.message);
+      Alert.alert(t('common.error'), result.message);
     }
   };
 
@@ -88,7 +90,7 @@ export function ProfileHeader() {
 
       {isPro ? (
         <View style={[styles.badge, styles.badgePro]}>
-          <Text style={[styles.badgeText, styles.badgeTextPro]}>PRO</Text>
+          <Text style={[styles.badgeText, styles.badgeTextPro]}>{t('profile.planPro')}</Text>
         </View>
       ) : (
         <TouchableOpacity
@@ -96,9 +98,9 @@ export function ProfileHeader() {
           onPress={() => router.push("/(main)/upgrade")}
           activeOpacity={0.8}
         >
-          <Text style={[styles.upgradeBtnLabel, { color: icon }]}>FREE</Text>
+          <Text style={[styles.upgradeBtnLabel, { color: icon }]}>{t('profile.planFree')}</Text>
           <Feather name="zap" size={10} color="#00F0FF" />
-          <Text style={styles.upgradeBtnCta}>UPGRADE</Text>
+          <Text style={styles.upgradeBtnCta}>{t('profile.upgrade')}</Text>
         </TouchableOpacity>
       )}
 
@@ -118,12 +120,12 @@ export function ProfileHeader() {
             style={[styles.sheet, { backgroundColor: sheetBg }]}
             activeOpacity={1}
           >
-            <Text style={[styles.sheetTitle, { color: text }]}>Edit Name</Text>
+            <Text style={[styles.sheetTitle, { color: text }]}>{t('profile.editName')}</Text>
             <TextInput
               style={[styles.input, { backgroundColor: inputBg, color: text, borderColor: inputBorder }]}
               value={nameInput}
               onChangeText={setNameInput}
-              placeholder="Your name"
+              placeholder={t('profile.yourName')}
               placeholderTextColor={icon}
               autoFocus
               maxLength={60}
@@ -133,7 +135,7 @@ export function ProfileHeader() {
                 style={[styles.cancelBtn, { backgroundColor: neutralBtnBg }]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={[styles.cancelText, { color: icon }]}>CANCEL</Text>
+                <Text style={[styles.cancelText, { color: icon }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.saveBtn}
@@ -143,7 +145,7 @@ export function ProfileHeader() {
                 {saving ? (
                   <ActivityIndicator size="small" color="#0D0D0D" />
                 ) : (
-                  <Text style={styles.saveText}>SAVE</Text>
+                  <Text style={styles.saveText}>{t('common.save')}</Text>
                 )}
               </TouchableOpacity>
             </View>

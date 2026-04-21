@@ -1,4 +1,6 @@
-﻿import React, { useCallback, useEffect, useState } from 'react';
+﻿import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { query } from '@/appwrite';
@@ -26,6 +28,7 @@ function CounterItem({ count, label, color }: CounterItemProps) {
 }
 
 export default function EntriesCounter() {
+  const { t } = useTranslation();
   const [active, setActive] = useState(0);
   const [expired, setExpired] = useState(0);
   const [archived, setArchived] = useState(0);
@@ -43,15 +46,15 @@ export default function EntriesCounter() {
     if (archivedRes.success) setArchived(archivedRes.data.length);
   }, [queryEntries]);
 
-  useEffect(() => { load(); }, [load]);
+  useFocusEffect(useCallback(() => { load(); }, [load]));
 
   return (
     <View style={styles.row}>
-      <CounterItem count={active}   label="ACTIVE"   color={StatusColors.active}   />
+      <CounterItem count={active}   label={t('home.active')}   color={StatusColors.active}   />
       <View style={[styles.divider, { backgroundColor: divider }]} />
-      <CounterItem count={expired}  label="EXPIRED"  color={StatusColors.expired}  />
+      <CounterItem count={expired}  label={t('home.expired')}  color={StatusColors.expired}  />
       <View style={[styles.divider, { backgroundColor: divider }]} />
-      <CounterItem count={archived} label="ARCHIVED" color={StatusColors.archived} />
+      <CounterItem count={archived} label={t('home.archived')} color={StatusColors.archived} />
     </View>
   );
 }

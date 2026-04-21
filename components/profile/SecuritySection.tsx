@@ -1,6 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -8,6 +9,7 @@ import { ThemedText } from "../ThemedText";
 import { RowDivider, SectionLabel, SettingRow, sharedStyles } from "./shared";
 
 export function SecuritySection() {
+  const { t } = useTranslation();
   const router = useRouter();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
@@ -16,10 +18,10 @@ export function SecuritySection() {
 
   return (
     <>
-      <SectionLabel title="SECURITY" />
+      <SectionLabel title={t('profile.security')} />
       <View style={[sharedStyles.card, { backgroundColor: cardBg }]}>
         <SettingRow
-          label="2FA Authentication"
+          label={t('profile.twoFA')}
           onPress={() => router.push("/(main)/mfa-setup")}
         />
         <RowDivider />
@@ -31,8 +33,7 @@ export function SecuritySection() {
             style={{ marginTop: 1 }}
           />
           <ThemedText style={styles.infoText}>
-            Your account uses military-grade AES-256 encryption to protect your
-            personal data and credentials at all times.
+            {t('profile.encryptionText')}
           </ThemedText>
         </View>
       </View>

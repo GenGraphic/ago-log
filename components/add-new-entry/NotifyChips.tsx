@@ -1,6 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import React, { useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export default function NotifyChips({ control, name }: Props) {
+  const { t } = useTranslation();
   const [showCustom, setShowCustom] = useState(false);
   const [customInput, setCustomInput] = useState('');
 
@@ -33,7 +35,9 @@ export default function NotifyChips({ control, name }: Props) {
           if (selected.includes(day)) {
             onChange(selected.filter(d => d !== day));
           } else {
-            onChange([...selected, day].sort((a, b) => a - b));
+            // Replace other preset selections, preserve any custom values
+            const custom = selected.filter(d => !PRESETS.includes(d));
+            onChange([...custom, day].sort((a, b) => a - b));
           }
         };
 
@@ -48,7 +52,7 @@ export default function NotifyChips({ control, name }: Props) {
 
         return (
           <View style={styles.container}>
-            <ThemedText style={[styles.label, { color: icon }]}>NOTIFY DAYS BEFORE</ThemedText>
+            <ThemedText style={[styles.label, { color: icon }]}>{t('notifications.notifyDaysBefore')}</ThemedText>
 
             <View style={styles.chipsRow}>
               {PRESETS.map(day => {
@@ -89,7 +93,7 @@ export default function NotifyChips({ control, name }: Props) {
                 onPress={() => setShowCustom(v => !v)}
                 activeOpacity={0.7}>
                 <Feather name="plus" size={12} color={icon} />
-                <ThemedText style={[styles.chipText, { color: icon }]}>Custom</ThemedText>
+                <ThemedText style={[styles.chipText, { color: icon }]}>{t('notifications.custom')}</ThemedText>
               </TouchableOpacity>
             </View>
 
@@ -97,7 +101,7 @@ export default function NotifyChips({ control, name }: Props) {
               <View style={styles.customRow}>
                 <TextInput
                   style={[styles.customInput, { borderColor: `${icon}30`, color: text, backgroundColor: cardBg }]}
-                  placeholder="e.g. 14"
+                  placeholder={t('notifications.customPlaceholder')}
                   placeholderTextColor={`${icon}50`}
                   keyboardType="number-pad"
                   value={customInput}

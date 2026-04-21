@@ -6,12 +6,15 @@ import useEntries from "@/hooks/useEntries";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { EntryStatus } from "@/models/enums";
 import { Entry } from "@/models/types";
-import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
 const ALERT_DAYS = 7;
 
 const CriticalAlerts = () => {
+  const { t } = useTranslation();
   const [entries, setEntries] = useState<Entry[]>([]);
   const { queryEntries } = useEntries();
   const [loading, setLoading] = useState(false);
@@ -62,16 +65,16 @@ const CriticalAlerts = () => {
     }
   }, [queryEntries]);
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     getEntries();
-  }, []);
+  }, [getEntries]));
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <ThemedText style={styles.title}>Critical Alerts</ThemedText>
+        <ThemedText style={styles.title}>{t('home.criticalAlerts')}</ThemedText>
         <ThemedText style={[styles.action, { color: StatusColors.expired }]}>
-          IMMEDIATE ACTION
+          {t('home.immediateAction')}
         </ThemedText>
       </View>
 
@@ -82,7 +85,7 @@ const CriticalAlerts = () => {
         />
       ) : entries.length === 0 ? (
         <ThemedText style={[styles.empty, { color: icon }]}>
-          No critical entries right now.
+          {t('home.noCritical')}
         </ThemedText>
       ) : (
         <FlatList

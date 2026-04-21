@@ -1,6 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import { useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,6 +14,7 @@ import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function PickMethod() {
+  const { t } = useTranslation();
   const router = useRouter();
   const limitStatus = useFreeLimitReached();
   const tint = useThemeColor({}, 'tint');
@@ -28,10 +30,10 @@ export default function PickMethod() {
 
           {/* Header */}
           <View style={styles.header}>
-            <ThemedText style={styles.title}>ADD NEW LOG</ThemedText>
+            <ThemedText style={styles.title}>{t('add.title')}</ThemedText>
             <View style={styles.subtitleRow}>
               <View style={[styles.dot, { backgroundColor: tint }]} />
-              <ThemedText style={[styles.subtitle, { color: icon }]}>HOW DO YOU WANT TO ADD IT?</ThemedText>
+              <ThemedText style={[styles.subtitle, { color: icon }]}>{t('add.subtitle')}</ThemedText>
             </View>
           </View>
 
@@ -45,8 +47,8 @@ export default function PickMethod() {
               <View style={[styles.iconBox, { backgroundColor: `${tint}18` }]}>
                 <Feather name="camera" size={26} color={tint} />
               </View>
-              <ThemedText style={styles.cardTitle}>Scan with AI</ThemedText>
-              <ThemedText style={[styles.cardSub, { color: icon }]}>TAKE A PHOTO, AI FILLS IT</ThemedText>
+              <ThemedText style={styles.cardTitle}>{t('add.scanWithAI')}</ThemedText>
+              <ThemedText style={[styles.cardSub, { color: icon }]}>{t('add.scanWithAISub')}</ThemedText>
             </TouchableOpacity>
 
             {/* Manual */}
@@ -57,8 +59,8 @@ export default function PickMethod() {
               <View style={[styles.iconBox, { backgroundColor: `${icon}22` }]}>
                 <Feather name="align-left" size={26} color={icon} />
               </View>
-              <ThemedText style={styles.cardTitle}>Manual Entry</ThemedText>
-              <ThemedText style={[styles.cardSub, { color: icon }]}>FILL DETAILS MANUALLY</ThemedText>
+              <ThemedText style={styles.cardTitle}>{t('add.manual')}</ThemedText>
+              <ThemedText style={[styles.cardSub, { color: icon }]}>{t('add.manualSub')}</ThemedText>
             </TouchableOpacity>
           </View>
 
@@ -66,15 +68,15 @@ export default function PickMethod() {
           <View style={styles.badges}>
             <View style={styles.badge}>
               <Feather name="shield" size={14} color={icon} />
-              <ThemedText style={[styles.badgeText, { color: icon }]}>SECURITY</ThemedText>
+              <ThemedText style={[styles.badgeText, { color: icon }]}>{t('add.badgeSecurity')}</ThemedText>
             </View>
             <View style={styles.badge}>
               <Feather name="star" size={14} color={StatusColors.archived} />
-              <ThemedText style={[styles.badgeText, { color: icon }]}>SENTENCE</ThemedText>
+              <ThemedText style={[styles.badgeText, { color: icon }]}>{t('add.badgeSentence')}</ThemedText>
             </View>
             <View style={styles.badge}>
               <Feather name="refresh-cw" size={14} color={icon} />
-              <ThemedText style={[styles.badgeText, { color: icon }]}>SYNC</ThemedText>
+              <ThemedText style={[styles.badgeText, { color: icon }]}>{t('add.badgeSync')}</ThemedText>
             </View>
           </View>
 

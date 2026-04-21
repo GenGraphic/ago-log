@@ -25,7 +25,7 @@ function daysUntil(isoDate) {
 
 async function sendExpoPush(tokens, title, body) {
   if (!tokens.length) return;
-  const messages = tokens.map((to) => ({ to, title, body, sound: 'default' }));
+  const messages = tokens.map((to) => ({ to, title, body, sound: 'default' }));  
   await fetch(EXPO_PUSH_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },

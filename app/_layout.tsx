@@ -17,8 +17,21 @@ SplashScreen.preventAutoHideAsync();
 import useAuth from "@/hooks/useAuth";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
+import "@/i18n";
+import i18n from "@/i18n";
 import { useAppSelector } from "@/store/hooks";
 import { store } from "@/store/store";
+
+// Keeps i18next language in sync with the Redux preference
+function LanguageSyncer() {
+  const language = useAppSelector((s) => s.preferences.language);
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
+  return null;
+}
 
 // Handles auth initialization (must be inside Provider)
 function AuthInitializer() {
@@ -81,6 +94,7 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
+      <LanguageSyncer />
       <AuthInitializer />
       <PurchasesInitializer />
       <ThemedApp>
@@ -88,6 +102,7 @@ export default function RootLayout() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(main)" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemedApp>
