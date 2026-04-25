@@ -229,6 +229,8 @@ export default function DocumentDetailsScreen() {
           />
           <InfoRow label="ADDED" value={formatDate(entry.createdAt)} />
           <InfoRow label="LAST UPDATED" value={formatDate(entry.updatedAt)} />
+          <InfoRow label="CURRENT PRICE" value={entry.currentPrice != null ? entry.currentPrice.toLocaleString() : undefined} />
+          <InfoRow label="CURRENCY" value={entry.currency} />
         </DetailsSection>
         {entry.notes && (
           <DetailsSection title="NOTES">

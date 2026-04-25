@@ -1,9 +1,11 @@
+import { useAppDispatch } from '@/store/hooks';
 import Feather from '@expo/vector-icons/Feather';
+import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import AnimatedBackground from '@/components/AnimatedBackground';
 import Logo from '@/components/Logo';
@@ -24,7 +26,14 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { sendOtp } = useAuth();
+    const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+  const [demoEmail, setDemoEmail] = useState(
+    Constants?.expoConfig?.extra?.DEMO_EMAIL || process.env.DEMO_EMAIL || 'contact@gengraphic.ro'
+  );
+  const [pendingEmail, setPendingEmail] = useState('');
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
     defaultValues: {
       email: '',
@@ -32,11 +41,14 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
+    if (data.email.trim().toLowerCase() === demoEmail.trim().toLowerCase()) {
+      setPendingEmail(data.email);
+      setShowPasswordModal(true);
+      return;
+    }
     try {
       setLoading(true);
-      
       const result = await sendOtp(data.email);
-
       if (!result.success) {
         Toast.show({
            type: 'error', 
@@ -45,7 +57,6 @@ export default function LoginScreen() {
           });
         return;
       };
-
       router.push({
         pathname: "/otp/[userId]",
         params: {
@@ -55,6 +66,27 @@ export default function LoginScreen() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Demo password login handler (replace with your real password login logic)
+  const handleDemoLogin = async () => {
+    setShowPasswordModal(false);
+    setLoading(true);
+    try {
+      if (password === 'Password11!') {
+        Toast.show({ type: 'success', text1: 'Demo login successful!' });
+        // Set auth state and navigate to main app
+        dispatch(setAuthState(true));
+        setTimeout(() => {
+          router.replace('/');
+        }, 500);
+      } else {
+        Toast.show({ type: 'error', text1: 'Invalid password' });
+      }
+    } finally {
+      setLoading(false);
+      setPassword('');
     }
   };
 
@@ -99,6 +131,37 @@ export default function LoginScreen() {
           isDisabled={loading}
           action={handleSubmit(onSubmit)}
         />
+
+        {/* Demo Password Modal */}
+        <Modal
+          visible={showPasswordModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowPasswordModal(false)}
+        >
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: '#fff', padding: 24, borderRadius: 12, width: 300 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 12 }}>Demo Account Login</Text>
+              <Text style={{ marginBottom: 12 }}>Enter password for {pendingEmail}</Text>
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                secureTextEntry
+                style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginBottom: 16 }}
+                autoFocus
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 12 }}>
+                <TouchableOpacity onPress={() => setShowPasswordModal(false)}>
+                  <Text style={{ color: '#888', fontWeight: 'bold', fontSize: 16 }}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleDemoLogin}>
+                  <Text style={{ color: '#007AFF', fontWeight: 'bold', fontSize: 16 }}>Login</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         {/* Legal */}
         <View style={styles.legalSection}>

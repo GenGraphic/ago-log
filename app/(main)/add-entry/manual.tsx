@@ -5,14 +5,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -30,7 +30,7 @@ import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ENTRY_CONFIG, EntryFieldConfig } from "@/models/entryConfig";
-import { EntryStatus, EntryType, UserPlan } from "@/models/enums";
+import { Currency, EntryStatus, EntryType, UserPlan } from "@/models/enums";
 import { Entry_DB } from "@/models/types";
 import { useAppSelector } from "@/store/hooks";
 import Toast from "react-native-toast-message";
@@ -50,6 +50,8 @@ type EntryFormData = {
   intervalDays?: string;
   lastMileage?: string;
   mileageInterval?: string;
+  currentPrice?: string;  
+  currency?: Currency
 };
 
 function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
@@ -230,6 +232,11 @@ export default function ManualInputScreen() {
           ? parseInt(data.mileageInterval, 10)
           : undefined,
         imageId,
+        currentPrice: data.currentPrice
+          ? Number(data.currentPrice.replace(",", "."))
+          : undefined,
+
+        currency: data.currency || undefined,
       };
 
       const result = await createEntry(newEntry);
@@ -492,6 +499,26 @@ export default function ManualInputScreen() {
                 />
               )}
             </>
+          )}
+
+          {config?.showAmount && (
+            <FormTextInput
+              control={control}
+              name="currentPrice"
+              label="CURRENT PRICE"
+              placeholder="e.g. 650"
+              keyboardType="decimal-pad"
+            />
+          )}
+
+          {config?.showCurrency && (
+            <FormTextInput
+              control={control}
+              name="currency"
+              label="CURRENCY"
+              placeholder="RON"
+              autoCapitalize="characters"
+            />
           )}
 
           <FormTextInput

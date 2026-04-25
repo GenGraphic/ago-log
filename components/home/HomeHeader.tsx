@@ -29,8 +29,7 @@ export default function HomeHeader() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 12,
     gap: 12,
   },
   statusRow: {

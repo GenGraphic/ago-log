@@ -3,13 +3,13 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -23,7 +23,7 @@ import { ThemedText } from "@/components/ThemedText";
 import useEntries from "@/hooks/useEntries";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ENTRY_CONFIG, EntryFieldConfig } from "@/models/entryConfig";
-import { EntryStatus, EntryType } from "@/models/enums";
+import { Currency, EntryStatus, EntryType } from "@/models/enums";
 import { Entry_DB } from "@/models/types";
 
 type EntryFormData = {
@@ -41,6 +41,8 @@ type EntryFormData = {
   intervalDays?: string;
   lastMileage?: string;
   mileageInterval?: string;
+  currentPrice?: string;  
+  currency?: Currency
 };
 
 function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
@@ -103,6 +105,8 @@ export default function EditDocumentScreen() {
         lastMileage: e.lastMileage !== undefined ? String(e.lastMileage) : "",
         mileageInterval:
           e.mileageInterval !== undefined ? String(e.mileageInterval) : "",
+        currentPrice: e.currentPrice !== undefined ? String(e.currentPrice) : "",
+        currency: e.currency ?? undefined,
       });
     } else {
       Toast.show({
@@ -153,6 +157,10 @@ export default function EditDocumentScreen() {
         mileageInterval: data.mileageInterval
           ? parseInt(data.mileageInterval, 10)
           : undefined,
+        currentPrice: data.currentPrice
+          ? Number(data.currentPrice.replace(",", "."))
+          : undefined,
+        currency: data.currency || undefined,
       };
 
       const res = await updateEntry(updated, id!);
@@ -364,6 +372,26 @@ export default function EditDocumentScreen() {
                 />
               )}
             </>
+          )}
+
+          {config?.showAmount && (
+            <FormTextInput
+              control={control}
+              name="currentPrice"
+              label="CURRENT PRICE"
+              placeholder="e.g. 650"
+              keyboardType="decimal-pad"
+            />
+          )}
+
+          {config?.showCurrency && (
+            <FormTextInput
+              control={control}
+              name="currency"
+              label="CURRENCY"
+              placeholder="RON"
+              autoCapitalize="characters"
+            />
           )}
 
           <FormTextInput

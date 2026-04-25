@@ -1,4 +1,4 @@
-import { EntryStatus, EntryType, NotifType, UserPlan, UserStatus } from "./enums";
+import { Currency, EntryStatus, EntryType, NotifType, UserPlan, UserStatus } from "./enums";
 
 export type HookResponse<T = void> =
   | { success: true;  data: T }
@@ -51,6 +51,9 @@ export interface Entry_DB {
   // The photo of the physical document. Used for AI extraction on add,
   // then stored permanently so the user can view the original image anytime.
   imageId?: string;  // Appwrite Storage file ID
+
+  currentPrice?: number;
+  currency?: Currency
 }
 
 export interface Entry extends Entry_DB {

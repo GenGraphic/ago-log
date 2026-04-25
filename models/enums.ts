@@ -9,6 +9,12 @@ export enum UserPlan {
     PRO  = 'PRO',
 };
 
+export enum Currency {
+    EUR = 'EUR',
+    RON  = 'RON',
+    USD = 'USD',
+};
+
 // enums.ts
 export enum EntryType {
   // Documents
@@ -27,6 +33,7 @@ export enum EntryType {
   CAR_INSPECTION    = 'Car_Inspection',       // MOT / TÜV
   CAR_MAINTENANCE   = 'Car_Maintenance',      // oil, tires, filters
   VEHICLE_REGISTRATION = 'Vehicle_Registration',
+  VIGNETTE          = 'Vignette',              // road tax sticker
 
   // Medical
   VACCINATION       = 'Vaccination',

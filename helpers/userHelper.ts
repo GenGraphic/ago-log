@@ -39,6 +39,8 @@ export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
   lastMileage: dbEntry.lastMileage ?? undefined,
   mileageInterval: dbEntry.mileageInterval ?? undefined,
   imageId: dbEntry.imageId ?? undefined,
+  currency: dbEntry.currency ?? undefined,
+  currentPrice: dbEntry.currentPrice ?? undefined
 });
 
 export function toNotification(doc: Models.DefaultRow): Notification {

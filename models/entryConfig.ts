@@ -13,6 +13,8 @@ export interface EntryFieldConfig {
   showMileageInterval: boolean;
   showNotifyDaysBefore: boolean;
   expiryLabel: string;
+  showAmount: boolean;
+  showCurrency: boolean;
 }
 
 const doc = (expiryLabel = 'Expiry Date'): EntryFieldConfig => ({
@@ -28,6 +30,8 @@ const doc = (expiryLabel = 'Expiry Date'): EntryFieldConfig => ({
   showMileageInterval: false,
   showNotifyDaysBefore: true,
   expiryLabel,
+  showAmount: false,
+  showCurrency: false
 });
 
 const insurance = (): EntryFieldConfig => ({
@@ -43,6 +47,8 @@ const insurance = (): EntryFieldConfig => ({
   showMileageInterval: false,
   showNotifyDaysBefore: true,
   expiryLabel: 'Renewal Date',
+  showAmount: true,
+  showCurrency: true
 });
 
 const maintenance = (): EntryFieldConfig => ({
@@ -58,6 +64,8 @@ const maintenance = (): EntryFieldConfig => ({
   showMileageInterval: true,
   showNotifyDaysBefore: true,
   expiryLabel: 'Due Date',
+  showAmount: true,
+  showCurrency: true
 });
 
 const reminder = (expiryLabel = 'Date'): EntryFieldConfig => ({
@@ -73,6 +81,8 @@ const reminder = (expiryLabel = 'Date'): EntryFieldConfig => ({
   showMileageInterval: false,
   showNotifyDaysBefore: true,
   expiryLabel,
+  showAmount: false,
+  showCurrency: false
 });
 
 export const ENTRY_CONFIG: Record<EntryType, EntryFieldConfig> = {
@@ -122,6 +132,8 @@ export const ENTRY_CONFIG: Record<EntryType, EntryFieldConfig> = {
     showMileageInterval: false,
     showNotifyDaysBefore: false,
     expiryLabel: 'Expiry Date',
+    showAmount: false,
+    showCurrency: false
   },
 
   // Catch-all

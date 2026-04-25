@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-    ActivityIndicator,
-    RefreshControl,
-    SectionList,
-    StyleSheet,
-    View,
+  ActivityIndicator,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -62,6 +62,7 @@ const TYPE_CATEGORY: Record<EntryType, CategoryKey> = {
   [EntryType.ANNIVERSARY]:          'PERSONAL',
   [EntryType.CREDENTIAL]:           'SECURE',
   [EntryType.REMINDER]:             'PERSONAL',
+  [EntryType.VIGNETTE]:             'VEHICLE',
 };
 
 type SectionData = { title: string; dot: string; count: number; data: Entry[] };

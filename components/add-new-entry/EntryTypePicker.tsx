@@ -13,7 +13,7 @@ type Group = { label: string; types: EntryType[] };
 const GROUPS: Group[] = [
   { label: 'DOCUMENTS',      types: [EntryType.PASSPORT, EntryType.DRIVING_LICENSE, EntryType.ID_CARD, EntryType.VISA] },
   { label: 'INSURANCE',      types: [EntryType.CAR_INSURANCE, EntryType.HEALTH_INSURANCE, EntryType.HOME_INSURANCE, EntryType.TRAVEL_INSURANCE] },
-  { label: 'VEHICLE',        types: [EntryType.CAR_INSPECTION, EntryType.CAR_MAINTENANCE, EntryType.VEHICLE_REGISTRATION] },
+  { label: 'VEHICLE',        types: [EntryType.CAR_INSPECTION, EntryType.CAR_MAINTENANCE, EntryType.VEHICLE_REGISTRATION, EntryType.VIGNETTE] },
   { label: 'MEDICAL',        types: [EntryType.VACCINATION, EntryType.PRESCRIPTION, EntryType.MEDICAL_CHECKUP] },
   { label: 'FINANCE & LEGAL',types: [EntryType.SUBSCRIPTION, EntryType.CONTRACT, EntryType.WARRANTY, EntryType.PROPERTY_LEASE] },
   { label: 'PERSONAL',       types: [EntryType.BIRTHDAY, EntryType.ANNIVERSARY] },

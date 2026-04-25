@@ -42,6 +42,9 @@ const EntryAIPrefillSchema = z.object({
   lastServiceDate:  z.string().nullable(),  // ISO 8601 datetime string — when the work was done
   lastMileage:      z.number().nullable(),  // odometer reading AT the time of service (e.g. 85000)
   mileageInterval:  z.number().nullable(),  // how many km/miles UNTIL next service (e.g. 30000)
+
+  currentPrice: z.number().nullable(), //used to compare future prices
+  currency: z.enum(["EUR", "RON", "USD"]),
 });
 
 export default async ({ req, res, log, error }) => {
