@@ -3,12 +3,14 @@ import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Dimensions,
-    FlatList,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    ViewToken,
+  Dimensions,
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewToken
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -142,6 +144,16 @@ export default function OnboardingScreen() {
               ]}
             />
           ))}
+        </View>
+
+        {/* Legal links */}
+        <View style={{ alignItems: 'center', marginBottom: 16 }}>
+          <ThemedText style={{ fontSize: 12, opacity: 0.7, textAlign: 'center' }}>
+            By using this app, you agree to our{' '}
+            <Text style={{ textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://ago-log.com/privacy-policy')}>Privacy Policy</Text>
+            {' '}and{' '}
+            <Text style={{ textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://ago-log.com/terms-of-service')}>Terms of Service</Text>.
+          </ThemedText>
         </View>
 
         {/* Action button */}

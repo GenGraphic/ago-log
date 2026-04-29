@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AnimatedBackground from "@/components/AnimatedBackground";
+import MyMainButton from "@/components/MyMainButton";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -84,6 +85,13 @@ export default function MfaSetupScreen() {
             <ThemedText style={[styles.overlayText, { color: secondary }]}>
               This feature will be available soon.
             </ThemedText>
+            <View style={{ width: 200, marginTop: 12 }}>
+              <MyMainButton 
+                action={() => router.back()}
+                title="Back"
+                isDisabled={false}
+              />
+            </View>
           </View>
         </View>
       </SafeAreaView>

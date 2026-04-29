@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Linking } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { SectionLabel } from "./shared";
 
@@ -24,18 +25,20 @@ export function SupportSection() {
         <TouchableOpacity
           style={[styles.card, { backgroundColor: cardBg }]}
           activeOpacity={0.7}
+          onPress={() => Linking.openURL('https://ago-log.com/#faq')}
         >
           <Feather name="book-open" size={22} color="#00F0FF" />
-          <ThemedText style={[styles.label, { color: labelColor }]}>
+          <ThemedText style={[styles.label, { color: labelColor }]}> 
             {t('profile.helpFaq')}
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.card, { backgroundColor: cardBg }]}
           activeOpacity={0.7}
+          onPress={() => Linking.openURL('https://ago-log.com/#contact')}
         >
           <Feather name="message-circle" size={22} color="#00F0FF" />
-          <ThemedText style={[styles.label, { color: labelColor }]}>
+          <ThemedText style={[styles.label, { color: labelColor }]}> 
             {t('profile.contact')}
           </ThemedText>
         </TouchableOpacity>

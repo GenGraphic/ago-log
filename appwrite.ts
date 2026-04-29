@@ -30,6 +30,7 @@ export const DB_ID = "68ba4da4001145a3a851";
 export const USERS_TABLE_ID = "697c28da000f3f78bafd";
 export const ENTRIES_TABLE_ID = "69d5dbd80021364ce602";
 export const NOTIFICATIONS_TABLE_ID = "69d78d63001584d54dc5";
+export const ASSETS_TABLE_ID = "69f080670032568d5dd0";
 
 //Storage bucket id's
 export const ENTRIES_IMAGES_BUCKET_ID = "69d5e39f00247e5da26f";

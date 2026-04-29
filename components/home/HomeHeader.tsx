@@ -1,22 +1,37 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
+import { useNotifications } from '@/hooks/useNotifications';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useAppSelector } from '@/store/hooks';
+import Feather from '@expo/vector-icons/Feather';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function HomeHeader() {
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.user);
   const tint = useThemeColor({}, 'tint');
+  const router = useRouter();
+  const { unreadCount } = useNotifications();
 
   return (
     <View style={styles.container}>
-      {/* Status row */}
-      <View style={styles.statusRow}>
-        <View style={[styles.statusDot, { backgroundColor: tint }]} />
-        <ThemedText style={[styles.statusText, { color: tint }]}>{t('home.systemOnline')}</ThemedText>
+      {/* Header row with notifications */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={styles.statusRow}>
+          <View style={[styles.statusDot, { backgroundColor: tint }]} />
+          <ThemedText style={[styles.statusText, { color: tint }]}>{t('home.systemOnline')}</ThemedText>
+        </View>
+        <TouchableOpacity onPress={() => router.push('/(main)/(tabs)/notifications')} style={{ padding: 4 }}>
+          <Feather name="bell" size={24} color={tint} />
+          {unreadCount > 0 && (
+            <View style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FF6060', borderRadius: 8, minWidth: 16, height: 16, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 }}>
+              <ThemedText style={{ color: '#fff', fontSize: 10, fontWeight: 'bold' }}>{unreadCount > 9 ? '9+' : unreadCount}</ThemedText>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* Welcome heading */}

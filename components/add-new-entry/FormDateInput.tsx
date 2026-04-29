@@ -1,14 +1,16 @@
 import Feather from '@expo/vector-icons/Feather';
 import React from 'react';
-import { Control, Controller } from 'react-hook-form';
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-type Props = {
-  control: Control<any>;
-  name: string;
+
+type Props<T extends FieldValues> = {
+  control: Control<T>;
+  name: Path<T>;
   label: string;
   rules?: object;
 };
@@ -40,7 +42,7 @@ function toDisplay(iso: string): string {
   return iso;
 }
 
-export default function FormDateInput({ control, name, label, rules }: Props) {
+export default function FormDateInput<T extends FieldValues>({ control, name, label, rules }: Props<T>) {
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
   const cardBg = useThemeColor({ light: '#E8E9EA', dark: '#141C2A' }, 'background');

@@ -2,10 +2,10 @@ import Feather from "@expo/vector-icons/Feather";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
-    ActivityIndicator,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { query } from "@/appwrite";
@@ -42,6 +42,7 @@ const ICON_MAP: Record<
   [EntryType.ANNIVERSARY]: "star",
   [EntryType.CREDENTIAL]: "lock",
   [EntryType.REMINDER]: "bell",
+  [EntryType.VIGNETTE]: "alert-octagon",
 };
 
 const MONTH_SHORT = [

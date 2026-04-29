@@ -64,3 +64,12 @@ export enum EntryStatus {
 }
 
 export type NotifType = 'expired' | 'warning' | 'info' | 'sync';
+
+export enum AssetType {
+  VEHICLE = 'Vehicle',
+  HOME = 'Home',
+  LAND = 'Land',
+  PERSONAL = "Personal",
+  BUSINESS = "Business",
+  OTHER = "Other",
+}

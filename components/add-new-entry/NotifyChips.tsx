@@ -9,12 +9,13 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 const PRESETS = [1, 7, 30];
 
-type Props = {
-  control: Control<any>;
-  name: string;
+
+type Props<T> = {
+  control: Control<T>;
+  name: keyof T;
 };
 
-export default function NotifyChips({ control, name }: Props) {
+export default function NotifyChips<T>({ control, name }: Props<T>) {
   const { t } = useTranslation();
   const [showCustom, setShowCustom] = useState(false);
   const [customInput, setCustomInput] = useState('');

@@ -1,7 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -16,7 +16,7 @@ const TABS: TabItem[] = [
   { name: 'index', icon: 'home' },
   { name: 'entries', icon: 'file-text' },
   { name: 'add', icon: 'plus', isCenter: true },
-  { name: 'notifications', icon: 'bell' },
+  { name: 'assets', icon: 'briefcase' },
   { name: 'profile', icon: 'user' },
 ];
 
@@ -77,11 +77,7 @@ export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                   size={24}
                   color={isFocused ? tint : inactive}
                 />
-                {tab.name === 'notifications' && unreadCount > 0 && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
-                  </View>
-                )}
+                {/* Notification badge removed from tab bar */}
               </TouchableOpacity>
             );
           })}

@@ -5,9 +5,10 @@ import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-type Props = {
-  control: Control<any>;
-  name: string;
+
+type Props<T> = {
+  control: Control<T>;
+  name: keyof T;
   label: string;
   placeholder?: string;
   sensitive?: boolean;
@@ -15,7 +16,7 @@ type Props = {
   rules?: object;
 } & Omit<TextInputProps, "style">;
 
-export default function FormTextInput({
+export default function FormTextInput<T>({
   control,
   name,
   label,
@@ -24,7 +25,7 @@ export default function FormTextInput({
   multiline,
   rules,
   ...rest
-}: Props) {
+}: Props<T>) {
   const icon = useThemeColor({}, "icon");
   const text = useThemeColor({}, "text");
   const cardBg = useThemeColor(

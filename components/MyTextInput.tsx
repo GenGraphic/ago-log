@@ -1,31 +1,31 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import React from "react";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, FieldValues, Path, RegisterOptions } from "react-hook-form";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TextInputProps,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 
-interface Props extends TextInputProps {
-  name: string;
-  control: Control<any>;
-  rules?: object;
+interface Props<T extends FieldValues> extends TextInputProps {
+  name: Path<T>;
+  control: Control<T>;
+  rules?: RegisterOptions<T>;
   label?: string;
   errorMessage?: string;
 }
 
-const MyTextInput: React.FC<Props> = ({
+const MyTextInput = <T extends FieldValues>({
   name,
   control,
   rules,
   label,
   errorMessage,
   ...textInputProps
-}) => {
+}: Props<T>) => {
   const placeholderColor = "#999999";
   const inputBg = useThemeColor(
     { light: "#F5F5F5", dark: "#1C2333" },

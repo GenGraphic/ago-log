@@ -5,12 +5,12 @@ export function UpgradeFooter() {
   return (
     <View style={styles.footer}>
       <View style={styles.links}>
-        <TouchableOpacity>
-          <Text style={styles.link}>Legal Settlement</Text>
+        <TouchableOpacity onPress={() => Linking.openURL('https://ago-log.com/privacy-policy')}>
+          <Text style={styles.link}>Privacy Policy</Text>
         </TouchableOpacity>
         <Text style={styles.dot}>·</Text>
-        <TouchableOpacity>
-          <Text style={styles.link}>Privacy Policy</Text>
+        <TouchableOpacity onPress={() => Linking.openURL('https://ago-log.com/terms-of-service')}>
+          <Text style={styles.link}>Terms of Service</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.copy}>© 2026 Agolog. All rights reserved.</Text>

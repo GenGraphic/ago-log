@@ -14,6 +14,7 @@ import MyTextInput from '@/components/MyTextInput';
 import { ThemedText } from '@/components/ThemedText';
 import globalStyles from '@/constants/GlobalStyles';
 import useAuth from '@/hooks/useAuth';
+import { setAuthState } from '@/store/slices/authSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
@@ -167,9 +168,9 @@ export default function LoginScreen() {
         <View style={styles.legalSection}>
           <Text style={styles.legalText}>
             {t('auth.legalPrefix')}{' '}
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/privacy')}>{t('auth.privacyPolicy')}</Text>
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/privacy-policy')}>{t('auth.privacyPolicy')}</Text>
             {' '}{t('auth.legalAnd')}{' '}
-            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/terms')}>{t('auth.legalTerms')}</Text>.
+            <Text style={styles.legalLink} onPress={() => Linking.openURL('https://ago-log.com/terms-of-service')}>{t('auth.legalTerms')}</Text>.
           </Text>
         </View>
 

@@ -26,6 +26,8 @@ export interface Entry_DB {
   entryType: EntryType;  // drives which fields are shown in the form (see ENTRY_CONFIG)
   status: EntryStatus;   // Active | Archived | Expired
 
+  assetId?: string;      // optional link to an Asset
+
   notes?: string;        // free-text field shown on all types
 
   // ─── Expiry / renewal ────────────────────────────────────────────────────
@@ -60,6 +62,7 @@ export interface Entry extends Entry_DB {
   id: string;
   createdAt: string;
   updatedAt: string;
+  assetId?: string;
 }
 
 export interface Notification_DB {

@@ -1,5 +1,6 @@
+import { Asset } from "@/models/assets";
 import { Models } from "react-native-appwrite";
-import { EntryStatus, EntryType, UserPlan, UserStatus } from "../models/enums";
+import { AssetType, EntryStatus, EntryType, UserPlan, UserStatus } from "../models/enums";
 import { Entry, Notification, User } from "../models/types";
 
 export const toUser = (dbUser: Models.DefaultRow): User => {
@@ -40,7 +41,8 @@ export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
   mileageInterval: dbEntry.mileageInterval ?? undefined,
   imageId: dbEntry.imageId ?? undefined,
   currency: dbEntry.currency ?? undefined,
-  currentPrice: dbEntry.currentPrice ?? undefined
+  currentPrice: dbEntry.currentPrice ?? undefined,
+  assetId: dbEntry.assetId ?? undefined,
 });
 
 export function toNotification(doc: Models.DefaultRow): Notification {
@@ -53,5 +55,17 @@ export function toNotification(doc: Models.DefaultRow): Notification {
     type: doc.type,
     read: doc.read,
     sentAt: doc.sentAt,
+  };
+}
+
+export function toAsset(doc: Models.DefaultRow): Asset {
+  return {
+    id: doc.$id,
+    createdAt: doc.$createdAt,
+    userId: doc.userId,
+    name: doc.name,
+    type: doc.type as AssetType,
+    description: doc.description ?? undefined,
+    metadata: doc.metadata ?? undefined,
   };
 }

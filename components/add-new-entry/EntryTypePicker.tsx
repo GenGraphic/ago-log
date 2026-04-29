@@ -1,6 +1,7 @@
 import Feather from '@expo/vector-icons/Feather';
 import React, { useState } from 'react';
-import { Control, Controller } from 'react-hook-form';
+import type { Control, FieldValues, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { FlatList, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,14 +22,15 @@ const GROUPS: Group[] = [
   { label: 'OTHER',          types: [EntryType.REMINDER] },
 ];
 
+
+export interface EntryTypePickerProps<T extends FieldValues> {
+  control: Control<T>;
+  name: Path<T>;
+}
+
 export const formatEntryType = (type: EntryType) => type.replace(/_/g, ' ');
 
-type Props = {
-  control: Control<any>;
-  name: string;
-};
-
-export default function EntryTypePicker({ control, name }: Props) {
+export default function EntryTypePicker<T extends FieldValues>({ control, name }: EntryTypePickerProps<T>) {
   const [open, setOpen] = useState(false);
 
   const tint = useThemeColor({}, 'tint');
@@ -38,6 +40,7 @@ export default function EntryTypePicker({ control, name }: Props) {
   const modalBg = useThemeColor({ light: '#F6F6F6', dark: '#0D1420' }, 'background');
 
   return (
+
     <Controller
       control={control}
       name={name}
@@ -52,7 +55,7 @@ export default function EntryTypePicker({ control, name }: Props) {
               ]}
               onPress={() => setOpen(true)}
               activeOpacity={0.8}>
-              <ThemedText style={[styles.pickerText, { color: value ? text : `${icon}60` }]}>
+              <ThemedText style={[styles.pickerText, { color: value ? text : `${icon}60` }]}> 
                 {value ? formatEntryType(value) : 'Select Type...'}
               </ThemedText>
               <Feather

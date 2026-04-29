@@ -32,6 +32,7 @@ const ICON_MAP: Record<EntryType, React.ComponentProps<typeof Feather>['name']> 
   [EntryType.ANNIVERSARY]:          'star',
   [EntryType.CREDENTIAL]:           'lock',
   [EntryType.REMINDER]:             'bell',
+  [EntryType.VIGNETTE]:             "alert-octagon",
 };
 
 const MONTH_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];

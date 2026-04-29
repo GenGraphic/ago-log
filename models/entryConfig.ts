@@ -101,6 +101,7 @@ export const ENTRY_CONFIG: Record<EntryType, EntryFieldConfig> = {
   // Vehicle
   [EntryType.CAR_INSPECTION]:        doc('Inspection Due'),
   [EntryType.CAR_MAINTENANCE]:       maintenance(),
+  [EntryType.VIGNETTE]:              doc('Renewal Date'),
   [EntryType.VEHICLE_REGISTRATION]:  doc('Renewal Date'),
 
   // Medical

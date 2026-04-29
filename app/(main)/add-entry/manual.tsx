@@ -461,7 +461,6 @@ export default function ManualInputScreen() {
                   label={t('manual.urlLabel')}
                   placeholder="https://..."
                   keyboardType="url"
-                  autoCapitalize="none"
                 />
               )}
               {config.showLastServiceDate && (
