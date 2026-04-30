@@ -1,38 +1,35 @@
-// models/assets.ts
-// Asset interface for the Assets screen/tab
-
-import { AssetType } from './enums';
+import { AssetType } from "./enums";
 
 export interface Asset_DB {
-    userId: string;
+  userId: string;
+  name: string;
+  type: AssetType;
+  description?: string;
 
-    name: string; 
-    type: AssetType;
+  // VEHICLE
+  brand?: string;
+  model?: string;
+  year?: number;
+  vin?: string;
+  registrationNumber?: string;
 
-    description?: string;
-    metadata?: {
-        brand?: string;
-        model?: string;
-        year?: number;
+  // HOME / LAND
+  address?: string;
+  rooms?: number;
+  surface?: number;
+  priceEvaluation?: number;
+  constructionYear?: number;
 
-        address?: string;
-    };
-}
+  // BUSINESS
+  businessName?: string;
+  activityType?: string;
+  foundedYear?: number;
+
+  // PERSONAL / OTHER
+  notes?: string;
+};
 
 export interface Asset extends Asset_DB {
-    id: string;
-    createdAt: string;
-    userId: string;
-
-    name: string; 
-    type: AssetType;
-
-    description?: string;
-    metadata?: {
-        brand?: string;
-        model?: string;
-        year?: number;
-
-        address?: string;
-    };
+  id: string;
+  createdAt: Date;
 }

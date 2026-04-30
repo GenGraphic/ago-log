@@ -3,7 +3,6 @@ import { File } from "expo-file-system";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -22,6 +21,7 @@ import FormDateInput from "@/components/add-new-entry/FormDateInput";
 import FormTextInput from "@/components/add-new-entry/FormTextInput";
 import NotifyChips from "@/components/add-new-entry/NotifyChips";
 import PhotoCapture from "@/components/add-new-entry/PhotoCapture";
+import BackHeader from "@/components/BackHeader";
 import MyMainButton from "@/components/MyMainButton";
 import { ThemedText } from "@/components/ThemedText";
 import { FREE_LOG_LIMIT } from "@/constants/plans";
@@ -29,6 +29,7 @@ import useAI from "@/hooks/useAI";
 import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { t } from "@/i18n/t";
 import { ENTRY_CONFIG, EntryFieldConfig } from "@/models/entryConfig";
 import { Currency, EntryStatus, EntryType, UserPlan } from "@/models/enums";
 import { Entry_DB } from "@/models/types";
@@ -69,7 +70,6 @@ function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
 }
 
 export default function ManualInputScreen() {
-  const { t } = useTranslation();
   const { photoUri } = useLocalSearchParams<{ photoUri?: string }>();
   const router = useRouter();
 
@@ -320,7 +320,7 @@ export default function ManualInputScreen() {
               }}
             >
               <ThemedText style={styles.modalUpgradeBtnText}>
-                {t('manual.upgradeToPro')}
+                {t('manual.upgradeButton')}
               </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -337,27 +337,15 @@ export default function ManualInputScreen() {
         </View>
       </Modal>
 
-      {/* ── Top bar ── */}
-      <View style={styles.topBar}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Feather name="arrow-left" size={20} color={icon} />
-        </TouchableOpacity>
-        <View style={styles.logoRow}>
-          <ThemedText style={[styles.logoText, { color: text }]}>
-            AGO_LOG
-          </ThemedText>
-          <View style={[styles.logoDot, { backgroundColor: tint }]} />
-        </View>
-        <View style={{ width: 40 }} />
-      </View>
+      <BackHeader />
 
       {/* ── Title area ── */}
       <View style={styles.titleArea}>
         <ThemedText style={[styles.sectionLabel, { color: `${icon}80` }]}>
-          {t('manual.vaultAcquisition')}
+          {t('manual.pageLabel')}
         </ThemedText>
         <ThemedText style={[styles.pageTitle, { color: text }]}>
-          {watchedTitle?.trim() || t('manual.manualEntry')}
+          {watchedTitle?.trim() || t('add.manual')}
         </ThemedText>
         {entryType && (
           <ThemedText style={[styles.entrySubtitle, { color: `${icon}70` }]}>
@@ -526,7 +514,7 @@ export default function ManualInputScreen() {
             label="NOTES"
             placeholder={
               config
-                ? t('manual.additionalInfo')
+                ? t('manual.notesPlaceholder')
                 : t('manual.notesPlaceholder')
             }
             multiline
@@ -537,15 +525,10 @@ export default function ManualInputScreen() {
       {/* ── Footer ── */}
       <View style={styles.footer}>
         <MyMainButton
-          title={submitting ? t('manual.sealing') : t('manual.sealEntry')}
+          title={submitting ? t('manual.sealing') : t('manual.sealButton')}
           isDisabled={submitting}
           action={handleSubmit(onSubmit)}
         />
-        <TouchableOpacity style={styles.voidBtn} onPress={() => router.back()}>
-          <ThemedText style={[styles.voidText, { color: `${icon}80` }]}>
-            {t('manual.voidEntry')}
-          </ThemedText>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -625,35 +608,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     letterSpacing: 1.5,
   },
-  // Top bar
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-  logoText: {
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 2,
-  },
-  logoDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
   // Title area
   titleArea: {
     paddingHorizontal: 20,
@@ -705,7 +659,7 @@ const styles = StyleSheet.create({
   // Footer
   footer: {
     paddingHorizontal: 20,
-    paddingBottom: 24,
+    paddingBottom: 50,
     paddingTop: 12,
     gap: 12,
   },

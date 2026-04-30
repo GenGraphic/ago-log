@@ -1,14 +1,14 @@
 import React from "react";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 
-type Props<T> = {
+type Props<T extends FieldValues> = {
   control: Control<T>;
-  name: keyof T;
+  name: Path<T>;
   label: string;
   placeholder?: string;
   sensitive?: boolean;
@@ -16,7 +16,7 @@ type Props<T> = {
   rules?: object;
 } & Omit<TextInputProps, "style">;
 
-export default function FormTextInput<T>({
+export default function FormTextInput<T extends FieldValues>({
   control,
   name,
   label,
@@ -66,8 +66,14 @@ export default function FormTextInput<T>({
             placeholder={placeholder}
             placeholderTextColor={`${icon}60`}
             onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+            onChangeText={(text) => {
+              if (rest.inputMode === "numeric") {
+                onChange(text === "" ? undefined : Number(text));
+              } else {
+                onChange(text);
+              }
+            }}
+            value={value !== undefined && value !== null ? String(value) : ""}
             multiline={multiline}
             numberOfLines={multiline ? 4 : 1}
             {...rest}

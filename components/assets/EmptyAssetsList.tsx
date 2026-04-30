@@ -1,18 +1,29 @@
 import { ThemedText } from '@/components/ThemedText';
+import { useRouter } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
+import MyMainButton from '../MyMainButton';
 
-export default function EmptyAssetsList() {
+
+const EmptyAssetsList = () => {
+  const navi = useRouter();
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <Text style={styles.icon}>📦</Text>
-      <ThemedText style={styles.title}>No Assets Yet</ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Start by adding your first asset to keep track of your valuables securely.
-      </ThemedText>
+      <ThemedText style={styles.title}>{t('assets.emptyTitle')}</ThemedText>
+      <ThemedText style={styles.subtitle}>{t('assets.emptySubtitle')}</ThemedText>
+      <MyMainButton 
+        action={() => navi.push("/(main)/addAsset")}
+        isDisabled={false}
+        title={t('assets.addNew')}
+      />
     </View>
   );
 }
+
+export default EmptyAssetsList;
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +32,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 60,
     opacity: 0.7,
+    gap: 12
   },
   icon: {
     fontSize: 48,

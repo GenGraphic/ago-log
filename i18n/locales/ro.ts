@@ -1,12 +1,26 @@
-import { TranslationKeys } from "./en";
-
-const ro: TranslationKeys = {
+const ro = {
   common: {
     error: "Eroare",
     cancel: "Anulează",
     delete: "Șterge",
     save: "SALVEAZĂ",
     dismiss: "ÎNCHIDE",
+  },
+
+  assets: {
+    title: "ACTIVE",
+    emptyTitle: "Niciun activ încă",
+    emptySubtitle: "Începe prin a adăuga primul tău activ pentru a ține evidența bunurilor tale în siguranță.",
+    addNew: "Adaugă nou",
+    type: {
+      Vehicle: "Vehicul",
+      Insurance: "Asigurare",
+      Home: "Casă",
+      Land: "Teren",
+      Personal: "Personal",
+      Business: "Afaceri",
+      Other: "Altele",
+    },
   },
 
   auth: {
@@ -161,7 +175,7 @@ const ro: TranslationKeys = {
     alignHint: "Aliniază documentul în cadru",
     alignFrame: "Aliniază documentul în cadru",
     cameraRequired: "Accesul la cameră este necesar",
-    grantPermission: "Acordă Permisiunea",
+    grantPermission: "Continuă",
   },
 
   notifications: {

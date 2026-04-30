@@ -18,7 +18,9 @@ const MyMainButton: React.FC<Props> = ({ title, isDisabled, action, icon, custom
         <TouchableOpacity
             onPress={action}
             disabled={isDisabled}
-            activeOpacity={0.85}>
+            activeOpacity={0.85}
+            style={{ flex: 1, width: '100%' }}
+        >
                 <LinearGradient
                     end={{ x: 0, y: 0 }}
                     start={{ x: 1, y: 0 }}

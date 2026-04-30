@@ -29,6 +29,9 @@ const MainLayout = () => {
       <Stack.Screen name="add-entry" options={{ headerShown: false }} />
       <Stack.Screen name="mfa-setup" options={{ headerShown: false }} />
       <Stack.Screen name="upgrade" options={{ headerShown: false }} />
+
+      <Stack.Screen name="addAsset" options={{ headerShown: false }} />
+      <Stack.Screen name="editAsset/[id]" options={{ headerShown: false }} />
     </Stack>
   );
 };

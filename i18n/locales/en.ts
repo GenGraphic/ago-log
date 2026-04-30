@@ -7,6 +7,22 @@ const en = {
     dismiss: "DISMISS",
   },
 
+  assets: {
+    title: "ASSETS",
+    emptyTitle: "No Assets Yet",
+    emptySubtitle: "Start by adding your first asset to keep track of your valuables securely.",
+    addNew: "Add new",
+    type: {
+      Vehicle: "Vehicle",
+      Insurance: "Insurance",
+      Home: "Home",
+      Land: "Land",
+      Personal: "Personal",
+      Business: "Business",
+      Other: "Other",
+    },
+  },
+
   auth: {
     welcomeBack: "Welcome back",
     subtitle: "Sign in to manage your vault",
@@ -141,6 +157,9 @@ const en = {
     almostAtLimitBody:
       "You have 1 free log remaining. Upgrade for unlimited.",
     unexpectedError: "Unexpected error",
+    intervalDaysLabel: "INTERVAL (DAYS)",
+    entryTypeRequiredSub: "Select a type before saving.",
+        almostAtLimitSub: "You have 1 free log remaining. Upgrade for unlimited.",
   },
 
   smart: {
@@ -148,7 +167,7 @@ const en = {
     alignHint: "Align the document within the frame",
     alignFrame: "Align the document within the frame",
     cameraRequired: "Camera access is required",
-    grantPermission: "Grant Permission",
+    grantPermission: "Continue",
   },
 
   notifications: {
