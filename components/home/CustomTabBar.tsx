@@ -15,7 +15,6 @@ interface TabItem {
 const TABS: TabItem[] = [
   { name: 'index', icon: 'home' },
   { name: 'entries', icon: 'file-text' },
-  { name: 'add', icon: 'plus', isCenter: true },
   { name: 'assets', icon: 'briefcase' },
   { name: 'profile', icon: 'user' },
 ];
@@ -90,7 +89,7 @@ export default function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 30,
     left: 0,
     right: 0,
     shadowOpacity: 0.35,

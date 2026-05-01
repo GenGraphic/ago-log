@@ -46,7 +46,9 @@ function getDaysLeft(iso: string): number {
   return Math.ceil((new Date(iso).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 }
 
-type Props = { item: Entry };
+type Props = {
+  item: Entry;
+};
 
 export default function EntryRow({ item }: Props) {
   const router = useRouter();
@@ -89,7 +91,9 @@ export default function EntryRow({ item }: Props) {
       {/* Text */}
       <View style={styles.textBlock}>
         <ThemedText style={styles.title} numberOfLines={1}>{item.title}</ThemedText>
-        <ThemedText style={[styles.type, { color: `${icon}80` }]}>{typeLabel}</ThemedText>
+        <View style={styles.metaRow}>
+          <ThemedText style={[styles.type, { color: `${icon}80` }]}>{typeLabel}</ThemedText>
+        </View>
       </View>
 
       {/* Right side */}
@@ -138,6 +142,11 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.5,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   right: {
     alignItems: 'flex-end',

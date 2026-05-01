@@ -1,4 +1,5 @@
 import { AssetType } from "./enums";
+import { Entry } from "./types";
 
 export interface Asset_DB {
   userId: string;
@@ -31,5 +32,6 @@ export interface Asset_DB {
 
 export interface Asset extends Asset_DB {
   id: string;
-  createdAt: Date;
+  createdAt: string;
+  entries?: Array<string | Entry>;
 }

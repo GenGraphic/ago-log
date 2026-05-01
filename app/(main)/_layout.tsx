@@ -31,7 +31,8 @@ const MainLayout = () => {
       <Stack.Screen name="upgrade" options={{ headerShown: false }} />
 
       <Stack.Screen name="addAsset" options={{ headerShown: false }} />
-      <Stack.Screen name="editAsset/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="asset-details" options={{ headerShown: false }} />
+      <Stack.Screen name="editAsset" options={{ headerShown: false }} />
     </Stack>
   );
 };

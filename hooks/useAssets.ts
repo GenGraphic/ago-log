@@ -1,4 +1,4 @@
-import { ASSETS_TABLE_ID, auth, db, DB_ID, idGen } from "@/appwrite";
+import { ASSETS_TABLE_ID, auth, db, DB_ID, idGen, query } from "@/appwrite";
 import { toAsset } from "@/helpers/userHelper";
 import { Asset, Asset_DB } from "@/models/assets";
 import { HookResponse } from "@/models/types";
@@ -35,6 +35,12 @@ const useAssets = () => {
         databaseId: DB_ID,
         tableId: ASSETS_TABLE_ID,
         rowId: assetId,
+        queries: [
+          query.select([
+            "*",
+            "entries.*"
+          ]),
+        ]
       });
       return { success: true, data: toAsset(result as any) };
     } catch (error: any) {
@@ -48,6 +54,12 @@ const useAssets = () => {
       const result = await db.listRows({
         databaseId: DB_ID,
         tableId: ASSETS_TABLE_ID,
+        queries: [
+          query.select([
+            "*",
+            "entries.*"
+          ]),
+        ]
       });
       return { success: true, data: result.rows.map((row: any) => toAsset(row)) };
     } catch (error: any) {
@@ -58,6 +70,7 @@ const useAssets = () => {
 
   const updateAsset = useCallback(async (updatedAsset: Partial<Asset>, assetId: string): Promise<HookResponse<Asset>> => {
     try {
+
       const result = await db.updateRow({
         databaseId: DB_ID,
         tableId: ASSETS_TABLE_ID,

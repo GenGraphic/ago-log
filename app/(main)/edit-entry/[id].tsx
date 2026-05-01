@@ -85,9 +85,10 @@ export default function EditDocumentScreen() {
 
   const load = useCallback(async () => {
     if (!id) return;
-    const res = await getEntry(id);
-    if (res.success) {
-      const e = res.data;
+    const entryRes = await getEntry(id);
+
+    if (entryRes.success) {
+      const e = entryRes.data;
       reset({
         entryType: e.entryType,
         title: e.title,
@@ -112,11 +113,11 @@ export default function EditDocumentScreen() {
       Toast.show({
         type: "error",
         text1: "Could not load entry",
-        text2: res.message,
+        text2: entryRes.message,
       });
     }
     setLoading(false);
-  }, [id]);
+  }, [id, getEntry, reset]);
 
   useEffect(() => {
     load();
@@ -135,7 +136,7 @@ export default function EditDocumentScreen() {
         ? new Date(data.expiryDate).getTime() < Date.now()
         : false;
 
-      const updated: Partial<Entry_DB> = {
+      const updatedEntry: Partial<Entry_DB> = {
         title: data.title,
         entryType: data.entryType,
         status: isPast ? EntryStatus.EXPIRED : EntryStatus.ACTIVE,
@@ -163,7 +164,7 @@ export default function EditDocumentScreen() {
         currency: data.currency || undefined,
       };
 
-      const res = await updateEntry(updated, id!);
+      const res = await updateEntry(updatedEntry, id!);
       if (!res.success) {
         Toast.show({
           type: "error",

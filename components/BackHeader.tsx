@@ -5,7 +5,14 @@ import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { ThemedText } from './ThemedText'
 
-const BackHeader = () => {
+type BackHeaderProps = {
+    rightIcon?: React.ComponentProps<typeof Feather>["name"];
+    onRightPress?: () => void;
+    rightAccessibilityLabel?: string;
+    rightDisabled?: boolean;
+};
+
+const BackHeader = ({ rightIcon, onRightPress, rightAccessibilityLabel, rightDisabled }: BackHeaderProps) => {
     const router = useRouter();
     const tint = useThemeColor({}, "tint");
     const icon = useThemeColor({}, "icon");
@@ -22,7 +29,18 @@ const BackHeader = () => {
                 </ThemedText>
                 <View style={[styles.logoDot, { backgroundColor: tint }]} />
             </View>
-            <View style={{ width: 40 }} />
+            {rightIcon && onRightPress ? (
+                <TouchableOpacity
+                    style={styles.rightBtn}
+                    onPress={onRightPress}
+                    disabled={rightDisabled}
+                    accessibilityLabel={rightAccessibilityLabel}
+                >
+                    <Feather name={rightIcon} size={19} color={icon} />
+                </TouchableOpacity>
+            ) : (
+                <View style={{ width: 40 }} />
+            )}
         </View>
     )
 }
@@ -38,6 +56,12 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     backBtn: {
+        width: 40,
+        height: 40,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    rightBtn: {
         width: 40,
         height: 40,
         alignItems: "center",

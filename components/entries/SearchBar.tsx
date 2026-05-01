@@ -8,9 +8,10 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 type Props = {
   value: string;
   onChangeText: (text: string) => void;
+  placeholder?: string;
 };
 
-export default function SearchBar({ value, onChangeText }: Props) {
+export default function SearchBar({ value, onChangeText, placeholder }: Props) {
   const { t } = useTranslation();
   const icon = useThemeColor({}, 'icon');
   const text = useThemeColor({}, 'text');
@@ -21,7 +22,7 @@ export default function SearchBar({ value, onChangeText }: Props) {
       <Feather name="search" size={16} color={`${icon}80`} />
       <TextInput
         style={[styles.input, { color: text }]}
-        placeholder={t('entries.searchPlaceholder')}
+        placeholder={placeholder ?? t('entries.searchPlaceholder')}
         placeholderTextColor={`${icon}60`}
         value={value}
         onChangeText={onChangeText}

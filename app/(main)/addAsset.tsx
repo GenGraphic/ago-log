@@ -38,20 +38,19 @@ const FIELD_CONFIG = {
     { name: "priceEvaluation", label: "Price Evaluation", inputType: "numeric" },
   ],
   [AssetType.BUSINESS]: [
-    { name: "name", label: "Business Name", inputType: "text" },
+    { name: "businessName", label: "Business Name", inputType: "text" },
     { name: "registrationNumber", label: "Registration Number", inputType: "text" },
     { name: "address", label: "Address", inputType: "text" },
     { name: "activityType", label: "Activity Type", inputType: "text" },
     { name: "foundedYear", label: "Founded Year", inputType: "numeric" },
   ],
   [AssetType.PERSONAL]: [
-    { name: "description", label: "Description", inputType: "text" },
+    { name: "notes", label: "Description", inputType: "text" },
   ],
   [AssetType.OTHER]: [
-    { name: "description", label: "Description", inputType: "text" },
+    { name: "notes", label: "Description", inputType: "text" },
   ],
 };
-
 
 export default function AddAsset() {
   const user = useAppSelector(state => state.user);

@@ -42,7 +42,6 @@ export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
   imageId: dbEntry.imageId ?? undefined,
   currency: dbEntry.currency ?? undefined,
   currentPrice: dbEntry.currentPrice ?? undefined,
-  assetId: dbEntry.assetId ?? undefined,
 });
 
 export function toNotification(doc: Models.DefaultRow): Notification {
@@ -59,6 +58,14 @@ export function toNotification(doc: Models.DefaultRow): Notification {
 }
 
 export function toAsset(doc: Models.DefaultRow): Asset {
+  const entries = Array.isArray(doc.entries)
+    ? doc.entries
+        .map((entry: any) =>
+          typeof entry === "string" ? entry : toEntry(entry as Models.DefaultRow),
+        )
+        .filter(Boolean)
+    : undefined;
+
   return {
     id: doc.$id,
     createdAt: doc.$createdAt,
@@ -66,6 +73,20 @@ export function toAsset(doc: Models.DefaultRow): Asset {
     name: doc.name,
     type: doc.type as AssetType,
     description: doc.description ?? undefined,
-    metadata: doc.metadata ?? undefined,
+    brand: doc.brand ?? undefined,
+    model: doc.model ?? undefined,
+    year: doc.year ?? undefined,
+    vin: doc.vin ?? undefined,
+    registrationNumber: doc.registrationNumber ?? undefined,
+    address: doc.address ?? undefined,
+    rooms: doc.rooms ?? undefined,
+    surface: doc.surface ?? undefined,
+    priceEvaluation: doc.priceEvaluation ?? undefined,
+    constructionYear: doc.constructionYear ?? undefined,
+    businessName: doc.businessName ?? undefined,
+    activityType: doc.activityType ?? undefined,
+    foundedYear: doc.foundedYear ?? undefined,
+    notes: doc.notes ?? undefined,
+    entries,
   };
 }

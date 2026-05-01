@@ -13,6 +13,7 @@ import AnimatedBackground from '@/components/AnimatedBackground';
 import CategoryFilter, { CategoryKey } from '@/components/entries/CategoryFilter';
 import EntryRow from '@/components/entries/EntryRow';
 import SearchBar from '@/components/entries/SearchBar';
+import MyFAB from '@/components/MyFAB';
 import { ThemedText } from '@/components/ThemedText';
 import { LimitBanner } from '@/components/upgrade/LimitBanner';
 import { StatusColors } from '@/constants/Colors';
@@ -21,10 +22,8 @@ import { useFreeLimitReached } from '@/hooks/useFreeLimitReached';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { EntryStatus, EntryType } from '@/models/enums';
 import { Entry } from '@/models/types';
+import { useRouter } from 'expo-router';
 
-const TAB_BAR_HEIGHT = 74;
-
-// --- helpers ---
 
 function getDaysLeft(iso: string) {
   return Math.ceil((new Date(iso).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
@@ -70,6 +69,7 @@ type SectionData = { title: string; dot: string; count: number; data: Entry[] };
 // --- screen ---
 
 export default function EntriesScreen() {
+  const router = useRouter();
   const { t } = useTranslation();
   const [allEntries, setAllEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,8 +86,12 @@ export default function EntriesScreen() {
 
   const load = useCallback(async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true); else setLoading(true);
-    const result = await listEntries();
-    if (result.success) setAllEntries(result.data);
+    const entriesResult = await listEntries();
+
+    if (entriesResult.success) {
+      setAllEntries(entriesResult.data);
+    }
+
     setLoading(false);
     setRefreshing(false);
   }, [listEntries]);
@@ -150,7 +154,6 @@ export default function EntriesScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.listContent,
-          { paddingBottom: TAB_BAR_HEIGHT + insets.bottom },
         ]}
         ListHeaderComponent={
           <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
@@ -191,6 +194,16 @@ export default function EntriesScreen() {
             colors={[tint]}
           />
         }
+      />
+
+      <MyFAB 
+        onPress={() =>
+          router.push({
+            pathname: '/(main)/(tabs)/add',
+          })
+        }
+        bottom={130}
+        accessibilityLabel="Create entry"
       />
     </AnimatedBackground>
   );

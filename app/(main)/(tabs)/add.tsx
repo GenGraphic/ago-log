@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
+    lineHeight: 34,
     fontWeight: 'bold',
     letterSpacing: 3,
     textAlign: 'center',
