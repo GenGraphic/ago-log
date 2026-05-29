@@ -11,6 +11,6 @@ export const RC_ENTITLEMENT_ID = "GenGraphic Pro";
 export const RC_OFFERING_ID = "default";
 
 export const RC_PRODUCTS = {
-  monthly: "ago_pro_monthly",
-  yearly: "ago_pro_annually",
+  monthly: Platform.OS === "ios" ? "ago_pro_monthly" : "ago_pro_monthly:monthly",
+  yearly: Platform.OS === "ios" ? "ago_pro_annually" : "ago_pro_annually:annually",
 } as const;
