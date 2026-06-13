@@ -12,6 +12,8 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function HomeHeader() {
   const { t } = useTranslation();
   const user = useAppSelector((state) => state.user);
+  const displayName =
+    user.name?.trim() || user.email?.split('@')[0]?.trim() || 'Guest';
   const tint = useThemeColor({}, 'tint');
   const router = useRouter();
   const { unreadCount } = useNotifications();
@@ -36,7 +38,7 @@ export default function HomeHeader() {
 
       {/* Welcome heading */}
       <ThemedText style={styles.welcomeText}>
-        {t('home.welcomeBack', { name: user.name !== '' ? user.name : 'Guest' })}
+        {t('home.welcomeBack', { name: displayName })}
       </ThemedText>
     </View>
   );

@@ -5,7 +5,7 @@ import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 import Toast from 'react-native-toast-message';
 
 import { db, DB_ID, USERS_TABLE_ID } from '@/appwrite';
-import { RC_API_KEY, RC_ENTITLEMENT_ID } from '@/constants/revenuecat';
+import { RC_API_KEY, RC_ENTITLEMENT_ID, RC_PRODUCTS } from '@/constants/revenuecat';
 import { UserPlan } from '@/models/enums';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateUser } from '@/store/slices/userSlice';
@@ -91,10 +91,11 @@ export function useRevenueCat() {
         return false;
       }
 
+      const packageType = billing === 'yearly' ? 'ANNUAL' : 'MONTHLY';
       const productId = billing === 'yearly' ? RC_PRODUCTS.yearly : RC_PRODUCTS.monthly;
-      const pkg = offering.availablePackages.find(
-        (p) => p.product.identifier === productId,
-      );
+      const pkg =
+        offering.availablePackages.find((p) => p.packageType === packageType) ??
+        offering.availablePackages.find((p) => p.product.identifier === productId);
 
       if (!pkg) {
         Toast.show({ type: 'error', text1: 'Product not found', text2: 'Please try again later.' });

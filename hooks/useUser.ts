@@ -9,6 +9,30 @@ import { Permission, Role } from "react-native-appwrite";
 const useUser = () => {
   const dispatch = useAppDispatch();
 
+  const getCurrentUserWithRetry = useCallback(async () => {
+    let lastError: any;
+
+    for (let attempt = 0; attempt < 8; attempt++) {
+      try {
+        return await auth.get();
+      } catch (error) {
+        lastError = error;
+        const delayMs = 250 + attempt * 150;
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+
+    throw lastError;
+  }, []);
+
+  const isGuestScopeError = (error: any): boolean => {
+    const message = String(error?.message || "").toLowerCase();
+    return (
+      message.includes("missing scopes") &&
+      (message.includes("account") || message.includes("role: guests"))
+    );
+  };
+
   const createUser = useCallback(async (user: User_DB, userId: string): Promise<HookResponse<User>> => {
     try {
       const response = await db.createRow({
@@ -39,7 +63,7 @@ const useUser = () => {
 
   const updateUserData = useCallback(async (updatedUserPart: Partial<User_DB>): Promise<HookResponse<User>> => {
     try {
-      const currentUser = await auth.get();
+      const currentUser = await getCurrentUserWithRetry();
 
       const response = await db.updateRow({
         databaseId: DB_ID, 
@@ -57,17 +81,19 @@ const useUser = () => {
         data: user,
       };
     } catch (error: any) {
-      console.log("Error updating user data:", error);
+      if (!isGuestScopeError(error)) {
+        console.log("Error updating user data:", error);
+      }
       return {
         success: false,
         message: error.message,
       };
     }
-  }, []);
+  }, [getCurrentUserWithRetry]);
 
   const getUser = useCallback(async (): Promise<HookResponse<User>> => {
     try {
-      const currentUser = await auth.get();
+      const currentUser = await getCurrentUserWithRetry();
 
       const response = await db.getRow({
         databaseId: DB_ID, 
@@ -84,13 +110,15 @@ const useUser = () => {
         data: user,
       };
     } catch (error: any) {
-      console.log("There was an error getting the user", error);
+      if (!isGuestScopeError(error)) {
+        console.log("There was an error getting the user", error);
+      }
       return {
         success: false,
         message: error.message,
       };
     }
-  }, []);
+  }, [getCurrentUserWithRetry]);
 
   return {
     createUser,

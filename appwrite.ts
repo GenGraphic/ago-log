@@ -1,3 +1,5 @@
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 import {
   Account,
   Client,
@@ -11,10 +13,17 @@ import {
 export const APPWRITE_PROJECT_ID = "68ba4c3f002c9e51046a";
 export const APPWRITE_ENDPOINT = "https://api.gengraphic.de/v1";
 
+const isExpoGo = Constants.executionEnvironment === "storeClient";
+const APPWRITE_PLATFORM = isExpoGo
+  ? Platform.OS === "android"
+    ? "host.exp.exponent"
+    : "host.exp.Exponent"
+  : "com.gengraphic.agolog";
+
 export const appwriteClient = new Client()
   .setProject(APPWRITE_PROJECT_ID)
   .setEndpoint(APPWRITE_ENDPOINT)
-  .setPlatform("com.gengraphic.agolog");
+  .setPlatform(APPWRITE_PLATFORM);
 
 export const db = new TablesDB(appwriteClient);
 export const auth = new Account(appwriteClient);

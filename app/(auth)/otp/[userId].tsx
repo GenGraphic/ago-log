@@ -1,4 +1,3 @@
-import { auth } from "@/appwrite";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import AuthOtpInput from "@/components/auth/AuthOtpInput";
 import AuthTitleBlock from "@/components/auth/AuthTitleBlock";
@@ -6,9 +5,6 @@ import Loading from "@/components/Loading";
 import { ThemedText } from "@/components/ThemedText";
 import globalStyles from "@/constants/GlobalStyles";
 import useAuth from "@/hooks/useAuth";
-import useUser from "@/hooks/useUser";
-import { UserPlan, UserStatus } from "@/models/enums";
-import { User_DB } from "@/models/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -18,45 +14,27 @@ import Toast from "react-native-toast-message";
 const Otp = () => {
   const navi = useRouter();
   const { userId, userEmail } = useLocalSearchParams();
+
+  const getParamValue = (value: string | string[] | undefined): string => {
+    if (Array.isArray(value)) return String(value[0] ?? "");
+    return String(value ?? "");
+  };
+
+  const [activeUserId, setActiveUserId] = useState<string>(
+    getParamValue(userId),
+  );
   const [otp, setOtp] = useState("");
   const { validateOtp, sendOtp } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { getUser, createUser } = useUser();
 
-  const ensureUserDocument = useCallback(async (): Promise<boolean> => {
-    const userResult = await getUser();
-    if (userResult.success) return true;
-
-    const accountUser = await auth.get();
-    const newUser: User_DB = {
-      email: accountUser.email,
-      status: UserStatus.ACTIVE,
-      avatar: "",
-      name: accountUser.name || "",
-      phone: accountUser.phone || "",
-      plan: UserPlan.FREE,
-      pushEnabled: true,
-      emailEnabled: true,
-      expoPushToken: null,
-    };
-
-    const createUserResult = await createUser(newUser, accountUser.$id);
-    if (!createUserResult.success) {
-      Toast.show({
-        type: "error",
-        text1: "Error!",
-        text2: createUserResult.message,
-      });
-      return false;
-    }
-
-    return true;
-  }, [getUser, createUser]);
+  useEffect(() => {
+    setActiveUserId(getParamValue(userId));
+  }, [userId]);
 
   const handleValidate = useCallback(
     async (otpCode: string) => {
-      if (!otpCode || otpCode.length !== 6 || !userId) {
+      if (!otpCode || otpCode.length !== 6 || !activeUserId) {
         return;
       }
 
@@ -64,7 +42,7 @@ const Otp = () => {
         setLoading(true);
         setError("");
 
-        const result = await validateOtp(userId as string, otpCode);
+        const result = await validateOtp(activeUserId, otpCode);
         if (!result.success) {
           setError(result.message);
           Toast.show({
@@ -75,16 +53,11 @@ const Otp = () => {
           setOtp("");
           return;
         }
-
-        const ok = await ensureUserDocument();
-        if (!ok) return;
-
-        navi.push("/(main)/(tabs)");
       } finally {
         setLoading(false);
       }
     },
-    [userId, validateOtp, navi, ensureUserDocument],
+    [activeUserId, validateOtp, navi],
   );
 
   useEffect(() => {
@@ -98,11 +71,19 @@ const Otp = () => {
       setLoading(true);
       setError("");
 
-      const result = await sendOtp(userEmail as string);
+      const email = getParamValue(userEmail);
+      if (!email) {
+        Toast.show({ type: "error", text1: "Error!", text2: "Email is missing." });
+        return;
+      }
+
+      const result = await sendOtp(email);
       if (!result.success) {
         Toast.show({ type: "error", text1: "Error!", text2: result.message });
         return;
       }
+
+      setActiveUserId(String(result.data));
 
       Toast.show({
         type: "success",
