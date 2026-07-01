@@ -10,8 +10,8 @@ import {
   TablesDB,
 } from "react-native-appwrite";
 
-export const APPWRITE_PROJECT_ID = "68ba4c3f002c9e51046a";
-export const APPWRITE_ENDPOINT = "https://api.gengraphic.de/v1";
+export const APPWRITE_PROJECT_ID = "6a44dc7900261b35d50f";
+export const APPWRITE_ENDPOINT = "https://api2.gengraphic.de/v1";
 
 const isExpoGo = Constants.executionEnvironment === "storeClient";
 const APPWRITE_PLATFORM = isExpoGo
