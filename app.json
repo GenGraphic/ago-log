@@ -2,7 +2,7 @@
   "expo": {
     "name": "Log Ago",
     "slug": "ago-log",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/myLogo.png",
     "scheme": "agolog",
