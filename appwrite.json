@@ -47,7 +47,10 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-16.0",
-            "scopes": [],
+            "scopes": [
+                "rows.read",
+                "rows.write"
+            ],
             "events": [],
             "schedule": "",
             "timeout": 15,
@@ -65,7 +68,10 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-16.0",
-            "scopes": [],
+            "scopes": [
+                "rows.read",
+                "rows.write"
+            ],
             "events": [],
             "schedule": "",
             "timeout": 15,
@@ -99,7 +105,11 @@
             "enabled": true,
             "logging": true,
             "runtime": "node-20.0",
-            "scopes": [],
+            "scopes": [
+                "rows.read",
+                "rows.write",
+                "users.read"
+            ],
             "events": [],
             "schedule": "0 4 * * *",
             "timeout": 60,

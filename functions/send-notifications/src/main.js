@@ -23,14 +23,38 @@ function daysUntil(isoDate) {
   return Math.round((target - today) / 86_400_000);
 }
 
-async function sendExpoPush(tokens, title, body) {
+async function sendExpoPush(tokens, title, body, log, error) {
   if (!tokens.length) return;
-  const messages = tokens.map((to) => ({ to, title, body, sound: 'default' }));  
-  await fetch(EXPO_PUSH_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(messages),
-  });
+  const messages = tokens.map((to) => ({
+    to,
+    title,
+    body,
+    sound: 'default',
+    channelId: 'default',
+  }));
+  try {
+    const response = await fetch(EXPO_PUSH_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(messages),
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      error(`Expo push HTTP ${response.status}: ${JSON.stringify(result)}`);
+      return;
+    }
+    // Expo returns one ticket per message; failures (e.g. DeviceNotRegistered,
+    // InvalidCredentials when FCM keys are missing) are only visible here.
+    for (const ticket of result?.data ?? []) {
+      if (ticket.status === 'error') {
+        error(`Expo push ticket error: ${ticket.message} ${JSON.stringify(ticket.details ?? {})}`);
+      } else {
+        log(`Expo push ticket ok: ${ticket.id}`);
+      }
+    }
+  } catch (err) {
+    error('Expo push request failed: ' + err.message);
+  }
 }
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
@@ -42,6 +66,19 @@ export default async ({ req, res, log, error }) => {
     .setKey(req.headers['x-appwrite-key'] ?? '');
 
   const db = new TablesDB(client);
+
+  const missingEnv = Object.entries({
+    APPWRITE_DB_ID: DB_ID,
+    APPWRITE_ENTRIES_TABLE_ID: ENTRIES_TABLE_ID,
+    APPWRITE_USERS_TABLE_ID: USERS_TABLE_ID,
+    APPWRITE_NOTIFICATIONS_TABLE_ID: NOTIFICATIONS_TABLE_ID,
+  })
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
+  if (missingEnv.length) {
+    error(`Missing environment variables: ${missingEnv.join(', ')}`);
+    return res.json({ ok: false, message: `Missing env: ${missingEnv.join(', ')}` }, 500);
+  }
 
   try {
     // 1. Fetch all active entries that have an expiryDate and notifyDaysBefore set
@@ -117,7 +154,7 @@ export default async ({ req, res, log, error }) => {
 
         // 3. Push
         if (pushTokens.length) {
-          await sendExpoPush(pushTokens, title, body);
+          await sendExpoPush(pushTokens, title, body, log, error);
         }
 
         // 4. Email via Appwrite Messaging (basic — requires email provider configured)
@@ -132,7 +169,6 @@ export default async ({ req, res, log, error }) => {
           databaseId: DB_ID, 
           tableId: NOTIFICATIONS_TABLE_ID, 
           rowId: ID.unique(),
-          permissions: [`read("user:${userId}")`, `update("user:${userId}")`],
           data: {
             userId,
             entryId: entry.$id,
