@@ -17,7 +17,7 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey:
     process.env.EXPO_PUBLIC_FIREBASE_API_KEY ??
-    "AIzaSyCROrqY_ZBDBgsNPPQQF2IifJkH6Di7Z5k",
+    "AIzaSyD3mL_YwJqwuloxWyIcd1_JErKypxjJSMM",
   authDomain:
     process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "ago-log.firebaseapp.com",
   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? "ago-log",
@@ -28,7 +28,7 @@ const firebaseConfig = {
     process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "980575056524",
   appId:
     process.env.EXPO_PUBLIC_FIREBASE_APP_ID ??
-    "1:980575056524:android:87c21bfd0e3b20000741a9",
+    "1:980575056524:web:6f686bf55a5771280741a9",
 };
 
 export const FUNCTIONS_REGION = "europe-west1";

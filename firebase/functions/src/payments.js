@@ -28,7 +28,7 @@ function isAuthorized(header) {
  * Authorization header equal to the RC_WEBHOOK_AUTHORIZATION secret.
  */
 export const revenuecatWebhook = onRequest(
-  { secrets: [RC_WEBHOOK_AUTHORIZATION, RESEND_API_KEY] },
+  { secrets: [RC_WEBHOOK_AUTHORIZATION, RESEND_API_KEY], invoker: 'public' },
   async (req, res) => {
     if (req.method !== 'POST') {
       res.status(405).json({ ok: false });
