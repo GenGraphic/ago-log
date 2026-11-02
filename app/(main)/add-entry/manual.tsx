@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ENTRIES_IMAGES_BUCKET_ID } from "@/appwrite";
+import { ENTRIES_IMAGES_FOLDER } from "@/firebase";
 import EntryTypePicker from "@/components/add-new-entry/EntryTypePicker";
 import FormDateInput from "@/components/add-new-entry/FormDateInput";
 import FormTextInput from "@/components/add-new-entry/FormTextInput";
@@ -186,7 +186,7 @@ export default function ManualInputScreen() {
       let imageId: string | undefined;
       if (photoUri) {
         const imageUpload = await uploadImage(
-          ENTRIES_IMAGES_BUCKET_ID,
+          ENTRIES_IMAGES_FOLDER,
           photoUri,
         );
         if (!imageUpload.success) {

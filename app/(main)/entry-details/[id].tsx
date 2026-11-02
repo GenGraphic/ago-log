@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { ENTRIES_IMAGES_BUCKET_ID } from "@/appwrite";
+import { ENTRIES_IMAGES_FOLDER } from "@/firebase";
 import { ThemedText } from "@/components/ThemedText";
 import { CountdownCard } from "@/components/entry-details/CountdownCard";
 import { DetailsSection } from "@/components/entry-details/DetailsSection";
@@ -58,7 +58,7 @@ export default function DocumentDetailsScreen() {
       setEntry(res.data);
       if (res.data.imageId) {
         const imgRes = await getPrivateImage(
-          ENTRIES_IMAGES_BUCKET_ID,
+          ENTRIES_IMAGES_FOLDER,
           res.data.imageId,
         );
         if (imgRes.success) setImageUri(imgRes.data);

@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 
-import { query } from "@/appwrite";
+import { query } from "@/firebase";
 import { ThemedText } from "@/components/ThemedText";
 import { StatusColors } from "@/constants/Colors";
 import useEntries from "@/hooks/useEntries";
@@ -93,7 +93,6 @@ export default function TimeLine() {
       setLoading(true);
       const result = await queryEntries([
         query.equal("status", EntryStatus.ACTIVE),
-        query.isNotNull("expiryDate"),
         query.greaterThan("expiryDate", new Date().toISOString()),
         query.orderAsc("expiryDate"),
         query.limit(3),

@@ -1,92 +1,115 @@
 import { Asset } from "@/models/assets";
-import { Models } from "react-native-appwrite";
+import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { AssetType, EntryStatus, EntryType, UserPlan, UserStatus } from "../models/enums";
 import { Entry, Notification, User } from "../models/types";
 
-export const toUser = (dbUser: Models.DefaultRow): User => {
+type Doc = Pick<DocumentSnapshot<DocumentData>, "id" | "data">;
+
+const nn = <T>(v: T | null | undefined): T | undefined => v ?? undefined;
+
+export const toUser = (doc: Doc): User => {
+  const d = doc.data() ?? {};
   return {
-    id: dbUser.$id,
-    createdAt: dbUser.$createdAt,
-    name: dbUser.name,
-    email: dbUser.email,
-    avatar: dbUser.avatar,
-    status: dbUser.status as UserStatus,
-    plan: (dbUser.plan as UserPlan) ?? UserPlan.FREE,
-    phone: dbUser.phone,
-    emailEnabled: dbUser.emailEnabled,
-    expoPushToken: dbUser.expoPushToken,
-    pushEnabled: dbUser.pushEnabled
+    id: doc.id,
+    createdAt: d.createdAt,
+    name: d.name ?? undefined,
+    email: d.email,
+    avatar: d.avatar ?? undefined,
+    status: d.status as UserStatus,
+    plan: (d.plan as UserPlan) ?? UserPlan.FREE,
+    phone: d.phone ?? undefined,
+    emailEnabled: d.emailEnabled ?? false,
+    expoPushToken: d.expoPushToken ?? null,
+    pushEnabled: d.pushEnabled ?? true,
   };
 };
 
-export const toEntry = (dbEntry: Models.DefaultRow): Entry => ({
-  id: dbEntry.$id,
-  createdAt: dbEntry.$createdAt,
-  updatedAt: dbEntry.$updatedAt,
-  userId: dbEntry.userId,
-  title: dbEntry.title,
-  entryType: dbEntry.entryType as EntryType,
-  status: dbEntry.status as EntryStatus,
-  notes: dbEntry.notes ?? undefined,
-  expiryDate: dbEntry.expiryDate ?? undefined,
-  notifyDaysBefore: dbEntry.notifyDaysBefore ?? undefined,
-  issuer: dbEntry.issuer ?? undefined,
-  identifier: dbEntry.identifier ?? undefined,
-  secret: dbEntry.secret ?? undefined,
-  username: dbEntry.username ?? undefined,
-  url: dbEntry.url ?? undefined,
-  lastServiceDate: dbEntry.lastServiceDate ?? undefined,
-  intervalDays: dbEntry.intervalDays ?? undefined,
-  lastMileage: dbEntry.lastMileage ?? undefined,
-  mileageInterval: dbEntry.mileageInterval ?? undefined,
-  imageId: dbEntry.imageId ?? undefined,
-  currency: dbEntry.currency ?? undefined,
-  currentPrice: dbEntry.currentPrice ?? undefined,
-});
-
-export function toNotification(doc: Models.DefaultRow): Notification {
+export const toEntry = (doc: Doc): Entry => {
+  const d = doc.data() ?? {};
   return {
-    id: doc.$id,
-    userId: doc.userId,
-    entryId: doc.entryId,
-    title: doc.title,
-    body: doc.body,
-    type: doc.type,
-    read: doc.read,
-    sentAt: doc.sentAt,
+    id: doc.id,
+    createdAt: d.createdAt,
+    updatedAt: d.updatedAt ?? d.createdAt,
+    userId: d.userId,
+    title: d.title,
+    entryType: d.entryType as EntryType,
+    status: d.status as EntryStatus,
+    notes: nn(d.notes),
+    expiryDate: nn(d.expiryDate),
+    notifyDaysBefore: nn(d.notifyDaysBefore),
+    issuer: nn(d.issuer),
+    identifier: nn(d.identifier),
+    secret: nn(d.secret),
+    username: nn(d.username),
+    url: nn(d.url),
+    lastServiceDate: nn(d.lastServiceDate),
+    intervalDays: nn(d.intervalDays),
+    lastMileage: nn(d.lastMileage),
+    mileageInterval: nn(d.mileageInterval),
+    imageId: nn(d.imageId),
+    currency: nn(d.currency),
+    currentPrice: nn(d.currentPrice),
+  };
+};
+
+export function toNotification(doc: Doc): Notification {
+  const d = doc.data() ?? {};
+  return {
+    id: doc.id,
+    userId: d.userId,
+    entryId: d.entryId,
+    title: d.title,
+    body: d.body,
+    type: d.type,
+    read: d.read,
+    sentAt: d.sentAt,
   };
 }
 
-export function toAsset(doc: Models.DefaultRow): Asset {
-  const entries = Array.isArray(doc.entries)
-    ? doc.entries
-        .map((entry: any) =>
-          typeof entry === "string" ? entry : toEntry(entry as Models.DefaultRow),
-        )
-        .filter(Boolean)
-    : undefined;
+/**
+ * In Firestore an asset stores the linked entry ids in `entries: string[]`.
+ * Pass `resolvedEntries` to replace the ids with the full Entry objects.
+ */
+export function toAsset(doc: Doc, resolvedEntries?: Entry[]): Asset {
+  const d = doc.data() ?? {};
+  const entryIds: string[] = Array.isArray(d.entries) ? d.entries : [];
 
   return {
-    id: doc.$id,
-    createdAt: doc.$createdAt,
-    userId: doc.userId,
-    name: doc.name,
-    type: doc.type as AssetType,
-    description: doc.description ?? undefined,
-    brand: doc.brand ?? undefined,
-    model: doc.model ?? undefined,
-    year: doc.year ?? undefined,
-    vin: doc.vin ?? undefined,
-    registrationNumber: doc.registrationNumber ?? undefined,
-    address: doc.address ?? undefined,
-    rooms: doc.rooms ?? undefined,
-    surface: doc.surface ?? undefined,
-    priceEvaluation: doc.priceEvaluation ?? undefined,
-    constructionYear: doc.constructionYear ?? undefined,
-    businessName: doc.businessName ?? undefined,
-    activityType: doc.activityType ?? undefined,
-    foundedYear: doc.foundedYear ?? undefined,
-    notes: doc.notes ?? undefined,
-    entries,
+    id: doc.id,
+    createdAt: d.createdAt,
+    userId: d.userId,
+    name: d.name,
+    type: d.type as AssetType,
+    description: nn(d.description),
+    brand: nn(d.brand),
+    model: nn(d.model),
+    year: nn(d.year),
+    vin: nn(d.vin),
+    registrationNumber: nn(d.registrationNumber),
+    address: nn(d.address),
+    rooms: nn(d.rooms),
+    surface: nn(d.surface),
+    priceEvaluation: nn(d.priceEvaluation),
+    constructionYear: nn(d.constructionYear),
+    businessName: nn(d.businessName),
+    activityType: nn(d.activityType),
+    foundedYear: nn(d.foundedYear),
+    notes: nn(d.notes),
+    entries: resolvedEntries ?? entryIds,
   };
+}
+
+/** Normalizes date fields to ISO strings so string comparisons in queries work. */
+export function normalizeDates<T extends Record<string, any>>(
+  data: T,
+  fields: string[] = ["expiryDate", "lastServiceDate"],
+): T {
+  const out: Record<string, any> = { ...data };
+  for (const f of fields) {
+    if (out[f]) {
+      const d = new Date(out[f]);
+      if (!isNaN(d.getTime())) out[f] = d.toISOString();
+    }
+  }
+  return out as T;
 }

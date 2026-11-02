@@ -40,3 +40,9 @@ yarn-error.*
 app-example
 
 ago-log-firebase-adminsdk-*.json
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

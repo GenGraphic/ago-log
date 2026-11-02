@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 
-import { query } from '@/appwrite';
+import { query } from '@/firebase';
 import { ThemedText } from '@/components/ThemedText';
 import { StatusColors } from '@/constants/Colors';
 import useEntries from '@/hooks/useEntries';

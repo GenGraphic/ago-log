@@ -1,4 +1,4 @@
-import { query } from "@/appwrite";
+import { query } from "@/firebase";
 import EntryComponent from "@/components/EntryComponent";
 import { ThemedText } from "@/components/ThemedText";
 import { StatusColors } from "@/constants/Colors";

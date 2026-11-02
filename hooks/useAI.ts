@@ -1,9 +1,15 @@
-import { functions, HANDLE_ENTRY_IMAGE } from "@/appwrite";
+import { functions } from "@/firebase";
 import { EntryAIPrefill, HookResponse } from "@/models/types";
+import { httpsCallable } from "firebase/functions";
 import { useCallback, useRef } from "react";
-import { ExecutionMethod } from "react-native-appwrite";
 
 const CLIENT_COOLDOWN_MS = 10_000; // 10 seconds between calls
+
+const extractFn = httpsCallable<{ image: string }, HookResponse<EntryAIPrefill>>(
+  functions,
+  "extractEntryFromImage",
+  { timeout: 70_000 },
+);
 
 const useAI = () => {
   const lastCallRef = useRef<number>(0);
@@ -19,23 +25,11 @@ const useAI = () => {
       }
       lastCallRef.current = now;
       try {
-        const execution = await functions.createExecution({
-          functionId: HANDLE_ENTRY_IMAGE,
-          body: JSON.stringify({ image: base64Image }),
-          async: false,
-          method: ExecutionMethod.POST,
-        });
-
-        const result: HookResponse<EntryAIPrefill> = JSON.parse(
-          execution.responseBody,
-        );
-        return result;
+        const { data } = await extractFn({ image: base64Image });
+        return data;
       } catch (error: any) {
         console.log("Error extracting entry from image: ", error);
-        return {
-          success: false,
-          message: error.message,
-        };
+        return { success: false, message: error.message };
       }
     },
     [],

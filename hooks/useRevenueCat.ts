@@ -4,7 +4,6 @@ import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 
 import Toast from 'react-native-toast-message';
 
-import { db, DB_ID, USERS_TABLE_ID } from '@/appwrite';
 import { RC_API_KEY, RC_ENTITLEMENT_ID, RC_PRODUCTS } from '@/constants/revenuecat';
 import { UserPlan } from '@/models/enums';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -18,21 +17,15 @@ function getPlanFromCustomerInfo(customerInfo: CustomerInfo): UserPlan {
     : UserPlan.FREE;
 }
 
-async function persistPlanToDb(userId: string, plan: UserPlan) {
-  await db.updateRow({
-    databaseId: DB_ID,
-    tableId: USERS_TABLE_ID,
-    rowId: userId,
-    data: { plan },
-  });
-}
+
+// Note: the plan stored in Firestore is written only by the RevenueCat webhook
+// (Cloud Function revenuecatWebhook); clients cannot change it.
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useRevenueCat() {
   const dispatch = useAppDispatch();
   const plan = useAppSelector((s) => s.user.plan);
-  const userId = useAppSelector((s) => s.user.id);
   const [isLoading, setIsLoading] = useState(false);
 
   const isPro = plan === UserPlan.PRO;
@@ -72,13 +65,10 @@ export function useRevenueCat() {
       const customerInfo = await Purchases.getCustomerInfo();
       const newPlan = getPlanFromCustomerInfo(customerInfo);
       dispatch(updateUser({ plan: newPlan }));
-      if (userId) {
-        await persistPlanToDb(userId, newPlan);
-      }
     } finally {
       setIsLoading(false);
     }
-  }, [dispatch, userId]);
+  }, [dispatch]);
 
   // ── Purchase a specific plan directly (no RC paywall UI) ─────────────────
   const purchasePlan = useCallback(async (billing: 'monthly' | 'yearly'): Promise<boolean> => {
@@ -105,7 +95,6 @@ export function useRevenueCat() {
       const { customerInfo } = await Purchases.purchasePackage(pkg);
       const newPlan = getPlanFromCustomerInfo(customerInfo);
       dispatch(updateUser({ plan: newPlan }));
-      if (userId) await persistPlanToDb(userId, newPlan);
       Toast.show({ type: 'success', text1: 'Welcome to Pro!', text2: 'Your account has been upgraded.' });
       return true;
     } catch (e: any) {
@@ -116,7 +105,7 @@ export function useRevenueCat() {
     } finally {
       setIsLoading(false);
     }
-  }, [dispatch, userId]);
+  }, [dispatch]);
 
   // ── Present RC Paywall ──────────────────────────────────────────────────
   const presentPaywall = useCallback(async (): Promise<boolean> => {
@@ -161,14 +150,11 @@ export function useRevenueCat() {
       const customerInfo = await Purchases.restorePurchases();
       const newPlan = getPlanFromCustomerInfo(customerInfo);
       dispatch(updateUser({ plan: newPlan }));
-      if (userId) {
-        await persistPlanToDb(userId, newPlan);
-      }
       return newPlan === UserPlan.PRO;
     } finally {
       setIsLoading(false);
     }
-  }, [dispatch, userId]);
+  }, [dispatch]);
 
   // ── Customer Center (self-serve subscription management) ─────────────────
   const presentCustomerCenter = useCallback(async () => {
@@ -177,14 +163,11 @@ export function useRevenueCat() {
         onRestoreCompleted: async ({ customerInfo }) => {
           const newPlan = getPlanFromCustomerInfo(customerInfo);
           dispatch(updateUser({ plan: newPlan }));
-          if (userId) {
-            await persistPlanToDb(userId, newPlan);
-          }
           Toast.show({ type: 'success', text1: 'Purchases restored', text2: 'Your Pro access has been restored.' });
         },
       },
     });
-  }, [dispatch, userId]);
+  }, [dispatch]);
 
   return {
     isPro,

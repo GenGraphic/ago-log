@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { query } from "@/appwrite";
+import { query } from "@/firebase";
 import { FREE_LOG_LIMIT } from "@/constants/plans";
 import useEntries from "@/hooks/useEntries";
 import { useThemeColor } from "@/hooks/useThemeColor";

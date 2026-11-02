@@ -9,7 +9,8 @@ import {
     View,
 } from "react-native";
 
-import { db, DB_ID, USERS_TABLE_ID } from "@/appwrite";
+import { COLLECTIONS, db } from "@/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -50,23 +51,13 @@ export function NotificationsSection() {
   async function handlePushToggle(v: boolean) {
     dispatch(setPushNotifications(v));
     if (userId)
-      await db.updateRow({
-        databaseId: DB_ID,
-        tableId: USERS_TABLE_ID,
-        rowId: userId,
-        data: { pushEnabled: v },
-      });
+      await updateDoc(doc(db, COLLECTIONS.users, userId), { pushEnabled: v });
   }
 
   async function handleEmailToggle(v: boolean) {
     dispatch(setEmailNotifications(v));
     if (userId)
-      await db.updateRow({
-        databaseId: DB_ID,
-        tableId: USERS_TABLE_ID,
-        rowId: userId,
-        data: { emailEnabled: v },
-      });
+      await updateDoc(doc(db, COLLECTIONS.users, userId), { emailEnabled: v });
   }
 
   return (

@@ -3,7 +3,8 @@ import * as Notifications from "expo-notifications";
 import { useCallback } from "react";
 import { Platform } from "react-native";
 
-import { db, DB_ID, USERS_TABLE_ID } from "@/appwrite";
+import { COLLECTIONS, db } from "@/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 export function usePushToken() {
   const registerPushToken = useCallback(async (userId: string) => {
@@ -35,11 +36,8 @@ export function usePushToken() {
       if (!token) return;
 
       // Persist to DB so the backend function can read it
-      await db.updateRow({
-        databaseId: DB_ID,
-        tableId: USERS_TABLE_ID,
-        rowId: userId,
-        data: { expoPushToken: token },
+      await updateDoc(doc(db, COLLECTIONS.users, userId), {
+        expoPushToken: token,
       });
     } catch (err: any) {
       console.log("registerPushToken error:", err?.message ?? err);

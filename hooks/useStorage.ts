@@ -1,129 +1,60 @@
-import { APPWRITE_PROJECT_ID, auth, storage } from "@/appwrite";
+import { requireUid, storage } from "@/firebase";
 import { HookResponse } from "@/models/types";
-import * as FileSystem from "expo-file-system/legacy";
+import { getDownloadURL as fbGetDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useCallback } from "react";
-import { ID, Permission, Role } from "react-native-appwrite";
+
+// Files live at users/{uid}/{folder}/{fileId}.jpg (see firebase/storage.rules)
+const filePath = (uid: string, folder: string, fileId: string) =>
+  `users/${uid}/${folder}/${fileId}.jpg`;
+
+const newFileId = () =>
+  `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+
+// fetch(uri).blob() is unreliable for local files in React Native; XHR works.
+function uriToBlob(uri: string): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => resolve(xhr.response as Blob);
+    xhr.onerror = () => reject(new TypeError("Could not read the file: " + uri));
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
+    xhr.send(null);
+  });
+}
 
 const useStorage = () => {
-  const getImagePreview = useCallback(
-    async (bucketId: string, fileId: string): Promise<HookResponse<string>> => {
-      try {
-        const response = storage.getFilePreviewURL(bucketId, fileId);
-
-        return {
-          success: true,
-          data: response.toString(),
-        };
-      } catch (error: any) {
-        console.log("Error getting the image preview URL: ", error);
-        return {
-          success: false,
-          message: error.message,
-        };
-      }
-    },
-    [],
-  );
-
-  const getPrivateImage = useCallback(
-    async (bucketId: string, fileId: string): Promise<HookResponse<string>> => {
-      try {
-        const currentUser = await auth.getSession({ sessionId: "current" });
-
-        const url = storage.getFileViewURL(bucketId, fileId);
-
-        const res = await fetch(url, {
-          headers: {
-            "X-Appwrite-Project": APPWRITE_PROJECT_ID,
-            "X-Appwrite-Session": currentUser.secret,
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-
-        const blob = await res.blob();
-
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onerror = reject;
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(blob);
-        });
-
-        return {
-          success: true,
-          data: base64,
-        };
-      } catch (error: any) {
-        console.log("Error getting private image:", error);
-        return {
-          success: false,
-          message: error.message,
-        };
-      }
-    },
-    [],
-  );
-
+  /** Returns an https URL that can be used directly in <Image source={{ uri }} />. */
   const getDownloadURL = useCallback(
-    async (bucketId: string, fileId: string): Promise<HookResponse<URL>> => {
+    async (folder: string, fileId: string): Promise<HookResponse<string>> => {
       try {
-        const response = storage.getFileDownloadURL(bucketId, fileId);
-
-        return {
-          success: true,
-          data: response,
-        };
+        const url = await fbGetDownloadURL(ref(storage, filePath(requireUid(), folder, fileId)));
+        return { success: true, data: url };
       } catch (error: any) {
         console.log("Error getting the download URL: ", error);
-        return {
-          success: false,
-          message: error.message,
-        };
+        return { success: false, message: error.message };
       }
     },
     [],
   );
 
+  // Kept for compatibility with existing screens — both return the download URL.
+  const getImagePreview = getDownloadURL;
+  const getPrivateImage = getDownloadURL;
+
+  /** Uploads a local image and returns its fileId (stored in entry.imageId). */
   const uploadImage = useCallback(
-    async (bucketId: string, uri: string): Promise<HookResponse<string>> => {
+    async (folder: string, uri: string): Promise<HookResponse<string>> => {
       try {
-        const currentUser = await auth.get();
-
-        const info = await FileSystem.getInfoAsync(uri);
-        if (!info.exists) throw new Error("File not found at URI: " + uri);
-
-        const filename = uri.split("/").pop() ?? "upload.jpg";
-        const file = {
-          uri,
-          name: filename,
-          type: "image/jpeg",
-          size: info.size,
-        };
-
-        const response = await storage.createFile({
-          bucketId,
-          fileId: ID.unique(),
-          file: file as any,
-          permissions: [
-            Permission.read(Role.user(currentUser.$id)),
-            Permission.update(Role.user(currentUser.$id)),
-            Permission.delete(Role.user(currentUser.$id)),
-          ],
+        const uid = requireUid();
+        const fileId = newFileId();
+        const blob = await uriToBlob(uri);
+        await uploadBytes(ref(storage, filePath(uid, folder, fileId)), blob, {
+          contentType: "image/jpeg",
         });
-
-        return {
-          success: true,
-          data: response.$id,
-        };
+        return { success: true, data: fileId };
       } catch (error: any) {
         console.log("Error uploading the image: ", error);
-        return {
-          success: false,
-          message: error.message,
-        };
+        return { success: false, message: error.message };
       }
     },
     [],
