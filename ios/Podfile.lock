@@ -292,11 +292,11 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
-  - PurchasesHybridCommon (17.55.1):
-    - RevenueCat (= 5.67.1)
-  - PurchasesHybridCommonUI (17.55.1):
-    - PurchasesHybridCommon (= 17.55.1)
-    - RevenueCatUI (= 5.67.1)
+  - PurchasesHybridCommon (19.8.0):
+    - RevenueCat (= 5.93.0)
+  - PurchasesHybridCommonUI (19.8.0):
+    - PurchasesHybridCommon (= 19.8.0)
+    - RevenueCatUI (= 5.93.0)
   - RCTDeprecation (0.81.5)
   - RCTRequired (0.81.5)
   - RCTTypeSafety (0.81.5):
@@ -2017,9 +2017,9 @@ PODS:
     - React-utils (= 0.81.5)
     - ReactNativeDependencies
   - ReactNativeDependencies (0.81.5)
-  - RevenueCat (5.67.1)
-  - RevenueCatUI (5.67.1):
-    - RevenueCat (= 5.67.1)
+  - RevenueCat (5.93.0)
+  - RevenueCatUI (5.93.0):
+    - RevenueCat (= 5.93.0)
   - RNCAsyncStorage (2.2.0):
     - hermes-engine
     - RCTRequired
@@ -2064,11 +2064,11 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNPaywalls (9.15.2):
-    - PurchasesHybridCommonUI (= 17.55.1)
+  - RNPaywalls (10.12.1):
+    - PurchasesHybridCommonUI (= 19.8.0)
     - React-Core
-  - RNPurchases (9.15.2):
-    - PurchasesHybridCommon (= 17.55.1)
+  - RNPurchases (10.12.1):
+    - PurchasesHybridCommon (= 19.8.0)
     - React-Core
   - RNReanimated (4.1.7):
     - hermes-engine
@@ -2651,8 +2651,8 @@ SPEC CHECKSUMS:
   libavif: 5f8e715bea24debec477006f21ef9e95432e254d
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  PurchasesHybridCommon: ecd9d7c586287625f1225b8de5e24c1021502270
-  PurchasesHybridCommonUI: 3056a3d261529f6adb8f74ecc3ab7f1cc0d3fab4
+  PurchasesHybridCommon: c3beb4e835cfa6c2da17f0c55a0043f195bd8a43
+  PurchasesHybridCommonUI: 0d23f8669a4d36a30e8bbdc48f1ba577e5359bc7
   RCTDeprecation: 943572d4be82d480a48f4884f670135ae30bf990
   RCTRequired: 8f3cfc90cc25cf6e420ddb3e7caaaabc57df6043
   RCTTypeSafety: 16a4144ca3f959583ab019b57d5633df10b5e97c
@@ -2719,12 +2719,12 @@ SPEC CHECKSUMS:
   ReactCodegen: 7d4593f7591f002d137fe40cef3f6c11f13c88cc
   ReactCommon: 08810150b1206cc44aecf5f6ae19af32f29151a8
   ReactNativeDependencies: 71ce9c28beb282aa720ea7b46980fff9669f428a
-  RevenueCat: 9357239a9f0978285e68983637b8a602e65c94f0
-  RevenueCatUI: 6f9291da540f98baf405b5bdfc46b2d5547b704a
+  RevenueCat: 2352e4208c6a9ae8aac023f8e376a7535871f4ee
+  RevenueCatUI: 4f51de30d89b21930ea080e78bfe6ba560417ff5
   RNCAsyncStorage: 3a4f5e2777dae1688b781a487923a08569e27fe4
   RNGestureHandler: 2914750df066d89bf9d8f48a10ad5f0051108ac3
-  RNPaywalls: 26e03d5c8ca04e9d89319eebbe8d26c14faa0a5e
-  RNPurchases: 4f6b0209e2fb4152bda0d0276a2a46d2b3416752
+  RNPaywalls: c782424ebc64f22aa583f547b12f21d2ff7d5559
+  RNPurchases: 6ad76398532ccf41f0e0b26f6b3a734f4ceb0fde
   RNReanimated: 41f496c18437fd0aa841234917af84e98fd5b9a2
   RNScreens: d8d6f1792f6e7ac12b0190d33d8d390efc0c1845
   RNWorklets: 76fce72926e28e304afb44f0da23b2d24f2c1fa0
@@ -2735,6 +2735,6 @@ SPEC CHECKSUMS:
   Yoga: 5934998fbeaef7845dbf698f698518695ab4cd1a
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 819aaf73d7fa4ef46a08aec341c6643f940dc2fb
+PODFILE CHECKSUM: a50555a11af0288c0a93bee7a84ba21b0d33f6ce
 
 COCOAPODS: 1.16.2
