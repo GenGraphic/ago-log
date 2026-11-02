@@ -21,7 +21,7 @@ export interface User extends User_DB {
 }
 
 export interface Entry_DB {
-  userId: string;        // owner — matches the Appwrite auth user $id
+  userId: string;        // owner — matches the Firebase Auth uid
   title: string;         // user-facing name, e.g. "My Passport", "Netflix"
   entryType: EntryType;  // drives which fields are shown in the form (see ENTRY_CONFIG)
   status: EntryStatus;   // Active | Archived | Expired
@@ -50,7 +50,7 @@ export interface Entry_DB {
   // ─── Attachments ─────────────────────────────────────────────────────────
   // The photo of the physical document. Used for AI extraction on add,
   // then stored permanently so the user can view the original image anytime.
-  imageId?: string;  // Appwrite Storage file ID
+  imageId?: string;  // Storage file ID → users/{uid}/entries/{imageId}.jpg
 
   currentPrice?: number;
   currency?: Currency

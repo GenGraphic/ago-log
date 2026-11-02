@@ -11,6 +11,9 @@ const initialState: User = {
   plan: UserPlan.FREE,
   avatar: "",
   phone: "",
+  pushEnabled: false,
+  emailEnabled: false,
+  expoPushToken: null,
 };
 
 const userSlice = createSlice({

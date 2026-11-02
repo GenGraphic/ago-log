@@ -1,6 +1,6 @@
 import Feather from '@expo/vector-icons/Feather';
 import React, { useState } from 'react';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -10,12 +10,12 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 const PRESETS = [1, 7, 30];
 
 
-type Props<T> = {
+type Props<T extends FieldValues> = {
   control: Control<T>;
-  name: keyof T;
+  name: Path<T>;
 };
 
-export default function NotifyChips<T>({ control, name }: Props<T>) {
+export default function NotifyChips<T extends FieldValues>({ control, name }: Props<T>) {
   const { t } = useTranslation();
   const [showCustom, setShowCustom] = useState(false);
   const [customInput, setCustomInput] = useState('');
