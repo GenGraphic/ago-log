@@ -14,7 +14,7 @@ const en = {
     addNew: "Add new",
     searchPlaceholder: "Search assets...",
     filterAll: "ALL",
-    noAssets: "No assets found",
+    noAssets: "No assets yet. Add your car or home to group its documents.",
     linkedEntryCount_one: "{{count}} entry linked",
     linkedEntryCount_other: "{{count}} entries linked",
     loadError: "Could not load assets",
@@ -105,18 +105,18 @@ const en = {
     skip: "Skip",
     next: "NEXT",
     getStarted: "GET STARTED",
-    slide1Title: "Your Personal Vault",
+    slide1Title: "Everything with a deadline, in one place",
     slide1Desc:
-      "Keep track of everything with an expiration date — subscriptions, IDs, warranties, medications, and more.",
-    slide2Title: "Never Miss a Date",
+      "ID card, car insurance, inspection, subscriptions, warranties. Organised around what you own: your car, your home.",
+    slide2Title: "Scan it, the AI fills it in",
     slide2Desc:
-      "AGO LOG monitors your entries and alerts you before anything expires, so you're always one step ahead.",
-    slide3Title: "Smart Notifications",
+      "Photograph a document or a receipt. Type, dates and numbers are filled in for you; you just check and save.",
+    slide3Title: "Reminded every day, until it's done",
     slide3Desc:
-      "Get timely reminders tailored to each entry. Choose how far in advance you want to be notified.",
-    slide4Title: "Ready to Start?",
+      "Pick 7 or 30 days and you get a notification each day before something expires. By push or by email.",
+    slide4Title: "No more fines for expired papers",
     slide4Desc:
-      "Create a free account and take control of your expiration dates today.",
+      "Plus a weekly note on what changes for you: taxes, mandatory insurance, deadlines. Free to start.",
   },
 
   home: {
@@ -134,7 +134,7 @@ const en = {
 
   entries: {
     noEntriesFound: "No entries found",
-    noEntries: "No entries found",
+    noEntries: "No entries yet. Add your first one with the + button: scan a document or fill it in by hand.",
     priorityOverride: "PRIORITY OVERRIDE",
     incomingBuffer: "INCOMING BUFFER",
     stabilizedVault: "STABILIZED VAULT",
@@ -306,6 +306,7 @@ const en = {
     failedToDelete: "Failed to delete account.",
     support: "SUPPORT",
     helpFaq: "HELP/FAQ",
+    howItWorks: "HOW IT WORKS",
     contact: "CONTACT",
     manageSub: "MANAGE SUB",
   },
@@ -332,6 +333,95 @@ const en = {
     receiptLabel: "RECEIPT",
     purchaseDate: "PURCHASED",
     length: "WARRANTY",
+  },
+
+  welcome: {
+    title: "What do you want to keep under control?",
+    subtitle: "Pick everything that applies. We'll prepare a short list of what's worth adding.",
+    goals: {
+      vehicle: { title: "Car", examples: "Insurance, inspection, road vignette, service" },
+      home: { title: "House or apartment", examples: "Home insurance" },
+      documents: { title: "Personal documents", examples: "ID card, driving licence, passport" },
+      subscriptions: { title: "Subscriptions", examples: "Streaming, phone, gym" },
+      warranties: { title: "Products under warranty", examples: "Phone, appliances — keep the receipt" },
+    },
+    assetName: { vehicle: "My car", home: "My home" },
+    howTitle: "HOW AGO LOG IS ORGANISED",
+    howAssets: "Assets are the things you own: your car, your home.",
+    howEntries: "Entries are anything with a deadline: insurance, ID card, a subscription. An entry can belong to an asset.",
+    howReminders: "Before an entry expires, we remind you every day until it's sorted.",
+    continue: "CONTINUE",
+    saving: "PREPARING...",
+  },
+
+  gettingStarted: {
+    title: "GETTING STARTED",
+    intro: "Add these and we'll remind you before any of them expires.",
+  },
+
+  suggestions: {
+    missingTitle: "Worth adding",
+    missingIntro_one: "One thing usually tracked for this asset is missing.",
+    missingIntro_other: "{{count}} things usually tracked for this asset are missing.",
+    types: {
+      Car_Insurance: { title: "Car insurance", why: "Mandatory. Driving without it means a fine." },
+      Car_Inspection: { title: "Inspection", why: "Driving without it means a fine and losing your registration papers." },
+      Vignette: { title: "Road vignette", why: "Checked by cameras; fines are high." },
+      Car_Maintenance: { title: "Service", why: "Oil and filters, by date or by mileage." },
+      Home_Insurance: { title: "Home insurance", why: "Mandatory insurance plus optional cover." },
+      ID_Card: { title: "ID card", why: "You need it for the bank, notary, travel." },
+      Driving_License: { title: "Driving licence", why: "Driving with an expired licence means a fine." },
+      Passport: { title: "Passport", why: "Many countries require 6 months of validity." },
+      Subscription: { title: "Subscription", why: "Know when it renews and how much it costs." },
+      Warranty: { title: "Product warranty", why: "Photograph the receipt; we remind you before it ends." },
+    },
+  },
+
+  tips: {
+    gotIt: "GOT IT",
+    entries: {
+      title: "Entries: everything with a deadline",
+      body: "Documents, insurance, subscriptions, warranties. Add one by scanning it, and we remind you every day during the last days before it expires.",
+    },
+    assets: {
+      title: "Assets: the things you own",
+      body: "Group entries by car, home or business. Open an asset to see what is usually tracked for it and what you're missing.",
+    },
+    notifications: {
+      title: "Reminders and weekly notes",
+      body: "Expiry reminders show up here. Every Monday you also get a short note with news that affects what you own, such as tax or insurance changes.",
+    },
+  },
+
+  guide: {
+    title: "How it works",
+    redoSetup: "SET UP AGAIN",
+    sections: {
+      entries: {
+        title: "Entries",
+        body: "Anything with a deadline: ID card, insurance, inspection, subscription, warranty. Each entry has an expiry date and a reminder setting.",
+      },
+      assets: {
+        title: "Assets",
+        body: "The things you own: a car, a home, a business. Link entries to them, and the asset page shows what is usually tracked and is missing.",
+      },
+      scan: {
+        title: "AI scan",
+        body: "Photograph a document or pick one from the gallery. The AI fills in the type, dates, issuer and number; you only check and save. The photo stays attached.",
+      },
+      reminders: {
+        title: "Daily reminders",
+        body: "Choose 7 days and you get a notification each day during the last 7 days before expiry, plus a few days after. You can also get them by email (Profile → Notifications).",
+      },
+      insights: {
+        title: "Weekly note",
+        body: "Every Monday, a short note based on what you own: tax or insurance changes in your country, upcoming deadlines, and what you might be missing. Each tip links to its source.",
+      },
+      warranties: {
+        title: "Warranties",
+        body: "Scan the receipt: we save the product, the store and the purchase date, and remind you to check the product still works before the warranty ends.",
+      },
+    },
   },
 
   upgrade: {

@@ -14,7 +14,7 @@ const ro = {
     addNew: "Adaugă nou",
     searchPlaceholder: "Caută active...",
     filterAll: "TOATE",
-    noAssets: "Nu există active",
+    noAssets: "Încă nu ai active. Adaugă mașina sau casa ca să-i grupezi actele.",
     linkedEntryCount_one: "{{count}} înregistrare legată",
     linkedEntryCount_other: "{{count}} înregistrări legate",
     loadError: "Nu am putut încărca activele",
@@ -106,18 +106,18 @@ const ro = {
     skip: "Omite",
     next: "URMĂTOR",
     getStarted: "ÎNCEPE ACUM",
-    slide1Title: "Seiful Tău Personal",
+    slide1Title: "Tot ce are termen, într-un singur loc",
     slide1Desc:
-      "Ține evidența a tot ce are dată de expirare — abonamente, acte de identitate, garanții, medicamente și multe altele.",
-    slide2Title: "Nu Rata Niciodată o Dată",
+      "Buletin, RCA, ITP, abonamente, garanții. Organizate pe ce deții: mașina, casa.",
+    slide2Title: "Scanezi, AI-ul completează",
     slide2Desc:
-      "AGO LOG monitorizează înregistrările tale și te avertizează înainte ca ceva să expire, astfel că ești mereu pregătit.",
-    slide3Title: "Notificări Inteligente",
+      "Fotografiezi un act sau un bon. Tipul, datele și numerele se completează singure; tu doar verifici și salvezi.",
+    slide3Title: "Îți amintim zilnic, până rezolvi",
     slide3Desc:
-      "Primești mementouri personalizate pentru fiecare înregistrare. Tu alegi cu cât timp înainte vrei să fii notificat.",
-    slide4Title: "Ești Pregătit?",
+      "Alegi 7 sau 30 de zile și primești câte o notificare în fiecare zi înainte să expire ceva. Push sau email.",
+    slide4Title: "Gata cu amenzile pentru acte expirate",
     slide4Desc:
-      "Creează un cont gratuit și preia controlul datelor de expirare astăzi.",
+      "Plus o notă săptămânală cu ce se schimbă pentru tine: taxe, asigurări obligatorii, termene. Gratuit la început.",
   },
 
   home: {
@@ -135,7 +135,7 @@ const ro = {
 
   entries: {
     noEntriesFound: "Nicio înregistrare găsită",
-    noEntries: "Nicio înregistrare găsită",
+    noEntries: "Încă nu ai înregistrări. Adaugă prima cu butonul +: scanezi actul sau o completezi manual.",
     priorityOverride: "PRIORITATE MAXIMĂ",
     incomingBuffer: "BUFFER INTRARE",
     stabilizedVault: "SEIF STABILIZAT",
@@ -314,6 +314,7 @@ const ro = {
     failedToDelete: "Nu s-a putut șterge contul.",
     support: "ASISTENȚĂ",
     helpFaq: "AJUTOR/FAQ",
+    howItWorks: "CUM FUNCȚIONEAZĂ",
     contact: "CONTACT",
     manageSub: "ABONAMENT",
   },
@@ -341,6 +342,96 @@ const ro = {
     receiptLabel: "BON FISCAL",
     purchaseDate: "CUMPĂRAT",
     length: "GARANȚIE",
+  },
+
+  welcome: {
+    title: "Ce vrei să ții sub control?",
+    subtitle: "Alege tot ce ți se potrivește. Pregătim o listă scurtă cu ce merită adăugat.",
+    goals: {
+      vehicle: { title: "Mașină", examples: "RCA, ITP, rovinietă, revizie" },
+      home: { title: "Casă sau apartament", examples: "Asigurarea locuinței" },
+      documents: { title: "Acte personale", examples: "Buletin, permis, pașaport" },
+      subscriptions: { title: "Abonamente", examples: "Streaming, telefon, sală" },
+      warranties: { title: "Produse în garanție", examples: "Telefon, electrocasnice — păstrezi bonul" },
+    },
+    assetName: { vehicle: "Mașina mea", home: "Casa mea" },
+    howTitle: "CUM E ORGANIZAT AGO LOG",
+    howAssets: "Activele sunt lucrurile pe care le deții: mașina, casa.",
+    howEntries: "Înregistrările sunt tot ce are un termen: RCA, buletin, un abonament. O înregistrare poate aparține unui activ.",
+    howReminders: "Înainte să expire ceva, îți amintim zilnic până rezolvi.",
+    continue: "CONTINUĂ",
+    saving: "PREGĂTIM...",
+  },
+
+  gettingStarted: {
+    title: "PRIMII PAȘI",
+    intro: "Adaugă-le și îți amintim înainte să expire vreuna.",
+  },
+
+  suggestions: {
+    missingTitle: "Merită adăugat",
+    missingIntro_one: "Lipsește un lucru urmărit de obicei pentru acest activ.",
+    missingIntro_few: "Lipsesc {{count}} lucruri urmărite de obicei pentru acest activ.",
+    missingIntro_other: "Lipsesc {{count}} de lucruri urmărite de obicei pentru acest activ.",
+    types: {
+      Car_Insurance: { title: "RCA", why: "Obligatoriu. Fără RCA valabil riști amendă." },
+      Car_Inspection: { title: "ITP", why: "Fără ITP valabil riști amendă și reținerea talonului." },
+      Vignette: { title: "Rovinietă", why: "Verificată automat de camere, amenzile sunt mari." },
+      Car_Maintenance: { title: "Revizie", why: "Ulei și filtre, după dată sau kilometri." },
+      Home_Insurance: { title: "Asigurarea locuinței", why: "PAD-ul e obligatoriu, plus asigurarea facultativă." },
+      ID_Card: { title: "Buletin", why: "Îți trebuie la bancă, notar, în călătorii." },
+      Driving_License: { title: "Permis de conducere", why: "Cu permisul expirat riști amendă." },
+      Passport: { title: "Pașaport", why: "Multe țări cer valabilitate de încă 6 luni." },
+      Subscription: { title: "Abonament", why: "Știi când se reînnoiește și cât te costă." },
+      Warranty: { title: "Garanție produs", why: "Fotografiezi bonul și îți amintim înainte să expire." },
+    },
+  },
+
+  tips: {
+    gotIt: "AM ÎNȚELES",
+    entries: {
+      title: "Înregistrări: tot ce are un termen",
+      body: "Acte, asigurări, abonamente, garanții. Adaugi una scanând documentul și îți amintim zilnic în ultimele zile dinainte să expire.",
+    },
+    assets: {
+      title: "Active: lucrurile pe care le deții",
+      body: "Grupează înregistrările pe mașină, casă sau firmă. Deschide un activ ca să vezi ce se urmărește de obicei pentru el și ce îți lipsește.",
+    },
+    notifications: {
+      title: "Remindere și nota săptămânală",
+      body: "Aici apar reminderele de expirare. În fiecare luni primești și o notă scurtă cu noutăți care te privesc: schimbări de taxe, asigurări și altele.",
+    },
+  },
+
+  guide: {
+    title: "Cum funcționează",
+    redoSetup: "REFĂ CONFIGURAREA",
+    sections: {
+      entries: {
+        title: "Înregistrări",
+        body: "Tot ce are un termen: buletin, RCA, ITP, abonament, garanție. Fiecare are o dată de expirare și o setare de reminder.",
+      },
+      assets: {
+        title: "Active",
+        body: "Lucrurile pe care le deții: mașină, casă, firmă. Le legi înregistrări, iar pagina activului îți arată ce se urmărește de obicei și ce lipsește.",
+      },
+      scan: {
+        title: "Scanare cu AI",
+        body: "Fotografiezi un document sau îl alegi din galerie. AI-ul completează tipul, datele, emitentul și numărul; tu doar verifici și salvezi. Poza rămâne atașată.",
+      },
+      reminders: {
+        title: "Remindere zilnice",
+        body: "Alegi 7 zile și primești câte o notificare în fiecare zi din ultimele 7 zile dinainte de expirare, plus câteva zile după. Le poți primi și pe email (Profil → Notificări).",
+      },
+      insights: {
+        title: "Nota săptămânală",
+        body: "În fiecare luni, o notă scurtă după ce deții: schimbări de taxe sau asigurări din țara ta, termene care se apropie și ce ți-ar putea lipsi. Fiecare sfat are link către sursă.",
+      },
+      warranties: {
+        title: "Garanții",
+        body: "Scanezi bonul: salvăm produsul, magazinul și data cumpărării, și îți amintim să verifici dacă produsul funcționează înainte să expire garanția.",
+      },
+    },
   },
 
   upgrade: {

@@ -4,6 +4,7 @@ import { Asset, Asset_DB } from "@/models/assets";
 import { Entry, HookResponse } from "@/models/types";
 import {
   addDoc,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
@@ -110,6 +111,17 @@ const useAssets = () => {
     [],
   );
 
+  /** Adds an entry to the asset's linked entries. */
+  const linkEntry = useCallback(async (assetId: string, entryId: string): Promise<HookResponse<null>> => {
+    try {
+      await updateDoc(doc(db, COLLECTIONS.assets, assetId), { entries: arrayUnion(entryId) });
+      return { success: true, data: null };
+    } catch (error: any) {
+      console.log("Error linking entry to Asset:", error);
+      return { success: false, message: error.message };
+    }
+  }, []);
+
   const deleteAsset = useCallback(async (assetId: string): Promise<HookResponse<null>> => {
     try {
       await deleteDoc(doc(db, COLLECTIONS.assets, assetId));
@@ -125,6 +137,7 @@ const useAssets = () => {
     getAsset,
     listAssets,
     updateAsset,
+    linkEntry,
     deleteAsset,
   };
 };

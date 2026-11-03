@@ -9,7 +9,9 @@ import useEntries from '@/hooks/useEntries';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Asset } from '@/models/assets';
 import { AssetType } from '@/models/enums';
+import { assetSuggestions } from '@/models/suggestions';
 import { Entry } from '@/models/types';
+import SuggestionRow from '@/components/suggestions/SuggestionRow';
 import Feather from '@expo/vector-icons/Feather';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -187,6 +189,9 @@ export default function AssetDetailsScreen() {
     }, [loadAsset]),
   );
 
+  const suggestions = useMemo(() => (asset ? assetSuggestions(asset) : []), [asset]);
+  const missing = suggestions.filter((s) => !s.done);
+
   const detailFields = useMemo(() => {
     if (!asset) return [];
     return TYPE_FIELDS[asset.type] || [];
@@ -280,6 +285,20 @@ export default function AssetDetailsScreen() {
                         {t('assets.linkedEntryCount', { count: asset.entries?.length ?? 0 })}
                     </ThemedText>
                     </View>
+
+                    {missing.length > 0 && (
+                      <View style={[styles.detailsCard, { backgroundColor: cardBg }]}>
+                        <ThemedText style={[styles.sectionTitle, { color: text }]}>
+                          {t('suggestions.missingTitle')}
+                        </ThemedText>
+                        <ThemedText style={[styles.assetDescription, { color: icon }]}>
+                          {t('suggestions.missingIntro', { count: missing.length })}
+                        </ThemedText>
+                        {missing.map((s) => (
+                          <SuggestionRow key={s.key} suggestion={s} />
+                        ))}
+                      </View>
+                    )}
 
                     <View style={[styles.detailsCard, { backgroundColor: cardBg }]}> 
                     <ThemedText style={[styles.sectionTitle, { color: text }]}>

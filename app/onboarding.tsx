@@ -39,19 +39,19 @@ const SLIDES: Slide[] = [
   },
   {
     id: "2",
-    icon: "⏰",
+    icon: "📸",
     titleKey: "onboarding.slide2Title",
     descriptionKey: "onboarding.slide2Desc",
   },
   {
     id: "3",
-    icon: "🔔",
+    icon: "⏰",
     titleKey: "onboarding.slide3Title",
     descriptionKey: "onboarding.slide3Desc",
   },
   {
     id: "4",
-    icon: "🚀",
+    icon: "✅",
     titleKey: "onboarding.slide4Title",
     descriptionKey: "onboarding.slide4Desc",
   },

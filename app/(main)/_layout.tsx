@@ -3,7 +3,7 @@ import { usePushToken } from "@/hooks/usePushToken";
 import { useSyncUserLocale } from "@/hooks/useSyncUserLocale";
 import useUser from "@/hooks/useUser";
 import { useAppSelector } from "@/store/hooks";
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 
 const MainLayout = () => {
@@ -11,12 +11,15 @@ const MainLayout = () => {
   const userId = useAppSelector((state) => state.user.id);
   const { getUser } = useUser();
   const { registerPushToken } = usePushToken();
+  const router = useRouter();
 
   useEffect(() => {
     if (isAuth) {
       getUser().then((res) => {
         if (res.success && res.data) {
           registerPushToken(res.data.id);
+          // First login: ask what they want to track before the empty home.
+          if (!res.data.setupCompletedAt) router.replace("/(main)/welcome");
         }
       });
     }
@@ -30,6 +33,8 @@ const MainLayout = () => {
   return (
     <Stack initialRouteName="(tabs)">
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="welcome" options={{ headerShown: false, gestureEnabled: false }} />
+      <Stack.Screen name="guide" options={{ headerShown: false }} />
       <Stack.Screen name="entry-details" options={{ headerShown: false }} />
       <Stack.Screen name="edit-entry" options={{ headerShown: false }} />
       <Stack.Screen name="add-entry" options={{ headerShown: false }} />

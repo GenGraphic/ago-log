@@ -19,6 +19,7 @@ import {
   SectionList
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TipCard from '@/components/ui/TipCard';
 
 export default function NotificationsScreen() {
   const limitStatus = useFreeLimitReached();
@@ -68,6 +69,8 @@ export default function NotificationsScreen() {
             style={{ marginTop: -8, marginBottom: 12 }}
           />
         )}
+
+        <TipCard id="notifications" icon="bell" style={{ marginHorizontal: 16, marginBottom: 12 }} />
 
         <NotificationFilterBar
           activeFilter={activeFilter}

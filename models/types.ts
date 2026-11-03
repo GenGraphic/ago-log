@@ -1,4 +1,5 @@
 import { Currency, EntryStatus, EntryType, NotifType, UserPlan, UserStatus } from "./enums";
+import type { SetupGoal } from "./suggestions";
 
 export type HookResponse<T = void> =
   | { success: true;  data: T }
@@ -14,6 +15,11 @@ export interface User_DB {
     pushEnabled: boolean;
     emailEnabled: boolean;
     expoPushToken: string | null;
+
+    // First-run setup (app/(main)/welcome.tsx) and the home checklist
+    setupGoals?: SetupGoal[];
+    setupCompletedAt?: string;
+    checklistDismissed?: boolean;
 }
 export interface User extends User_DB {
     id: string;

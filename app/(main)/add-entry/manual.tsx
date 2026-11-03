@@ -28,6 +28,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { FREE_LOG_LIMIT } from "@/constants/plans";
 import { DEFAULT_WARRANTY_MONTHS, warrantyExpiry } from "@/helpers/warrantyHelper";
 import useAI from "@/hooks/useAI";
+import useAssets from "@/hooks/useAssets";
 import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -75,7 +76,10 @@ function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
 }
 
 export default function ManualInputScreen() {
-  const { photoUri } = useLocalSearchParams<{ photoUri?: string }>();
+  // entryType / assetId / title come from a suggestion ("Add RCA" on a car):
+  // the type is preselected and the new entry is linked to the asset.
+  const { photoUri, entryType: presetType, assetId, title: presetTitle } =
+    useLocalSearchParams<{ photoUri?: string; entryType?: EntryType; assetId?: string; title?: string }>();
   const router = useRouter();
 
   const tint = useThemeColor({}, "tint");
@@ -90,6 +94,7 @@ export default function ManualInputScreen() {
     "background",
   );
   const { createEntry, countEntries } = useEntries();
+  const { linkEntry } = useAssets();
   const { uploadImage } = useStorage();
   const { extractEntryFromImage } = useAI();
   const userId = useAppSelector((state) => state.user.id);
@@ -114,7 +119,11 @@ export default function ManualInputScreen() {
   }, [isFree]);
 
   const { control, watch, handleSubmit, setValue } = useForm<EntryFormData>({
-    defaultValues: { notifyDays: [defaultReminder] },
+    defaultValues: {
+      notifyDays: [defaultReminder],
+      entryType: presetType,
+      title: presetTitle ?? "",
+    },
   });
 
   React.useEffect(() => {
@@ -289,6 +298,8 @@ export default function ManualInputScreen() {
         return;
       }
 
+      if (assetId) await linkEntry(assetId, result.data.id);
+
       Toast.show({
         type: "success",
         text1: t('manual.entrySealed'),
@@ -309,7 +320,9 @@ export default function ManualInputScreen() {
         });
       }
 
-      router.replace("/(main)/(tabs)");
+      // Back to the asset (or checklist) the suggestion came from.
+      if (assetId && router.canGoBack()) router.back();
+      else router.replace("/(main)/(tabs)");
     } catch (err: any) {
       Toast.show({
         type: "error",
@@ -405,7 +418,10 @@ export default function ManualInputScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PhotoCapture uri={photoUri} />
+          <PhotoCapture
+            uri={photoUri}
+            params={{ entryType: entryType ?? presetType, assetId, title: watchedTitle || presetTitle }}
+          />
 
           <EntryTypePicker control={control} name="entryType" />
 

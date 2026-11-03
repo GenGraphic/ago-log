@@ -7,6 +7,7 @@ import FinancialBarChart from '@/components/FinancialBarChart';
 import CallToActions from '@/components/home/CallToActions';
 import CriticalAlerts from '@/components/home/CriticalAlerts';
 import EntriesCounter from '@/components/home/EntriesCounter';
+import GettingStarted from '@/components/home/GettingStarted';
 import HomeHeader from '@/components/home/HomeHeader';
 import TimeLine from '@/components/home/TimeLine';
 import { LimitBanner } from '@/components/upgrade/LimitBanner';
@@ -44,6 +45,8 @@ export default function HomeScreen() {
 
           {limitStatus !== 'none' && <LimitBanner variant={limitStatus} />}
           <HomeHeader />
+
+          <GettingStarted />
 
           <FinancialBarChart entries={entries} />
 

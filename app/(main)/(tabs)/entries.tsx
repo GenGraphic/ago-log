@@ -24,6 +24,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { EntryStatus, EntryType } from '@/models/enums';
 import { Entry } from '@/models/types';
 import { useRouter } from 'expo-router';
+import TipCard from '@/components/ui/TipCard';
 
 
 function getDaysLeft(iso: string) {
@@ -164,6 +165,7 @@ export default function EntriesScreen() {
         ListHeaderComponent={
           <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
             {limitStatus !== 'none' && <LimitBanner variant={limitStatus} style={{ marginHorizontal: 0, marginBottom: 12 }} />}
+            <TipCard id="entries" icon="file-text" />
             <SearchBar value={search} onChangeText={setSearch} />
             <CategoryFilter selected={category} onSelect={setCategory} />
           </View>

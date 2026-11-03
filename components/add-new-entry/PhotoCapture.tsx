@@ -11,13 +11,15 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 type PhotoCaptureProps = {
   uri?: string | null;
   onRetake?: () => void;
+  /** Passed through the camera back to the form (preset type, asset). */
+  params?: Record<string, string | undefined>;
 };
 
 /**
  * Empty state   → tappable card that opens the camera (smart screen).
  * Filled state  → shows the captured image with a "Retake" button.
  */
-export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
+export default function PhotoCapture({ uri, onRetake, params }: PhotoCaptureProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const tint = useThemeColor({}, "tint");
@@ -32,7 +34,9 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
   );
 
   const handlePress = () => {
-    router.push("/(main)/add-entry/smart");
+    // Replace the form: the camera opens a fresh form with the photo, and
+    // "back" after saving should return to where the user started.
+    router.replace({ pathname: "/(main)/add-entry/smart", params: withoutEmpty(params) });
   };
 
   if (uri) {
@@ -92,6 +96,10 @@ export default function PhotoCapture({ uri, onRetake }: PhotoCaptureProps) {
       </ThemedText>
     </TouchableOpacity>
   );
+}
+
+function withoutEmpty(params?: Record<string, string | undefined>) {
+  return Object.fromEntries(Object.entries(params ?? {}).filter(([, v]) => v)) as Record<string, string>;
 }
 
 const styles = StyleSheet.create({

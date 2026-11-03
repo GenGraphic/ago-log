@@ -1,7 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -19,6 +19,8 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 export default function CameraScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  // Preset type / asset from the form, handed back with the photo.
+  const passThrough = useLocalSearchParams<Record<string, string>>();
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<"back" | "front">("back");
@@ -46,7 +48,7 @@ export default function CameraScreen() {
       // Pass the photo URI to manual screen via query param; AI prefill happens there
       router.replace({
         pathname: "/(main)/add-entry/manual",
-        params: { photoUri },
+        params: { ...passThrough, photoUri },
       });
     } finally {
       setCapturing(false);
@@ -61,7 +63,7 @@ export default function CameraScreen() {
       if (!uri) return;
       router.replace({
         pathname: "/(main)/add-entry/manual",
-        params: { photoUri: uri },
+        params: { ...passThrough, photoUri: uri },
       });
     } finally {
       setCapturing(false);
@@ -193,7 +195,7 @@ export default function CameraScreen() {
             {/* Manual fallback */}
             <TouchableOpacity
               style={styles.sideBtn}
-              onPress={() => router.replace("/(main)/add-entry/manual")}
+              onPress={() => router.replace({ pathname: "/(main)/add-entry/manual", params: passThrough })}
             >
               <Feather name="edit-2" size={22} color="#fff" />
             </TouchableOpacity>

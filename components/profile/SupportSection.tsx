@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
+import { useRouter } from "expo-router";
+
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Linking } from "react-native";
@@ -11,6 +13,7 @@ import { SectionLabel } from "./shared";
 
 export function SupportSection() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { presentCustomerCenter, isPro } = useRevenueCat();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
@@ -22,6 +25,16 @@ export function SupportSection() {
     <>
       <SectionLabel title={t('profile.support')} />
       <View style={styles.row}>
+        <TouchableOpacity
+          style={[styles.card, { backgroundColor: cardBg }]}
+          activeOpacity={0.7}
+          onPress={() => router.push("/(main)/guide")}
+        >
+          <Feather name="compass" size={22} color="#00F0FF" />
+          <ThemedText style={[styles.label, { color: labelColor }]}>
+            {t('profile.howItWorks')}
+          </ThemedText>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.card, { backgroundColor: cardBg }]}
           activeOpacity={0.7}

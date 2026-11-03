@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, RefreshControl, SectionList, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import TipCard from '@/components/ui/TipCard';
 
 const TYPE_ORDER: AssetType[] = [
   AssetType.VEHICLE,
@@ -144,6 +145,7 @@ export default function AssetsScreen() {
             contentContainerStyle={styles.listContent}
             ListHeaderComponent={
               <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+                <TipCard id="assets" icon="box" />
                 <SearchBar
                   value={search}
                   onChangeText={setSearch}

@@ -21,6 +21,9 @@ export const toUser = (doc: Doc): User => {
     emailEnabled: d.emailEnabled ?? false,
     expoPushToken: d.expoPushToken ?? null,
     pushEnabled: d.pushEnabled ?? true,
+    setupGoals: d.setupGoals ?? [],
+    setupCompletedAt: d.setupCompletedAt ?? undefined,
+    checklistDismissed: d.checklistDismissed ?? false,
   };
 };
 
