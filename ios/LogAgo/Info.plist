@@ -53,12 +53,12 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Allow Ago Log to access your photos to let AI read and prefill the fields.</string>
     <key>NSCameraUsageDescription</key>
     <string>Allow Ago Log to access your camera to let AI read and prefill the fields.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow Ago Log to access your camera to let AI read and prefill the fields.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow Ago Log to access your photos to let AI read and prefill the fields.</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
