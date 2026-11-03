@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
-import { pickImageFromLibrary } from "@/helpers/imageHelper";
+import { pickImageFromLibrary, prepareImage } from "@/helpers/imageHelper";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function CameraScreen() {
@@ -41,10 +41,12 @@ export default function CameraScreen() {
         base64: false,
         quality: 1,
       });
+      if (!photo) return;
+      const photoUri = await prepareImage(photo.uri, photo.width, photo.height);
       // Pass the photo URI to manual screen via query param; AI prefill happens there
       router.replace({
         pathname: "/(main)/add-entry/manual",
-        params: { photoUri: photo?.uri },
+        params: { photoUri },
       });
     } finally {
       setCapturing(false);
