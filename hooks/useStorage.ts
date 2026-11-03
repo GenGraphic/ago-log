@@ -1,6 +1,6 @@
 import { requireUid, storage } from "@/firebase";
 import { HookResponse } from "@/models/types";
-import { getDownloadURL as fbGetDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL as fbGetDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useCallback } from "react";
 
 // Files live at users/{uid}/{folder}/{fileId}.jpg (see firebase/storage.rules)
@@ -60,8 +60,24 @@ const useStorage = () => {
     [],
   );
 
+  /** Deletes a stored image, e.g. a replaced receipt photo. Missing files are ignored. */
+  const deleteImage = useCallback(
+    async (folder: string, fileId: string): Promise<HookResponse<null>> => {
+      try {
+        await deleteObject(ref(storage, filePath(requireUid(), folder, fileId)));
+        return { success: true, data: null };
+      } catch (error: any) {
+        if (error?.code === "storage/object-not-found") return { success: true, data: null };
+        console.log("Error deleting the image: ", error);
+        return { success: false, message: error.message };
+      }
+    },
+    [],
+  );
+
   return {
     getDownloadURL,
+    deleteImage,
     getImagePreview,
     uploadImage,
     getPrivateImage,

@@ -7,8 +7,10 @@ import { remindersEmail, sendEmail, simpleEmail } from './email.js';
 import { expiryMessage, langOf, t } from './messages.js';
 import { pushToUser } from './push.js';
 
-// Keep reminding for a few days after the expiry date.
+// Keep reminding for a few days after the expiry date, except for
+// warranties: once one has ended there is nothing left to do.
 const DAYS_AFTER_EXPIRY = 3;
+const NO_REMINDERS_AFTER_EXPIRY = new Set(['Warranty']);
 // More reminders than this on the same day are pushed as one summary.
 const MAX_SEPARATE_PUSHES = 2;
 
@@ -23,7 +25,7 @@ function daysUntil(isoDate) {
 /**
  * Daily job. An entry with notifyDaysBefore = N is reminded every day during
  * the last N days before its expiry date, on the day itself and for
- * DAYS_AFTER_EXPIRY days after.
+ * DAYS_AFTER_EXPIRY days after (warranties stop on the day itself).
  */
 export const sendNotifications = onSchedule(
   {
@@ -47,7 +49,8 @@ export const sendNotifications = onSchedule(
       if (entry.notifyDaysBefore == null) continue;
 
       const days = daysUntil(entry.expiryDate);
-      if (days > entry.notifyDaysBefore || days < -DAYS_AFTER_EXPIRY) continue;
+      const daysAfter = NO_REMINDERS_AFTER_EXPIRY.has(entry.entryType) ? 0 : DAYS_AFTER_EXPIRY;
+      if (days > entry.notifyDaysBefore || days < -daysAfter) continue;
 
       if (!toNotify.has(entry.userId)) toNotify.set(entry.userId, []);
       toNotify.get(entry.userId).push({ entry, days });

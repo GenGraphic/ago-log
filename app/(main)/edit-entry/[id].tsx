@@ -1,6 +1,6 @@
 import Feather from "@expo/vector-icons/Feather";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -14,14 +14,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import EntryPhotoField from "@/components/add-new-entry/EntryPhotoField";
 import EntryTypePicker from "@/components/add-new-entry/EntryTypePicker";
 import FormDateInput from "@/components/add-new-entry/FormDateInput";
 import FormTextInput from "@/components/add-new-entry/FormTextInput";
 import NotifyChips from "@/components/add-new-entry/NotifyChips";
+import WarrantyMonthsChips from "@/components/add-new-entry/WarrantyMonthsChips";
 import MyMainButton from "@/components/MyMainButton";
 import { ThemedText } from "@/components/ThemedText";
+import { ENTRIES_IMAGES_FOLDER } from "@/firebase";
+import { warrantyExpiry } from "@/helpers/warrantyHelper";
 import useEntries from "@/hooks/useEntries";
+import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { t } from "@/i18n/t";
 import { ENTRY_CONFIG, EntryFieldConfig } from "@/models/entryConfig";
 import { Currency, EntryStatus, EntryType } from "@/models/enums";
 import { Entry_DB } from "@/models/types";
@@ -41,6 +47,8 @@ type EntryFormData = {
   intervalDays?: string;
   lastMileage?: string;
   mileageInterval?: string;
+  purchaseDate?: string;
+  warrantyMonths?: string;
   currentPrice?: string;  
   currency?: Currency
 };
@@ -55,7 +63,8 @@ function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
     config.showLastServiceDate ||
     config.showIntervalDays ||
     config.showLastMileage ||
-    config.showMileageInterval
+    config.showMileageInterval ||
+    config.showPurchaseDate
   );
 }
 
@@ -70,10 +79,14 @@ export default function EditDocumentScreen() {
     "background",
   );
   const { getEntry, updateEntry } = useEntries();
+  const { getPrivateImage, uploadImage, deleteImage } = useStorage();
   const [submitting, setSubmitting] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const [imageId, setImageId] = useState<string | undefined>();
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [newPhotoUri, setNewPhotoUri] = useState<string | null>(null);
 
-  const { control, watch, handleSubmit, setValue, reset } =
+  const { control, watch, handleSubmit, setValue, reset, getFieldState } =
     useForm<EntryFormData>({
       defaultValues: { notifyDays: [] },
     });
@@ -82,6 +95,18 @@ export default function EditDocumentScreen() {
   const watchedTitle = watch("title");
   const config = entryType ? ENTRY_CONFIG[entryType] : null;
   const showTypeFields = config ? hasTypeSpecificFields(config) : false;
+  const isWarranty = entryType === EntryType.WARRANTY;
+  const purchaseDate = watch("purchaseDate");
+  const warrantyMonths = watch("warrantyMonths");
+
+  // Recompute the warranty end date only when the user changes the purchase
+  // date or the length, so a manually set end date survives loading.
+  useEffect(() => {
+    if (!isWarranty) return;
+    if (!getFieldState("purchaseDate").isDirty && !getFieldState("warrantyMonths").isDirty) return;
+    const expiry = warrantyExpiry(purchaseDate, warrantyMonths);
+    if (expiry) setValue("expiryDate", expiry);
+  }, [isWarranty, purchaseDate, warrantyMonths]);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -106,9 +131,17 @@ export default function EditDocumentScreen() {
         lastMileage: e.lastMileage !== undefined ? String(e.lastMileage) : "",
         mileageInterval:
           e.mileageInterval !== undefined ? String(e.mileageInterval) : "",
+        purchaseDate: e.purchaseDate ?? "",
+        warrantyMonths:
+          e.warrantyMonths !== undefined ? String(e.warrantyMonths) : "",
         currentPrice: e.currentPrice !== undefined ? String(e.currentPrice) : "",
         currency: e.currency ?? undefined,
       });
+      setImageId(e.imageId);
+      if (e.imageId) {
+        const imgRes = await getPrivateImage(ENTRIES_IMAGES_FOLDER, e.imageId);
+        if (imgRes.success) setImageUri(imgRes.data);
+      }
     } else {
       Toast.show({
         type: "error",
@@ -117,7 +150,7 @@ export default function EditDocumentScreen() {
       });
     }
     setLoading(false);
-  }, [id, getEntry, reset]);
+  }, [id, getEntry, getPrivateImage, reset]);
 
   useEffect(() => {
     load();
@@ -136,6 +169,18 @@ export default function EditDocumentScreen() {
         ? new Date(data.expiryDate).getTime() < Date.now()
         : false;
 
+      // A new photo replaces the old one; the old file is removed after save.
+      let newImageId: string | undefined;
+      if (newPhotoUri) {
+        const upload = await uploadImage(ENTRIES_IMAGES_FOLDER, newPhotoUri);
+        if (!upload.success) {
+          Toast.show({ type: "error", text1: "Upload failed", text2: upload.message });
+          return;
+        }
+        newImageId = upload.data;
+      }
+
+      const warranty = data.entryType === EntryType.WARRANTY;
       const updatedEntry: Partial<Entry_DB> = {
         title: data.title,
         entryType: data.entryType,
@@ -158,6 +203,12 @@ export default function EditDocumentScreen() {
         mileageInterval: data.mileageInterval
           ? parseInt(data.mileageInterval, 10)
           : undefined,
+        purchaseDate: (warranty && data.purchaseDate) || undefined,
+        warrantyMonths:
+          warranty && data.warrantyMonths
+            ? parseInt(data.warrantyMonths, 10)
+            : undefined,
+        ...(newImageId && { imageId: newImageId }),
         currentPrice: data.currentPrice
           ? Number(data.currentPrice.replace(",", "."))
           : undefined,
@@ -173,6 +224,7 @@ export default function EditDocumentScreen() {
         });
         return;
       }
+      if (newImageId && imageId) deleteImage(ENTRIES_IMAGES_FOLDER, imageId);
       Toast.show({ type: "success", text1: "Entry updated" });
       router.back();
     } catch (err: any) {
@@ -250,6 +302,12 @@ export default function EditDocumentScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          <EntryPhotoField
+            uri={newPhotoUri ?? imageUri}
+            label={isWarranty ? t("warranty.receiptLabel") : t("photo.photoLabel")}
+            onChange={setNewPhotoUri}
+          />
+
           <EntryTypePicker control={control} name="entryType" />
 
           <FormTextInput
@@ -259,6 +317,17 @@ export default function EditDocumentScreen() {
             placeholder="e.g. My Passport"
             rules={{ required: "Title is required" }}
           />
+
+          {config?.showPurchaseDate && (
+            <>
+              <FormDateInput
+                control={control}
+                name="purchaseDate"
+                label={t("warranty.purchaseDateLabel")}
+              />
+              <WarrantyMonthsChips control={control} name="warrantyMonths" />
+            </>
+          )}
 
           {config?.showExpiryDate && (
             <FormDateInput
@@ -297,16 +366,16 @@ export default function EditDocumentScreen() {
                 <FormTextInput
                   control={control}
                   name="issuer"
-                  label="ISSUER"
-                  placeholder="Organisation or company"
+                  label={isWarranty ? t("warranty.storeLabel") : "ISSUER"}
+                  placeholder={isWarranty ? t("warranty.storePlaceholder") : "Organisation or company"}
                 />
               )}
               {config.showIdentifier && (
                 <FormTextInput
                   control={control}
                   name="identifier"
-                  label="IDENTIFIER"
-                  placeholder="Policy number, ID, reference"
+                  label={isWarranty ? t("warranty.serialLabel") : "IDENTIFIER"}
+                  placeholder={isWarranty ? t("warranty.serialPlaceholder") : "Policy number, ID, reference"}
                   sensitive
                 />
               )}
@@ -457,7 +526,7 @@ const editStyles = StyleSheet.create({
     marginTop: 2,
   },
   scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: 20, paddingBottom: 20 },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 20, gap: 16 },
   sectionDivider: {
     flexDirection: "row",
     alignItems: "center",

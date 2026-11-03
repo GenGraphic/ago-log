@@ -11,6 +11,8 @@ export interface EntryFieldConfig {
   showIntervalDays: boolean;
   showLastMileage: boolean;
   showMileageInterval: boolean;
+  showPurchaseDate: boolean;
+  showWarrantyMonths: boolean;
   showNotifyDaysBefore: boolean;
   expiryLabel: string;
   showAmount: boolean;
@@ -28,6 +30,8 @@ const doc = (expiryLabel = 'Expiry Date'): EntryFieldConfig => ({
   showIntervalDays: false,
   showLastMileage: false,
   showMileageInterval: false,
+  showPurchaseDate: false,
+  showWarrantyMonths: false,
   showNotifyDaysBefore: true,
   expiryLabel,
   showAmount: false,
@@ -45,6 +49,8 @@ const insurance = (): EntryFieldConfig => ({
   showIntervalDays: false,
   showLastMileage: false,
   showMileageInterval: false,
+  showPurchaseDate: false,
+  showWarrantyMonths: false,
   showNotifyDaysBefore: true,
   expiryLabel: 'Renewal Date',
   showAmount: true,
@@ -62,8 +68,21 @@ const maintenance = (): EntryFieldConfig => ({
   showIntervalDays: true,
   showLastMileage: true,
   showMileageInterval: true,
+  showPurchaseDate: false,
+  showWarrantyMonths: false,
   showNotifyDaysBefore: true,
   expiryLabel: 'Due Date',
+  showAmount: true,
+  showCurrency: true
+});
+
+// Product bought with a receipt: the expiry date is computed from the
+// purchase date and the warranty length, issuer is the store, identifier
+// the serial number.
+const warranty = (): EntryFieldConfig => ({
+  ...doc('Warranty Expiry'),
+  showPurchaseDate: true,
+  showWarrantyMonths: true,
   showAmount: true,
   showCurrency: true
 });
@@ -79,6 +98,8 @@ const reminder = (expiryLabel = 'Date'): EntryFieldConfig => ({
   showIntervalDays: false,
   showLastMileage: false,
   showMileageInterval: false,
+  showPurchaseDate: false,
+  showWarrantyMonths: false,
   showNotifyDaysBefore: true,
   expiryLabel,
   showAmount: false,
@@ -112,7 +133,7 @@ export const ENTRY_CONFIG: Record<EntryType, EntryFieldConfig> = {
   // Finance / Legal
   [EntryType.SUBSCRIPTION]:          { ...insurance(), expiryLabel: 'Renewal Date' },
   [EntryType.CONTRACT]:              doc('End Date'),
-  [EntryType.WARRANTY]:              doc('Warranty Expiry'),
+  [EntryType.WARRANTY]:              warranty(),
   [EntryType.PROPERTY_LEASE]:        doc('Lease End Date'),
 
   // Personal
@@ -131,6 +152,8 @@ export const ENTRY_CONFIG: Record<EntryType, EntryFieldConfig> = {
     showIntervalDays: false,
     showLastMileage: false,
     showMileageInterval: false,
+    showPurchaseDate: false,
+    showWarrantyMonths: false,
     showNotifyDaysBefore: false,
     expiryLabel: 'Expiry Date',
     showAmount: false,

@@ -40,3 +40,21 @@ export async function pickImageFromLibrary(): Promise<string | null> {
   const asset = result.assets[0];
   return prepareImage(asset.uri, asset.width, asset.height);
 }
+
+/**
+ * Opens the system camera and returns a prepared JPEG uri, or null if the
+ * user cancels or denies the permission.
+ */
+export async function takePhotoWithCamera(): Promise<string | null> {
+  const permission = await ImagePicker.requestCameraPermissionsAsync();
+  if (!permission.granted) return null;
+
+  const result = await ImagePicker.launchCameraAsync({
+    mediaTypes: ["images"],
+    quality: 1,
+  });
+  if (result.canceled || !result.assets?.length) return null;
+
+  const asset = result.assets[0];
+  return prepareImage(asset.uri, asset.width, asset.height);
+}

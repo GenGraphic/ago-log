@@ -21,10 +21,12 @@ import FormDateInput from "@/components/add-new-entry/FormDateInput";
 import FormTextInput from "@/components/add-new-entry/FormTextInput";
 import NotifyChips from "@/components/add-new-entry/NotifyChips";
 import PhotoCapture from "@/components/add-new-entry/PhotoCapture";
+import WarrantyMonthsChips from "@/components/add-new-entry/WarrantyMonthsChips";
 import BackHeader from "@/components/BackHeader";
 import MyMainButton from "@/components/MyMainButton";
 import { ThemedText } from "@/components/ThemedText";
 import { FREE_LOG_LIMIT } from "@/constants/plans";
+import { DEFAULT_WARRANTY_MONTHS, warrantyExpiry } from "@/helpers/warrantyHelper";
 import useAI from "@/hooks/useAI";
 import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
@@ -51,6 +53,8 @@ type EntryFormData = {
   intervalDays?: string;
   lastMileage?: string;
   mileageInterval?: string;
+  purchaseDate?: string;
+  warrantyMonths?: string;
   currentPrice?: string;  
   currency?: Currency
 };
@@ -65,7 +69,8 @@ function hasTypeSpecificFields(config: EntryFieldConfig): boolean {
     config.showLastServiceDate ||
     config.showIntervalDays ||
     config.showLastMileage ||
-    config.showMileageInterval
+    config.showMileageInterval ||
+    config.showPurchaseDate
   );
 }
 
@@ -150,6 +155,18 @@ export default function ManualInputScreen() {
           setValue("lastMileage", String(prefill.lastMileage));
         if (prefill.mileageInterval)
           setValue("mileageInterval", String(prefill.mileageInterval));
+        if (prefill.currentPrice != null)
+          setValue("currentPrice", String(prefill.currentPrice));
+        if (prefill.currency) setValue("currency", prefill.currency);
+        if (prefill.entryType === EntryType.WARRANTY) {
+          const months = prefill.warrantyMonths ?? DEFAULT_WARRANTY_MONTHS;
+          setValue("warrantyMonths", String(months));
+          if (prefill.purchaseDate) {
+            setValue("purchaseDate", prefill.purchaseDate);
+            const expiry = warrantyExpiry(prefill.purchaseDate, months);
+            if (expiry) setValue("expiryDate", expiry);
+          }
+        }
       } catch (err: any) {
         Toast.show({ type: "error", text1: t('manual.aiError'), text2: err.message });
       } finally {
@@ -163,6 +180,22 @@ export default function ManualInputScreen() {
   const watchedTitle = watch("title");
   const config = entryType ? ENTRY_CONFIG[entryType] : null;
   const showTypeFields = config ? hasTypeSpecificFields(config) : false;
+  const isWarranty = entryType === EntryType.WARRANTY;
+  const purchaseDate = watch("purchaseDate");
+  const warrantyMonths = watch("warrantyMonths");
+
+  // Warranties default to the 2-year legal guarantee.
+  React.useEffect(() => {
+    if (isWarranty && !warrantyMonths)
+      setValue("warrantyMonths", String(DEFAULT_WARRANTY_MONTHS));
+  }, [isWarranty]);
+
+  // The warranty end date follows the purchase date and the warranty length.
+  React.useEffect(() => {
+    if (!isWarranty) return;
+    const expiry = warrantyExpiry(purchaseDate, warrantyMonths);
+    if (expiry) setValue("expiryDate", expiry);
+  }, [isWarranty, purchaseDate, warrantyMonths]);
 
   const onSubmit = async (data: EntryFormData) => {
     if (!data.entryType) {
@@ -231,6 +264,12 @@ export default function ManualInputScreen() {
         mileageInterval: data.mileageInterval
           ? parseInt(data.mileageInterval, 10)
           : undefined,
+        ...(data.entryType === EntryType.WARRANTY && {
+          purchaseDate: data.purchaseDate || undefined,
+          warrantyMonths: data.warrantyMonths
+            ? parseInt(data.warrantyMonths, 10)
+            : undefined,
+        }),
         imageId,
         currentPrice: data.currentPrice
           ? Number(data.currentPrice.replace(",", "."))
@@ -378,6 +417,17 @@ export default function ManualInputScreen() {
             rules={{ required: t('manual.titleRequired') }}
           />
 
+          {config?.showPurchaseDate && (
+            <>
+              <FormDateInput
+                control={control}
+                name="purchaseDate"
+                label={t('warranty.purchaseDateLabel')}
+              />
+              <WarrantyMonthsChips control={control} name="warrantyMonths" />
+            </>
+          )}
+
           {config?.showExpiryDate && (
             <FormDateInput
               control={control}
@@ -411,16 +461,16 @@ export default function ManualInputScreen() {
                 <FormTextInput
                   control={control}
                   name="issuer"
-                  label={t('manual.issuerLabel')}
-                  placeholder={t('manual.issuerPlaceholder')}
+                  label={isWarranty ? t('warranty.storeLabel') : t('manual.issuerLabel')}
+                  placeholder={isWarranty ? t('warranty.storePlaceholder') : t('manual.issuerPlaceholder')}
                 />
               )}
               {config.showIdentifier && (
                 <FormTextInput
                   control={control}
                   name="identifier"
-                  label={t('manual.identifierLabel')}
-                  placeholder={t('manual.identifierPlaceholder')}
+                  label={isWarranty ? t('warranty.serialLabel') : t('manual.identifierLabel')}
+                  placeholder={isWarranty ? t('warranty.serialPlaceholder') : t('manual.identifierPlaceholder')}
                   sensitive
                 />
               )}

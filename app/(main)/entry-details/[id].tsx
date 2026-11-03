@@ -1,6 +1,7 @@
 ﻿import Feather from "@expo/vector-icons/Feather";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -28,12 +29,14 @@ import useEntries from "@/hooks/useEntries";
 import useStorage from "@/hooks/useStorage";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ENTRY_CONFIG } from "@/models/entryConfig";
+import { EntryType } from "@/models/enums";
 import { Entry } from "@/models/types";
 
 // --- Screen ---
 
 export default function DocumentDetailsScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const tint = useThemeColor({}, "tint");
   const icon = useThemeColor({}, "icon");
@@ -44,7 +47,7 @@ export default function DocumentDetailsScreen() {
   );
 
   const { getEntry, deleteEntry } = useEntries();
-  const { getPrivateImage } = useStorage();
+  const { getPrivateImage, deleteImage } = useStorage();
 
   const [entry, setEntry] = useState<Entry | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -88,6 +91,7 @@ export default function DocumentDetailsScreen() {
         onPress: async () => {
           const res = await deleteEntry(id!);
           if (res.success) {
+            if (entry?.imageId) deleteImage(ENTRIES_IMAGES_FOLDER, entry.imageId);
             Toast.show({ type: "success", text1: "Entry deleted" });
             router.replace("/(main)/(tabs)");
           } else {
@@ -139,6 +143,7 @@ export default function DocumentDetailsScreen() {
   const config = ENTRY_CONFIG[entry.entryType];
   const color = statusColor(entry);
   const days = daysUntil(entry.expiryDate);
+  const isWarranty = entry.entryType === EntryType.WARRANTY;
 
   return (
     <SafeAreaView style={[detailStyles.fill, { backgroundColor: screenBg }]}>
@@ -190,8 +195,26 @@ export default function DocumentDetailsScreen() {
           />
         )}
         <DetailsSection title="DETAILS">
-          <InfoRow label="ISSUER" value={entry.issuer} />
-          <InfoRow label="IDENTIFIER" value={entry.identifier} />
+          <InfoRow
+            label={t("warranty.purchaseDate")}
+            value={entry.purchaseDate ? formatDate(entry.purchaseDate) : undefined}
+          />
+          <InfoRow
+            label={t("warranty.length")}
+            value={
+              entry.warrantyMonths != null
+                ? t("warranty.months", { count: entry.warrantyMonths })
+                : undefined
+            }
+          />
+          <InfoRow
+            label={isWarranty ? t("warranty.storeLabel") : "ISSUER"}
+            value={entry.issuer}
+          />
+          <InfoRow
+            label={isWarranty ? t("warranty.serialLabel") : "IDENTIFIER"}
+            value={entry.identifier}
+          />
           <InfoRow label="USERNAME" value={entry.username} />
           <InfoRow label="SECRET" value={entry.secret} sensitive />
           <InfoRow label="URL" value={entry.url} />

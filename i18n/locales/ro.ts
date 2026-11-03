@@ -322,6 +322,25 @@ const ro = {
     retake: "Refă Poza",
     addPhoto: "Adaugă Fotografie (Scanare AI)",
     extractAuto: "Extrage automat informații din imagini",
+    camera: "Cameră",
+    library: "Galerie",
+    photoLabel: "FOTOGRAFIE",
+  },
+
+  warranty: {
+    purchaseDateLabel: "DATA CUMPĂRĂRII",
+    monthsLabel: "DURATA GARANȚIEI",
+    months_one: "{{count}} lună",
+    months_few: "{{count}} luni",
+    months_other: "{{count}} de luni",
+    customPlaceholder: "Luni, ex. 18",
+    storeLabel: "MAGAZIN",
+    storePlaceholder: "ex. eMAG, Altex, IKEA",
+    serialLabel: "SERIE PRODUS",
+    serialPlaceholder: "De pe produs sau certificatul de garanție",
+    receiptLabel: "BON FISCAL",
+    purchaseDate: "CUMPĂRAT",
+    length: "GARANȚIE",
   },
 
   upgrade: {

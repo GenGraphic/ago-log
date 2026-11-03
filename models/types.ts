@@ -47,6 +47,11 @@ export interface Entry_DB {
   lastMileage?: number;      // odometer reading when last serviced (km or miles)
   mileageInterval?: number;  // mileage-based recurrence, e.g. 10000 km
 
+  // ─── Warranty (EntryType.WARRANTY only) ──────────────────────────────────
+  // expiryDate = purchaseDate + warrantyMonths; the photo is the receipt.
+  purchaseDate?: string;    // ISO date — when the product was bought
+  warrantyMonths?: number;  // warranty length, e.g. 24
+
   // ─── Attachments ─────────────────────────────────────────────────────────
   // The photo of the physical document. Used for AI extraction on add,
   // then stored permanently so the user can view the original image anytime.
@@ -98,5 +103,13 @@ export interface EntryAIPrefill {
   lastServiceDate?: string;
   lastMileage?: number;
   mileageInterval?: number;
+
+  // Warranty
+  purchaseDate?: string;
+  warrantyMonths?: number;
+
+  // Price
+  currentPrice?: number;
+  currency?: Currency;
 }
 

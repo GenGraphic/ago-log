@@ -37,6 +37,10 @@ const EntryAIPrefillSchema = z.object({
   lastMileage: z.number().nullable(), // odometer reading AT the time of service
   mileageInterval: z.number().nullable(), // km/miles UNTIL next service
 
+  // Warranty
+  purchaseDate: z.string().nullable(), // ISO 8601, date on the receipt
+  warrantyMonths: z.number().nullable(), // only when stated on the document
+
   currentPrice: z.number().nullable(), // used to compare future prices
   currency: z.enum(['EUR', 'RON', 'USD']),
 });
@@ -63,8 +67,8 @@ ENTRY TYPES — pick the single best match:
 - Prescription: medical prescription from a doctor
 - Medical_Checkup: health screening, blood test results, checkup certificate
 - Subscription: subscription invoice or renewal notice (Netflix, Spotify, SaaS, etc.)
-- Contract: any signed contract, agreement, service contract, utility bill, invoice
-- Warranty: product warranty card or certificate
+- Contract: any signed contract, agreement, service contract, utility bill, invoice (except purchase receipts for products, see Warranty)
+- Warranty: product warranty card or certificate, AND any receipt or invoice for buying a durable product (fiscal receipt / "bon fiscal", store invoice for electronics, appliances, phones, laptops, tools, furniture, bikes, etc.)
 - Property_Lease: rental agreement, lease contract
 - Birthday: birthday reminder (not usually a document)
 - Anniversary: anniversary reminder
@@ -83,6 +87,15 @@ FIELD DEFINITIONS:
 - lastServiceDate: date the maintenance/service was performed — ISO 8601
 - lastMileage: the odometer reading AT THE TIME of the service (e.g. current km on the car when you changed the oil: 85000)
 - mileageInterval: how many km/miles UNTIL the next service is due (e.g. "change oil again in 30,000 km" → 30000)
+- purchaseDate: Warranty only — the purchase date printed on the receipt or warranty card — ISO 8601
+- warrantyMonths: Warranty only — the warranty length in months, ONLY if it is written on the document (e.g. "garanție 24 luni" → 24, "3 ani" → 36); otherwise null
+- currentPrice: the amount paid (for a receipt with several items, the price of the main product); currency: the currency of that amount
+
+WARRANTY RECEIPTS:
+- title: the product name as a person would say it (e.g. "Samsung washing machine WW90", "iPhone 15 128GB"), not the store name; if the receipt has several items, use the most expensive durable product
+- issuer: the store (e.g. "eMAG", "Altex", "IKEA")
+- identifier: the product serial number if visible, otherwise the receipt or invoice number
+- expiryDate: purchaseDate + warrantyMonths when both are known, otherwise null
 
 RULES:
 1. Think step by step:

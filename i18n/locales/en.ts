@@ -314,6 +314,24 @@ const en = {
     retake: "Retake",
     addPhoto: "Add Photo (AI Scan)",
     extractAuto: "Extract intelligence from images automatically",
+    camera: "Camera",
+    library: "Library",
+    photoLabel: "PHOTO",
+  },
+
+  warranty: {
+    purchaseDateLabel: "PURCHASE DATE",
+    monthsLabel: "WARRANTY LENGTH",
+    months_one: "{{count}} month",
+    months_other: "{{count}} months",
+    customPlaceholder: "Months, e.g. 18",
+    storeLabel: "STORE",
+    storePlaceholder: "e.g. eMAG, Altex, IKEA",
+    serialLabel: "SERIAL NUMBER",
+    serialPlaceholder: "On the product or the warranty card",
+    receiptLabel: "RECEIPT",
+    purchaseDate: "PURCHASED",
+    length: "WARRANTY",
   },
 
   upgrade: {

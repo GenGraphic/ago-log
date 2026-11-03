@@ -23,6 +23,9 @@ const STRINGS = {
         ? `Your ${type} expires today. Renew it now so it doesn't lapse.`
         : `Your ${type} is due soon. We'll remind you every day until then.`,
     expiredBody: (type, d) => `Your ${type} expired ${d} day${d === 1 ? '' : 's'} ago. Take action now.`,
+    warrantyEndsIn: (t, d) =>
+      d === 0 ? `The warranty for ${t} ends today` : `The warranty for ${t} ends in ${d} day${d === 1 ? '' : 's'}`,
+    warrantyBody: (t) => `Check that ${t} still works properly. Until then, defects are repaired for free.`,
     summaryTitle: (n) => `${n} items need your attention`,
     summaryBody: (titles) => `${titles.slice(0, 3).join(', ')}${titles.length > 3 ? '…' : ''}`,
     remindersEmailHeading: 'Upcoming expirations',
@@ -44,6 +47,13 @@ const STRINGS = {
         : `Termenul pentru ${type} se apropie. Îți amintim zilnic până atunci.`,
     expiredBody: (type, d) =>
       `Termenul pentru ${type} a trecut ${d === 1 ? 'ieri' : `acum ${d} zile`}. Ia măsuri acum.`,
+    warrantyEndsIn: (t, d) =>
+      d === 0
+        ? `Garanția pentru ${t} expiră azi`
+        : d === 1
+          ? `Garanția pentru ${t} expiră mâine`
+          : `Garanția pentru ${t} expiră în ${d} zile`,
+    warrantyBody: (t) => `Verifică dacă ${t} funcționează corect. Până atunci, defectele se repară gratuit.`,
     summaryTitle: (n) => `${n} lucruri au nevoie de atenția ta`,
     summaryBody: (titles) => `${titles.slice(0, 3).join(', ')}${titles.length > 3 ? '…' : ''}`,
     remindersEmailHeading: 'Expirări apropiate',
@@ -72,6 +82,10 @@ export function typeLabel(lang, entryType) {
 /** Expiry reminder for one entry, `days` until expiry (negative = expired). */
 export function expiryMessage(lang, entry, days) {
   const s = t(lang);
+  // Warranties: a nudge to check the product while repairs are still free.
+  if (entry.entryType === 'Warranty') {
+    return { title: s.warrantyEndsIn(entry.title, days), body: s.warrantyBody(entry.title), type: 'warning' };
+  }
   const type = typeLabel(lang, entry.entryType);
   if (days < 0) {
     return { title: s.expired(entry.title), body: s.expiredBody(type, -days), type: 'expired' };
