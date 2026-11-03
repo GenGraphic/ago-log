@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.3</string>
+    <string>1.0.4</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -53,6 +53,8 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow Ago Log to access your photos to let AI read and prefill the fields.</string>
     <key>NSCameraUsageDescription</key>
     <string>Allow Ago Log to access your camera to let AI read and prefill the fields.</string>
     <key>NSMicrophoneUsageDescription</key>

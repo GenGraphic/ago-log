@@ -2,7 +2,7 @@
   "expo": {
     "name": "Log Ago",
     "slug": "ago-log",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/myLogo.png",
     "scheme": "agolog",
@@ -44,6 +44,14 @@
           "microphonePermission": "Allow Ago Log to access your camera to let AI read and prefill the fields.",
           "recordAudioAndroid": true,
           "barcodeScannerEnabled": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Ago Log to access your photos to let AI read and prefill the fields.",
+          "cameraPermission": false,
+          "microphonePermission": false
         }
       ],
       "expo-font",

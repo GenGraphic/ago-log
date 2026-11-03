@@ -236,6 +236,7 @@ const ro = {
     alignFrame: "Aliniază documentul în cadru",
     cameraRequired: "Accesul la cameră este necesar",
     grantPermission: "Continuă",
+    chooseFromLibrary: "Alege din galerie",
   },
 
   notifications: {

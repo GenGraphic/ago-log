@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -96,7 +97,12 @@ export default function EntriesScreen() {
     setRefreshing(false);
   }, [listEntries]);
 
-  useEffect(() => { load(); }, [load]);
+  // Reload on focus so edits made in other screens show up.
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load]),
+  );
 
   // Filter by search + category
   const filtered = useMemo(() => {

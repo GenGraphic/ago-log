@@ -5,6 +5,7 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getCountFromServer,
   getDoc,
@@ -91,6 +92,11 @@ const useEntries = () => {
       try {
         const data: Record<string, any> = normalizeDates({ ...updatedEntry });
         delete data.userId;
+        // A field left empty in the edit form arrives as undefined; Firestore
+        // would skip it (ignoreUndefinedProperties), so remove it explicitly.
+        for (const key of Object.keys(data)) {
+          if (data[key] === undefined) data[key] = deleteField();
+        }
         const ref = doc(db, COLLECTIONS.entries, entryId);
         await updateDoc(ref, { ...data, updatedAt: new Date().toISOString() });
         return { success: true, data: toEntry(await getDoc(ref)) };

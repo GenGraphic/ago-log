@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/ThemedText";
+import { pickImageFromLibrary } from "@/helpers/imageHelper";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function CameraScreen() {
@@ -50,6 +51,21 @@ export default function CameraScreen() {
     }
   };
 
+  const handlePickFromLibrary = async () => {
+    if (capturing) return;
+    setCapturing(true);
+    try {
+      const uri = await pickImageFromLibrary();
+      if (!uri) return;
+      router.replace({
+        pathname: "/(main)/add-entry/manual",
+        params: { photoUri: uri },
+      });
+    } finally {
+      setCapturing(false);
+    }
+  };
+
   const toggleFacing = () =>
     setFacing((f) => (f === "back" ? "front" : "back"));
   const toggleFlash = () => setFlash((f) => (f === "off" ? "on" : "off"));
@@ -73,6 +89,13 @@ export default function CameraScreen() {
           onPress={requestPermission}
         >
           <ThemedText style={{ color: tint }}>{t('smart.grantPermission')}</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.libraryLink}
+          onPress={handlePickFromLibrary}
+        >
+          <Feather name="image" size={16} color={icon} />
+          <ThemedText style={{ color: icon }}>{t('smart.chooseFromLibrary')}</ThemedText>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -101,13 +124,18 @@ export default function CameraScreen() {
 
             <ThemedText style={styles.topLabel}>{t('smart.scanDocument')}</ThemedText>
 
-            <TouchableOpacity style={styles.iconBtn} onPress={toggleFlash}>
-              <Feather
-                name={flash === "on" ? "zap" : "zap-off"}
-                size={22}
-                color={flash === "on" ? tint : "#fff"}
-              />
-            </TouchableOpacity>
+            <View style={styles.topActions}>
+              <TouchableOpacity style={styles.iconBtn} onPress={toggleFacing}>
+                <Feather name="refresh-cw" size={20} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconBtn} onPress={toggleFlash}>
+                <Feather
+                  name={flash === "on" ? "zap" : "zap-off"}
+                  size={22}
+                  color={flash === "on" ? tint : "#fff"}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </SafeAreaView>
 
@@ -135,9 +163,13 @@ export default function CameraScreen() {
         {/* Bottom controls */}
         <SafeAreaView edges={["bottom"]}>
           <View style={styles.bottomBar}>
-            {/* Flip camera */}
-            <TouchableOpacity style={styles.sideBtn} onPress={toggleFacing}>
-              <Feather name="refresh-cw" size={22} color="#fff" />
+            {/* Pick from library */}
+            <TouchableOpacity
+              style={styles.sideBtn}
+              onPress={handlePickFromLibrary}
+              disabled={capturing}
+            >
+              <Feather name="image" size={22} color="#fff" />
             </TouchableOpacity>
 
             {/* Shutter */}
@@ -185,6 +217,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
   },
+  libraryLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 8,
+  },
   // Overlay
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -198,6 +236,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
+  topActions: { flexDirection: "row", gap: 8 },
   iconBtn: {
     width: 40,
     height: 40,

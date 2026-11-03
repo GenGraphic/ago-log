@@ -228,6 +228,7 @@ const en = {
     alignFrame: "Align the document within the frame",
     cameraRequired: "Camera access is required",
     grantPermission: "Continue",
+    chooseFromLibrary: "Choose from library",
   },
 
   notifications: {
