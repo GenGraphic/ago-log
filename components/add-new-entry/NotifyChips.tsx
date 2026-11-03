@@ -32,21 +32,14 @@ export default function NotifyChips<T extends FieldValues>({ control, name }: Pr
       render={({ field: { onChange, value } }) => {
         const selected: number[] = value ?? [];
 
+        // Single choice: the user is reminded every day during the last N days.
         const toggle = (day: number) => {
-          if (selected.includes(day)) {
-            onChange(selected.filter(d => d !== day));
-          } else {
-            // Replace other preset selections, preserve any custom values
-            const custom = selected.filter(d => !PRESETS.includes(d));
-            onChange([...custom, day].sort((a, b) => a - b));
-          }
+          onChange(selected.includes(day) ? [] : [day]);
         };
 
         const confirmCustom = () => {
           const num = parseInt(customInput, 10);
-          if (num > 0 && !selected.includes(num)) {
-            onChange([...selected, num].sort((a, b) => a - b));
-          }
+          if (num > 0) onChange([num]);
           setCustomInput('');
           setShowCustom(false);
         };
@@ -117,6 +110,12 @@ export default function NotifyChips<T extends FieldValues>({ control, name }: Pr
                 </TouchableOpacity>
               </View>
             )}
+
+            {selected.length > 0 && (
+              <ThemedText style={[styles.hint, { color: `${icon}90` }]}>
+                {t('notifications.notifyDailyHint', { count: selected[0] })}
+              </ThemedText>
+            )}
           </View>
         );
       }}
@@ -125,6 +124,7 @@ export default function NotifyChips<T extends FieldValues>({ control, name }: Pr
 }
 
 const styles = StyleSheet.create({
+  hint: { fontSize: 11, marginTop: 8 },
   container: {
     gap: 8,
   },

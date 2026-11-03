@@ -4,8 +4,8 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { NotifType } from "@/models/enums";
 import { Notification } from "@/models/types";
 import Feather from "@expo/vector-icons/Feather";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const ICON_CONFIG: Record<
   NotifType,
@@ -27,6 +27,7 @@ const ICON_CONFIG: Record<
   },
   info: { name: "info", color: "#9BA1A6", bg: "rgba(155,161,166,0.12)" },
   sync: { name: "refresh-cw", color: "#00F0FF", bg: "rgba(0,240,255,0.10)" },
+  insight: { name: "zap", color: "#00F0FF", bg: "rgba(0,240,255,0.10)" },
 };
 
 type Props = {
@@ -35,7 +36,9 @@ type Props = {
 };
 
 export default function NotificationRow({ item, onPress }: Props) {
-  const cfg = ICON_CONFIG[item.type];
+  const cfg = ICON_CONFIG[item.type] ?? ICON_CONFIG.info;
+  // Tapping a row shows the whole text (weekly insights are longer).
+  const [expanded, setExpanded] = useState(false);
   const rowBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
     "background",
@@ -48,7 +51,10 @@ export default function NotificationRow({ item, onPress }: Props) {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => onPress(item.id)}
+      onPress={() => {
+        setExpanded((v) => !v);
+        onPress(item.id);
+      }}
       style={[styles.row, { backgroundColor: item.read ? rowBg : unreadBg }]}
     >
       <View style={[styles.accent, { backgroundColor: cfg.color }]} />
@@ -56,12 +62,23 @@ export default function NotificationRow({ item, onPress }: Props) {
         <Feather name={cfg.name} size={18} color={cfg.color} />
       </View>
       <View style={styles.body}>
-        <ThemedText style={styles.title} numberOfLines={1}>
+        <ThemedText style={styles.title} numberOfLines={expanded ? undefined : 1}>
           {item.title}
         </ThemedText>
-        <ThemedText style={styles.desc} numberOfLines={2}>
+        <ThemedText style={styles.desc} numberOfLines={expanded ? undefined : 2}>
           {item.body}
         </ThemedText>
+        {expanded &&
+          item.sources?.map((source) => (
+            <ThemedText
+              key={source.url}
+              style={[styles.source, { color: cfg.color }]}
+              numberOfLines={1}
+              onPress={() => Linking.openURL(source.url)}
+            >
+              ↗ {source.title}
+            </ThemedText>
+          ))}
       </View>
       <View style={styles.meta}>
         <ThemedText style={styles.time}>{formatTime(item.sentAt)}</ThemedText>
@@ -93,6 +110,7 @@ const styles = StyleSheet.create({
   body: { flex: 1, gap: 3, paddingVertical: 14 },
   title: { fontSize: 14, fontWeight: "600" },
   desc: { fontSize: 12, color: "#555", lineHeight: 17 },
+  source: { fontSize: 11, fontWeight: "600", marginTop: 6 },
   meta: {
     alignItems: "flex-end",
     gap: 6,

@@ -70,6 +70,7 @@ export interface Notification_DB {
   type: NotifType;
   read: boolean;
   sentAt: string;
+  sources?: { title: string; url: string }[]; // weekly insights only
 }
 
 export interface Notification extends Notification_DB {

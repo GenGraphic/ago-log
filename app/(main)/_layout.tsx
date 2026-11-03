@@ -1,4 +1,6 @@
+import { useNotificationNavigation } from "@/hooks/useNotificationNavigation";
 import { usePushToken } from "@/hooks/usePushToken";
+import { useSyncUserLocale } from "@/hooks/useSyncUserLocale";
 import useUser from "@/hooks/useUser";
 import { useAppSelector } from "@/store/hooks";
 import { Redirect, Stack } from "expo-router";
@@ -6,6 +8,7 @@ import { useEffect } from "react";
 
 const MainLayout = () => {
   const { isAuth } = useAppSelector((state) => state.auth);
+  const userId = useAppSelector((state) => state.user.id);
   const { getUser } = useUser();
   const { registerPushToken } = usePushToken();
 
@@ -18,6 +21,9 @@ const MainLayout = () => {
       });
     }
   }, [isAuth]);
+
+  useSyncUserLocale(isAuth ? userId : undefined);
+  useNotificationNavigation();
 
   if (!isAuth) return <Redirect href="/(auth)" />;
 

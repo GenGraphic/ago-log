@@ -63,6 +63,7 @@ export function toNotification(doc: Doc): Notification {
     type: d.type,
     read: d.read,
     sentAt: d.sentAt,
+    sources: d.sources ?? undefined,
   };
 }
 

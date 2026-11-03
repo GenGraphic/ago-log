@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { COLLECTIONS, db } from '@/firebase';
+import { COLLECTIONS, db, functions } from '@/firebase';
 import {
   collection,
   doc,
@@ -12,10 +12,16 @@ import {
   where,
   writeBatch,
 } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 import { toNotification } from '@/helpers/userHelper';
 import { Notification } from '@/models/types';
 import { useAppSelector } from '@/store/hooks';
 
+type ChannelResult = 'sent' | 'disabled' | 'no_token' | 'invalid_token' | 'failed';
+const sendTestFn = httpsCallable<void, { push: ChannelResult; email: ChannelResult }>(
+  functions,
+  'sendTestNotification',
+);
 
 export function useNotifications() {
   const userId = useAppSelector((s) => s.user.id);
@@ -70,5 +76,11 @@ export function useNotifications() {
     setUnreadCount(0);
   }, [notifications]);
 
-  return { notifications, loading, unreadCount, fetchNotifications, markAsRead, markAllAsRead };
+  /** Asks the backend to send a test push and email to the current user. */
+  const sendTestNotification = useCallback(async () => {
+    const { data } = await sendTestFn();
+    return data;
+  }, []);
+
+  return { notifications, loading, unreadCount, fetchNotifications, markAsRead, markAllAsRead, sendTestNotification };
 }

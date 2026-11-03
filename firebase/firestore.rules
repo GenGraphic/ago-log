@@ -21,7 +21,7 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isOwner(uid);
       allow update: if isOwner(uid)
-        && !changedKeys().hasAny(['plan', 'status', 'email', 'createdAt']);
+        && !changedKeys().hasAny(['plan', 'status', 'email', 'createdAt', 'lastInsightAt', 'recentInsightTopics']);
       allow create, delete: if false;
     }
 

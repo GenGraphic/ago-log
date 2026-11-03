@@ -9,7 +9,9 @@ Proiect: `ago-log` · Regiune funcții: `europe-west1` · Plan: **Blaze** (cu al
 | `functions/src/otp.js` | `sendOtp` / `verifyOtp`: login cu cod de 6 cifre pe email (Resend) → custom token |
 | `functions/src/ai.js` | `extractEntryFromImage`: completare automată din poză (OpenAI). Înlocuiește `handleEntryImage`. |
 | `functions/src/payments.js` | `revenuecatWebhook`: un singur webhook RevenueCat. Înlocuiește `on-success-payment` și `on-fail-payment`. |
-| `functions/src/notifications.js` | `sendNotifications`: cron zilnic la 07:00 ora României (push Expo + email + notificări în aplicație) |
+| `functions/src/notifications.js` | `sendNotifications`: cron zilnic la 07:00 ora României. O intrare cu `notifyDaysBefore = N` primește câte o notificare în fiecare zi din ultimele N zile, în ziua expirării și încă 3 zile după (push Expo + email + o notificare în aplicație per intrare, actualizată zilnic). `sendTestNotification`: push + email de test pentru userul logat. |
+| `functions/src/insights.js` | `sendWeeklyInsights`: luni la 10:00, o notă personalizată per user, generată cu gpt-5-mini + căutare web (taxe, asigurări obligatorii, termene din țara userului), cu surse. Userii fără nimic adăugat primesc un îndemn simplu, fără AI. Cost estimat ~2 cenți/user/săptămână. |
+| `functions/src/messages.js` | Textele trimise de backend, în engleză și română (după `user.language`) |
 | `functions/src/account.js` | `deleteAccount`: șterge datele, pozele și contul userului |
 | `firestore.rules`, `storage.rules` | Fiecare user are acces doar la datele lui. `plan`, `status` și `email` se modifică doar de pe server. |
 | `firestore.indexes.json` | Indexurile compuse de care au nevoie interogările |

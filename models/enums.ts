@@ -63,7 +63,7 @@ export enum EntryStatus {
   EXPIRED  = 'Expired',
 }
 
-export type NotifType = 'expired' | 'warning' | 'info' | 'sync';
+export type NotifType = 'expired' | 'warning' | 'info' | 'sync' | 'insight';
 
 export enum AssetType {
   VEHICLE = 'Vehicle',

@@ -9,7 +9,10 @@ import {
     View,
 } from "react-native";
 
+import Toast from "react-native-toast-message";
+
 import { COLLECTIONS, db } from "@/firebase";
+import { useNotifications } from "@/hooks/useNotifications";
 import { doc, updateDoc } from "firebase/firestore";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -29,6 +32,8 @@ export function NotificationsSection() {
   const { defaultReminder, pushNotifications, emailNotifications } =
     useAppSelector((s) => s.preferences);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const { sendTestNotification } = useNotifications();
   const cardBg = useThemeColor(
     { light: "#FFFFFF", dark: "#141414" },
     "background",
@@ -58,6 +63,22 @@ export function NotificationsSection() {
     dispatch(setEmailNotifications(v));
     if (userId)
       await updateDoc(doc(db, COLLECTIONS.users, userId), { emailEnabled: v });
+  }
+
+  async function handleTest() {
+    setTesting(true);
+    try {
+      const res = await sendTestNotification();
+      Toast.show({
+        type: res.push === "sent" || res.email === "sent" ? "success" : "error",
+        text1: t("notifications.testResultTitle"),
+        text2: `${t("notifications.push")}: ${t(`notifications.testStatus.${res.push}`)} · ${t("notifications.email")}: ${t(`notifications.testStatus.${res.email}`)}`,
+      });
+    } catch (err: any) {
+      Toast.show({ type: "error", text1: t("notifications.testResultTitle"), text2: err.message });
+    } finally {
+      setTesting(false);
+    }
   }
 
   return (
@@ -106,6 +127,20 @@ export function NotificationsSection() {
             thumbColor={emailNotifications ? "#00F0FF" : "#555"}
           />
         </View>
+
+        <RowDivider />
+
+        <TouchableOpacity
+          style={sharedStyles.row}
+          activeOpacity={0.7}
+          onPress={handleTest}
+          disabled={testing}
+        >
+          <ThemedText style={sharedStyles.rowLabel}>
+            {testing ? t("notifications.testSending") : t("notifications.testSend")}
+          </ThemedText>
+          <ThemedText style={styles.chevron}>›</ThemedText>
+        </TouchableOpacity>
       </View>
 
       {/* Dropdown Modal */}

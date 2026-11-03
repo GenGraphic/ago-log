@@ -93,11 +93,36 @@ export function billingProblemEmail(eventType) {
   `);
 }
 
-export function remindersEmail(items) {
+export function remindersEmail(items, s) {
   const list = items.map((i) => `<li><strong>${escapeHtml(i.title)}</strong><br/><span style="color:#999">${escapeHtml(i.body)}</span></li>`).join('');
   return layout(`
-    <h1>Upcoming expirations</h1>
+    <h1>${escapeHtml(s.remindersEmailHeading)}</h1>
     <ul>${list}</ul>
-    <p>Open the app to see the details.</p>
+    <p>${escapeHtml(s.openApp)}</p>
+  `);
+}
+
+export function simpleEmail(heading, body) {
+  return layout(`
+    <h1>${escapeHtml(heading)}</h1>
+    <p>${escapeHtml(body)}</p>
+  `);
+}
+
+/** Weekly insights: a short intro plus tips, each with an optional source link. */
+export function insightsEmail(insight, s) {
+  const tips = insight.tips
+    .map((tip) => {
+      const source = tip.sourceUrl
+        ? `<br/><a href="${escapeHtml(tip.sourceUrl)}" style="color:#00F0FF;font-size:12px">${escapeHtml(tip.sourceTitle || s.sources)}</a>`
+        : '';
+      return `<li>${escapeHtml(tip.text)}${source}</li>`;
+    })
+    .join('');
+  return layout(`
+    <h1>${escapeHtml(insight.title)}</h1>
+    <p>${escapeHtml(insight.summary)}</p>
+    <ul>${tips}</ul>
+    <p>${escapeHtml(s.openApp)}</p>
   `);
 }
